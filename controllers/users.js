@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
-const db = require('../db');
+const user = require('../models/user.js');
 
 app.get("/usersonline", function (req, res) {
-    console.log(123, db.get())
-
+    user.getAllUsersConnectedCount(req, res);
 });
+
+module.exports = app;

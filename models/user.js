@@ -1,24 +1,31 @@
 const db = require('../db.js')
 
-// exports.create = function(userId, text, done) {
-//     var values = [userId, text, new Date().toISOString()]
-//
-//     db.get().query('INSERT INTO comments (user_id, text, date) VALUES(?, ?, ?)', values, function(err, result) {
-//         if (err) return done(err)
-//         done(null, result.insertId)
-//     })
-// };
-//
-exports.getAll = function(done) {
-    db.get().query('SELECT * FROM comments', function (err, rows) {
-        if (err) return done(err)
-        done(null, rows)
+exports.getAll = function(req, res) {
+    db.get().query('SELECT * FROM user', function (err, results, fields) {
+        if (err) throw err;
+
+        //preguntar por que se ve diferente esto, que un resultado de mysql to json
+        // res.send([{"asd":"ddd"}])
+
+        res.status(200).send(JSON.stringify(results));
     })
 };
 
-exports.getAllByUser = function(userId, done) {
-    db.get().query('SELECT * FROM comments WHERE user_id = ?', userId, function (err, rows) {
-        if (err) return done(err)
-        done(null, rows)
+exports.getAllByUser = function(req, res) {
+    console.log(req)
+    db.get().query('SELECT * FROM user WHERE id = ?', res.userId, function (err, rows) {
+        if (err) throw err;
+        res.send(rows);
+    })
+};
+
+exports.getAllUsersConnectedCount = function(req, res) {
+    db.get().query('SELECT COUNT(id) as users_connected FROM `user` WHERE is_logged = true;', function (err, results, fields) {
+        if (err) throw err;
+
+        //preguntar por que se ve diferente esto, que un resultado de mysql to json
+        // res.send([{"asd":"ddd"}])
+
+        res.status(200).send(JSON.stringify(results));
     })
 };

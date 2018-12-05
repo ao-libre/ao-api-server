@@ -4,21 +4,20 @@ const port = process.env.port || 1337;
 const charfile = require('./utils/ao-charfile-reader');
 const db = require('./db');
 
-// app.use('/users', require('./controllers/users'));
+
+app.use('/api/v1/users', require('./controllers/users'));
 
 
 
-// app.get("/charfile/:chrFileName", function(request, response)  {
-//     console.log(request.params.chrFileName);
-//     charfile.getCharFile(request.params.chrFileName).then(console.log).catch(console.error);
-// });
-
-app.get("/asd", function (req, res) {
-    db.
-
+app.get("/charfile/:chrFileName", function(request, response)  {
+    console.log(request.params.chrFileName);
+    charfile.getCharFile(request.params.chrFileName).then(console.log).catch(console.error);
 });
 
-
+app.get("/asd", function (req, res) {
+    // db.
+    console.log(123)
+});
 
 
 // Connect to MySQL on start
