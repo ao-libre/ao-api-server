@@ -10,6 +10,10 @@ app.get("/all", function (req, res) {
     user.getAllUsers(req, res);
 });
 
+app.get("/user/:name", function (req, res) {
+    user.getUserByName(req, res, req.params.name);
+});
+
 app.get("/toptenlevel", function (req, res) {
     user.getTopTenMaxLeverUsers(req, res);
 });

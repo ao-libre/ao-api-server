@@ -9,9 +9,8 @@ exports.getAllUsers = function(req, res) {
     })
 };
 
-exports.getAllByUser = function(req, res) {
-    console.log(req)
-    db.get().query(`SELECT ${publicFieldsFromUsersTable} FROM user WHERE id = ?;`, res.userId, function (err, rows) {
+exports.getUserByName = function(req, res, name) {
+    db.get().query(`SELECT ${publicFieldsFromUsersTable} FROM user WHERE name = '${name}';`, res.userId, function (err, results, rows) {
         if (err) throw err;
         res.status(200).json(results);
     })
