@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.port || 1337;
+const port = process.env.PORT || 1337;
 const charfile = require('./utils/ao-charfile-reader');
 const db = require('./db');
 
