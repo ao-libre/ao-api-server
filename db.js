@@ -1,8 +1,8 @@
 const mysql = require('mysql');
 // const async = require('async');
 
-const PRODUCTION_DB = 'argentumonline';
-const TEST_DB = 'argentumonline';
+const PRODUCTION_DB = 'ao_database';
+const TEST_DB = 'ao_database';
 
 exports.MODE_TEST = 'mode_test';
 exports.MODE_PRODUCTION = 'mode_production';
@@ -14,9 +14,9 @@ var state = {
 
 exports.connect = function(mode, done) {
     state.pool = mysql.createPool({
-        host: '104.43.140.56',
-        user: 'argentum',
-        password: 'Argentum1234',
+        host: 'db4free.net',
+        user: 'aodatos',
+        password: 'b665c163',
         database: mode === exports.MODE_PRODUCTION ? PRODUCTION_DB : TEST_DB
     });
 
