@@ -21,18 +21,18 @@
  * @apiSuccess {Number} killed_users Quantity of users killed by the char.
  * @apiSuccess {Number} counter_connected Time expended online since the beginning of the time.
  * @apiSuccess {Number} is_logged If the user is logged at the moment.
- * @apiSuccess {Number} min_hp Minimun HP ??
- * @apiSuccess {Number} max_hp Maximum HP ??.
- * @apiSuccess {Number} min_man Minimum Mana ??.
- * @apiSuccess {Number} max_man Maximum Mana ??.
- * @apiSuccess {Number} min_sta Minimum Stamina ??.
- * @apiSuccess {Number} max_sta Maximum Stamina ??.
- * @apiSuccess {Number} min_ham Minimum Hungry???? ??.
- * @apiSuccess {Number} max_ham Maximum Starving? ??.
- * @apiSuccess {Number} min_sed Minimum Thirsty ???? ??.
- * @apiSuccess {Number} max_sed Maximum Thirsty? ??.
- * @apiSuccess {Number} min_hit Minimum Thirsty ???? ??.
- * @apiSuccess {Number} max_hit Maximum Thirsty? ??.
+ * @apiSuccess {Number} min_hp Current Health Points of the char
+ * @apiSuccess {Number} max_hp Char's Maximum Health Points.
+ * @apiSuccess {Number} min_man Char's Current Mana Points.
+ * @apiSuccess {Number} max_man Char's Maximum Mana Points.
+ * @apiSuccess {Number} min_sta Char's Current Stamina Points.
+ * @apiSuccess {Number} max_sta Char's Maximum Stamina Points.
+ * @apiSuccess {Number} min_ham Char's Current Hungry Points.
+ * @apiSuccess {Number} max_ham Char's Maximum Hungry Points.
+ * @apiSuccess {Number} min_sed Char's Current Thirsty Points.
+ * @apiSuccess {Number} max_sed Char's Maximum Thirsty Points.
+ * @apiSuccess {Number} min_hit Char's Minimum Hit Points.
+ * @apiSuccess {Number} max_hit Char's Maximum Hit Points.
  * @apiSuccess {Number} head_id Head ID.
  * @apiSuccess {Number} weapon_id Weapon Equiped ID.
  * @apiSuccess {Number} helmet_id Helmet Equiped ID.
@@ -43,6 +43,9 @@
  * @apiSuccess {Number} pertenece_real Char member of Real.
  * @apiSuccess {Number} ciudadanos_matados Quantity Ciudadanos killed by the char.
  * @apiSuccess {Number} criminales_matados Quantity Criminales killed by the char.
+ * @apiSuccess {Number} is_dead Indicate if the char is dead.
+ * @apiSuccess {Number} is_ban Indicate if the char is banned.
+ *
  */
 
 /**
@@ -92,13 +95,15 @@
  *    "pertenece_caos": 0,
  *    "pertenece_real": 0,
  *    "ciudadanos_matados": 0,
- *    "criminales_matados": 0
+ *    "criminales_matados": 0,
+ *    "is_dead": 0,
+ *    "is_ban": 0
  *   }
  */
 
 /**
  * @api {get} users/user/:name Get char by name
- * @apiVersion 0.2.0
+ * @apiVersion 0.1.0
  * @apiName GetUser
  * @apiGroup User
  *
