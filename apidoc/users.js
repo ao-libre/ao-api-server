@@ -104,12 +104,106 @@
 /**
  * @api {get} users/user/:name Get char by name
  * @apiVersion 0.1.0
- * @apiName GetUser
+ * @apiName getUser
  * @apiGroup User
  *
  * @apiParam {String} name Char unique name.
  *
  * @apiUse UserFieldsExplanation
  * @apiUse UserJsonResponse
+ */
+
+/**
+ * @api {get} users/online Get quantity chars connected.
+ * @apiVersion 0.1.0
+ * @apiName getAllUsersOnline
+ * @apiGroup User
+ *
+ *
+ * @apiSuccess {Number} users_connected Quantity of chars connected.
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *   {
+ *    "quantity": 150,
+ *   }
  *
  */
+
+/**
+ * @api {get} users/all Get all chars
+ * @apiVersion 0.1.0
+ * @apiName getAllUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptenlevel Get top ten level chars
+ * @apiVersion 0.1.0
+ * @apiName getTopTenMaxLeverUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptengold Get top ten gold chars
+ * @apiVersion 0.1.0
+ * @apiName getTopTenMoreGoldUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptenmoretimeonline Get top ten more time online chars
+ * @apiVersion 0.1.0
+ * @apiName getTopTenMoreTimeOnline
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptenmorehp Get top ten more health points chars
+ * @apiVersion 0.1.0
+ * @apiName getTopTenMoreHp
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptenuserkiller Get top ten more users killed by char
+ * @apiVersion 0.1.0
+ * @apiName getTopTenUserKiller
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/toptenuserkiller Get top ten more npc killed by char
+ * @apiVersion 0.1.0
+ * @apiName getTopTenUserKiller
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/armada Get all chars who belong to Armada
+ * @apiVersion 0.1.0
+ * @apiName getAllArmadaUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/consejoarmada Get all chars who belong to Consejo Caos
+ * @apiVersion 0.1.0
+ * @apiName getAllArmadaConsejoUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/caos Get all chars who belong to Caos
+ * @apiVersion 0.1.0
+ * @apiName getAllCaosUsers
+ * @apiGroup User
+ */
+
+/**
+ * @api {get} users/consejocaos Get all chars who belong to Consejo Caos
+ * @apiVersion 0.1.0
+ * @apiName getAllCaosConsejoUsers
+ * @apiGroup User
+ */
+
+

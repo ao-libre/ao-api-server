@@ -26,8 +26,8 @@ app.get("/toptenmoretimeonline", function (req, res) {
     user.getTopTenMoreTimeOnline(req, res);
 });
 
-app.get("/toptenmorelife", function (req, res) {
-    user.getTopTenMoreLife(req, res);
+app.get("/toptenmorehp", function (req, res) {
+    user.getTopTenMoreHp(req, res);
 });
 
 app.get("/toptenuserkiller", function (req, res) {

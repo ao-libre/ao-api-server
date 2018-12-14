@@ -23,7 +23,7 @@ exports.getAllUsersConnectedCount = function(req, res) {
     })
 };
 
-exports.getTopTenMoreLife = function (req, res) {
+exports.getTopTenMoreHp = function (req, res) {
     db.get().query(`SELECT ${publicFieldsFromUsersTable} FROM user ORDER BY max_hp DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
