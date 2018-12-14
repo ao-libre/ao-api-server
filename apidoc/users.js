@@ -186,7 +186,7 @@
  */
 
 /**
- * @api {get} users/consejoarmada Get all chars who belong to Consejo Caos
+ * @api {get} users/consejoarmada Get all chars who belong to Consejo Armada
  * @apiVersion 0.1.0
  * @apiName getAllArmadaConsejoUsers
  * @apiGroup User
