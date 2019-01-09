@@ -1,5 +1,5 @@
 {
-  "name": "ao-charfile-reader",
+  "name": "ao-api-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
