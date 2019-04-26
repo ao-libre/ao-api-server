@@ -1,16 +1,10 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 1337;
-const charfile = require('./utils/ao-charfile-reader');
 const db = require('./db');
 
 app.use('/api/v1/users', require('./controllers/users'));
-
-
-app.get("/charfile/:chrFileName", function(request, response)  {
-    console.log(request.params.chrFileName);
-    charfile.getCharFile(request.params.chrFileName).then(console.log).catch(console.error);
-});
+app.use('/api/v1/charfiles', require('./controllers/charfiles'));
 
 
 // Connect to MySQL on start

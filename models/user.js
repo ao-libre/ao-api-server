@@ -1,3 +1,6 @@
+//USERS are the charfiles in the database
+//Use charfile controller to read from charfiles
+
 const db = require('../db.js');
 
 const publicFieldsFromUsersTable = "id, name, level, exp, elu, genre_id, race_id, class_id, home_id, description, gold, bank_gold, pos_map, pos_x, pos_y, body_id, killed_npcs, killed_users, counter_connected, is_logged, min_hp, max_hp, min_man, max_man, min_sta, max_sta, min_ham, max_ham, min_sed, max_sed, min_hit, max_hit, body_id, head_id, weapon_id, helmet_id, shield_id, pertenece_consejo_real, pertenece_consejo_caos, pertenece_caos, pertenece_real, ciudadanos_matados, criminales_matados, is_dead, is_ban";
