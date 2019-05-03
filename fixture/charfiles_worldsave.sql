@@ -1,5 +1,6 @@
-CREATE TABLE charfiles_worldsave ( 
+CREATE TABLE IF NOT EXISTS charfiles_worldsave ( 
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    NOMBRE text,
     ATRIBUTOS_AT1 text,
     ATRIBUTOS_AT2 text,
     ATRIBUTOS_AT3 text,
@@ -259,3 +260,4 @@ CREATE TABLE charfiles_worldsave (
     STATS_MINSTA text,
     STATS_SKILLPTSLIBRES text
 ) 
+

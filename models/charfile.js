@@ -8,191 +8,223 @@ function readIniFile(chrName){
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 
-function writeCharfileInDatabase(charfile) {
-    let chrJson = readIniFile(charfile);
-console.log(chrJson);
-    let query = `INSERT INTO charfiles_worldsave(
-        ATRIBUTOS.AT1
-        ATRIBUTOS.AT2
-        ATRIBUTOS.AT3
-        ATRIBUTOS.AT4
-        ATRIBUTOS.AT5
-        CONSEJO.PERTENECE
-        CONSEJO.PERTENECECAOS
-        CONTACTO.EMAIL
-        COUNTERS.PENA
-        COUNTERS.SKILLSASIGNADOS
-        FACCIONES.CIUDMATADOS
-        FACCIONES.CRIMMATADOS
-        FACCIONES.EJERCITOCAOS
-        FACCIONES.EJERCITOREAL
-        FACCIONES.FECHAINGRESO
-        FACCIONES.MATADOSINGRESO
-        FACCIONES.NEXTRECOMPENSA
-        FACCIONES.NIVELINGRESO
-        FACCIONES.RARCAOS
-        FACCIONES.RARREAL
-        FACCIONES.RECCAOS
-        FACCIONES.RECREAL
-        FACCIONES.REENLISTADAS
-        FACCIONES.REXCAOS
-        FACCIONES.REXREAL
-        FLAGS.BAN
-        FLAGS.DESNUDO
-        FLAGS.ENVENENADO
-        FLAGS.ESCONDIDO
-        FLAGS.HAMBRE
-        FLAGS.LASTMAP
-        FLAGS.MUERTO
-        FLAGS.NAVEGANDO
-        FLAGS.PARALIZADO
-        FLAGS.SED
-        INIT.ARMA
-        INIT.BODY
-        INIT.CASCO
-        INIT.CLASE
-        INIT.DESC
-        INIT.ESCUDO
-        INIT.GENERO
-        INIT.HEAD
-        INIT.HEADING
-        INIT.HOGAR
-        INIT.LASTIP1
-        INIT.LOGGED
-        INIT.PASSWORD
-        INIT.POSITION
-        INIT.RAZA
-        INIT.UPTIME
-        MASCOTAS.MAS1
-        MASCOTAS.MAS2
-        MASCOTAS.MAS3
-        MASCOTAS.NROMASCOTAS
-        MUERTES.NPCSMUERTES
-        MUERTES.USERMUERTES
-        REP.ASESINO
-        REP.BANDIDO
-        REP.BURGUESIA
-        REP.LADRONES
-        REP.NOBLES
-        REP.PLEBE
-        REP.PROMEDIO
-        RESEARCH.TRAINNINGTIME
-        STATS.BANCO
-        STATS.ELU
-        STATS.ELV
-        STATS.EXP
-        STATS.GLD
-        STATS.MAXAGU
-        STATS.MAXHAM
-        STATS.MAXHIT
-        STATS.MAXHP
-        STATS.MAXMAN
-        STATS.MAXSTA
-        STATS.MINAGU
-        STATS.MINHAM
-        STATS.MINHIT
-        STATS.MINHP
-        STATS.MINMAN
-        STATS.MINSTA)
+function writeCharfileWorldSaveTable(charfile) {
+    let charfileJson = readIniFile(charfile);
+    
+    //Hacemos esto para usarlo como Nombre
+    charfile = charfile.replace('.chr', '')
 
-           VALUES(
-            ${chrJson.ATRIBUTOS.AT1},
-            ${chrJson.ATRIBUTOS.AT2},
-            ${chrJson.ATRIBUTOS.AT3},
-            ${chrJson.ATRIBUTOS.AT4},
-            ${chrJson.ATRIBUTOS.AT5},
-            ${chrJson.CONSEJO.PERTENECE},
-            ${chrJson.CONSEJO.PERTENECECAOS},
-            ${chrJson.CONTACTO.EMAIL},
-            ${chrJson.COUNTERS.PENA},
-            ${chrJson.COUNTERS.SKILLSASIGNADOS},
-            ${chrJson.FACCIONES.CIUDMATADOS},
-            ${chrJson.FACCIONES.CRIMMATADOS},
-            ${chrJson.FACCIONES.EJERCITOCAOS},
-            ${chrJson.FACCIONES.EJERCITOREAL},
-            ${chrJson.FACCIONES.FECHAINGRESO},
-            ${chrJson.FACCIONES.MATADOSINGRESO},
-            ${chrJson.FACCIONES.NEXTRECOMPENSA},
-            ${chrJson.FACCIONES.NIVELINGRESO},
-            ${chrJson.FACCIONES.RARCAOS},
-            ${chrJson.FACCIONES.RARREAL},
-            ${chrJson.FACCIONES.RECCAOS},
-            ${chrJson.FACCIONES.RECREAL},
-            ${chrJson.FACCIONES.REENLISTADAS},
-            ${chrJson.FACCIONES.REXCAOS},
-            ${chrJson.FACCIONES.REXREAL},
-            ${chrJson.FLAGS.BAN},
-            ${chrJson.FLAGS.DESNUDO},
-            ${chrJson.FLAGS.ENVENENADO},
-            ${chrJson.FLAGS.ESCONDIDO},
-            ${chrJson.FLAGS.HAMBRE},
-            ${chrJson.FLAGS.LASTMAP},
-            ${chrJson.FLAGS.MUERTO},
-            ${chrJson.FLAGS.NAVEGANDO},
-            ${chrJson.FLAGS.PARALIZADO},
-            ${chrJson.FLAGS.SED},
-            ${chrJson.INIT.ARMA},
-            ${chrJson.INIT.BODY},
-            ${chrJson.INIT.CASCO},
-            ${chrJson.INIT.CLASE},
-            ${chrJson.INIT.DESC},
-            ${chrJson.INIT.ESCUDO},
-            ${chrJson.INIT.GENERO},
-            ${chrJson.INIT.HEAD},
-            ${chrJson.INIT.HEADING},
-            ${chrJson.INIT.HOGAR},
-            ${chrJson.INIT.LASTIP1},
-            ${chrJson.INIT.LOGGED},
-            ${chrJson.INIT.PASSWORD},
-            ${chrJson.INIT.POSITION},
-            ${chrJson.INIT.RAZA},
-            ${chrJson.INIT.UPTIME},
-            ${chrJson.MASCOTAS.MAS1},
-            ${chrJson.MASCOTAS.MAS2},
-            ${chrJson.MASCOTAS.MAS3},
-            ${chrJson.MASCOTAS.NROMASCOTAS},
-            ${chrJson.MUERTES.NPCSMUERTES},
-            ${chrJson.MUERTES.USERMUERTES},
-            ${chrJson.REP.ASESINO},
-            ${chrJson.REP.BANDIDO},
-            ${chrJson.REP.BURGUESIA},
-            ${chrJson.REP.LADRONES},
-            ${chrJson.REP.NOBLES},
-            ${chrJson.REP.PLEBE},
-            ${chrJson.REP.PROMEDIO},
-            ${chrJson.RESEARCH.TRAINNINGTIME},
-            ${chrJson.STATS.BANCO},
-            ${chrJson.STATS.ELU},
-            ${chrJson.STATS.ELV},
-            ${chrJson.STATS.EXP},
-            ${chrJson.STATS.GLD},
-            ${chrJson.STATS.MAXAGU},
-            ${chrJson.STATS.MAXHAM},
-            ${chrJson.STATS.MAXHIT},
-            ${chrJson.STATS.MAXHP},
-            ${chrJson.STATS.MAXMAN},
-            ${chrJson.STATS.MAXSTA},
-            ${chrJson.STATS.MINAGU},
-            ${chrJson.STATS.MINHAM},
-            ${chrJson.STATS.MINHIT},
-            ${chrJson.STATS.MINHP},
-            ${chrJson.STATS.MINMAN},
-            ${chrJson.STATS.MINSTA},
-            ${chrJson.STATS.SKILLPTSLIBRES})`;
+    let query = `INSERT INTO charfiles_worldsave (
+        NOMBRE,
+        ATRIBUTOS_AT1,
+        ATRIBUTOS_AT2,
+        ATRIBUTOS_AT3,
+        ATRIBUTOS_AT4,
+        ATRIBUTOS_AT5,
+        CONSEJO_PERTENECE,
+        CONSEJO_PERTENECECAOS,
+        CONTACTO_EMAIL,
+        COUNTERS_PENA,
+        COUNTERS_SKILLSASIGNADOS,
+        FACCIONES_CIUDMATADOS,
+        FACCIONES_CRIMMATADOS,
+        FACCIONES_EJERCITOCAOS,
+        FACCIONES_EJERCITOREAL,
+        FACCIONES_FECHAINGRESO,
+        FACCIONES_MATADOSINGRESO,
+        FACCIONES_NEXTRECOMPENSA,
+        FACCIONES_NIVELINGRESO,
+        FACCIONES_RARCAOS,
+        FACCIONES_RARREAL,
+        FACCIONES_RECCAOS,
+        FACCIONES_RECREAL,
+        FACCIONES_REENLISTADAS,
+        FACCIONES_REXCAOS,
+        FACCIONES_REXREAL,
+        FLAGS_BAN,
+        FLAGS_DESNUDO,
+        FLAGS_ENVENENADO,
+        FLAGS_ESCONDIDO,
+        FLAGS_HAMBRE,
+        FLAGS_LASTMAP,
+        FLAGS_MUERTO,
+        FLAGS_NAVEGANDO,
+        FLAGS_PARALIZADO,
+        FLAGS_SED,
+        INIT_ARMA,
+        INIT_BODY,
+        INIT_CASCO,
+        INIT_CLASE,
+        INIT_DESC,
+        INIT_ESCUDO,
+        INIT_GENERO,
+        INIT_HEAD,
+        INIT_HEADING,
+        INIT_HOGAR,
+        INIT_LASTIP1,
+        INIT_LOGGED,
+        INIT_PASSWORD,
+        INIT_POSITION,
+        INIT_RAZA,
+        INIT_UPTIME,
+        MASCOTAS_MAS1,
+        MASCOTAS_MAS2,
+        MASCOTAS_MAS3,
+        MASCOTAS_NROMASCOTAS,
+        MUERTES_NPCSMUERTES,
+        MUERTES_USERMUERTES,
+        REP_ASESINO,
+        REP_BANDIDO,
+        REP_BURGUESIA,
+        REP_LADRONES,
+        REP_NOBLES,
+        REP_PLEBE,
+        REP_PROMEDIO,
+        RESEARCH_TRAINNINGTIME,
+        STATS_BANCO,
+        STATS_ELU,
+        STATS_ELV,
+        STATS_EXP,
+        STATS_GLD,
+        STATS_MAXAGU,
+        STATS_MAXHAM,
+        STATS_MAXHIT,
+        STATS_MAXHP,
+        STATS_MAXMAN,
+        STATS_MAXSTA,
+        STATS_MINAGU,
+        STATS_MINHAM,
+        STATS_MINHIT,
+        STATS_MINHP,
+        STATS_MINMAN,
+        STATS_MINSTA
+        )
 
-           
+        VALUES (
+        '${charfile}',
+        '${charfileJson.ATRIBUTOS.AT1}',
+        '${charfileJson.ATRIBUTOS.AT2}',
+        '${charfileJson.ATRIBUTOS.AT3}',
+        '${charfileJson.ATRIBUTOS.AT4}',
+        '${charfileJson.ATRIBUTOS.AT5}',
+        '${charfileJson.CONSEJO.PERTENECE}',
+        '${charfileJson.CONSEJO.PERTENECECAOS}',
+        '${charfileJson.CONTACTO.EMAIL}',
+        '${charfileJson.COUNTERS.PENA}',
+        '${charfileJson.COUNTERS.SKILLSASIGNADOS}',
+        '${charfileJson.FACCIONES.CIUDMATADOS}',
+        '${charfileJson.FACCIONES.CRIMMATADOS}',
+        '${charfileJson.FACCIONES.EJERCITOCAOS}',
+        '${charfileJson.FACCIONES.EJERCITOREAL}',
+        '${charfileJson.FACCIONES.FECHAINGRESO}',
+        '${charfileJson.FACCIONES.MATADOSINGRESO}',
+        '${charfileJson.FACCIONES.NEXTRECOMPENSA}',
+        '${charfileJson.FACCIONES.NIVELINGRESO}',
+        '${charfileJson.FACCIONES.RARCAOS}',
+        '${charfileJson.FACCIONES.RARREAL}',
+        '${charfileJson.FACCIONES.RECCAOS}',
+        '${charfileJson.FACCIONES.RECREAL}',
+        '${charfileJson.FACCIONES.REENLISTADAS}',
+        '${charfileJson.FACCIONES.REXCAOS}',
+        '${charfileJson.FACCIONES.REXREAL}',
+        '${charfileJson.FLAGS.BAN}',
+        '${charfileJson.FLAGS.DESNUDO}',
+        '${charfileJson.FLAGS.ENVENENADO}',
+        '${charfileJson.FLAGS.ESCONDIDO}',
+        '${charfileJson.FLAGS.HAMBRE}',
+        '${charfileJson.FLAGS.LASTMAP}',
+        '${charfileJson.FLAGS.MUERTO}',
+        '${charfileJson.FLAGS.NAVEGANDO}',
+        '${charfileJson.FLAGS.PARALIZADO}',
+        '${charfileJson.FLAGS.SED}',
+        '${charfileJson.INIT.ARMA}',
+        '${charfileJson.INIT.BODY}',
+        '${charfileJson.INIT.CASCO}',
+        '${charfileJson.INIT.CLASE}',
+        '${charfileJson.INIT.DESC}',
+        '${charfileJson.INIT.ESCUDO}',
+        '${charfileJson.INIT.GENERO}',
+        '${charfileJson.INIT.HEAD}',
+        '${charfileJson.INIT.HEADING}',
+        '${charfileJson.INIT.HOGAR}',
+        '${charfileJson.INIT.LASTIP1}',
+        '${charfileJson.INIT.LOGGED}',
+        '${charfileJson.INIT.PASSWORD}',
+        '${charfileJson.INIT.POSITION}',
+        '${charfileJson.INIT.RAZA}',
+        '${charfileJson.INIT.UPTIME}',
+        '${charfileJson.MASCOTAS.MAS1}',
+        '${charfileJson.MASCOTAS.MAS2}',
+        '${charfileJson.MASCOTAS.MAS3}',
+        '${charfileJson.MASCOTAS.NROMASCOTAS}',
+        '${charfileJson.MUERTES.NPCSMUERTES}',
+        '${charfileJson.MUERTES.USERMUERTES}',
+        '${charfileJson.REP.ASESINO}',
+        '${charfileJson.REP.BANDIDO}',
+        '${charfileJson.REP.BURGUESIA}',
+        '${charfileJson.REP.LADRONES}',
+        '${charfileJson.REP.NOBLES}',
+        '${charfileJson.REP.PLEBE}',
+        '${charfileJson.REP.PROMEDIO}',
+        '${charfileJson.RESEARCH.TRAINNINGTIME}',
+        '${charfileJson.STATS.BANCO}',
+        '${charfileJson.STATS.ELU}',
+        '${charfileJson.STATS.ELV}',
+        '${charfileJson.STATS.EXP}',
+        '${charfileJson.STATS.GLD}',
+        '${charfileJson.STATS.MAXAGU}',
+        '${charfileJson.STATS.MAXHAM}',
+        '${charfileJson.STATS.MAXHIT}',
+        '${charfileJson.STATS.MAXHP}',
+        '${charfileJson.STATS.MAXMAN}',
+        '${charfileJson.STATS.MAXSTA}',
+        '${charfileJson.STATS.MINAGU}',
+        '${charfileJson.STATS.MINHAM}',
+        '${charfileJson.STATS.MINHIT}',
+        '${charfileJson.STATS.MINHP}',
+        '${charfileJson.STATS.MINMAN}',
+        '${charfileJson.STATS.MINSTA}')`;
 
-    db.get().query(query, function (err, results, fields) {
-        if (err) throw err;
-        res.status(200).json(results);
+    db.get().query(query, function (err, result, fields) {
+        if (err) console.error('function writeCharfileInDatabase: ' + err);
+        console.info(`${charfile} Guardado en base de datos correctamente`);
     });
 
 };
 
+
+// function createCharfileWorldSaveTemporalTable(){
+//     let query = 'CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;'
+
+//     db.get().query(query, function (err, result, fields) {
+//         if (err) console.error('function backupCharfileWorldSaveTable: ' + err);
+//         console.info('Tabla charfiles_worldsave_temporal creada');
+//     });
+// }
+
+
+// function deleteCharfileWorldSaveTemporalTable(){
+//     let query = 'DROP TABLE IF EXISTS charfiles_worldsave_temporal'
+
+//     db.get().query(query, function (err, result, fields) {
+//         if (err) console.error('function deleteCharfileWorldSaveTemporalTable: ' + err);
+//         console.info('Tabla charfiles_worldsave_temporal borrada exitosamente');
+//     });
+// }
+
+async function truncateCharfileWorldSaveTable(){
+    let query = 'TRUNCATE charfiles_worldsave'
+
+    await db.get().query(query, function (err, result, fields) {
+        if (err) console.error('function truncateCharfileWorldSaveTable: ' + err);
+        console.info('Tabla charfiles_worldsave_temporal TRUNCATE');
+    });
+}
+
 exports.getCharfileByName = function(req, res, chrName) {
     try {
-        let chrJson = readIniFile(`${chrName}.chr`);
-        res.status(202).json(chrJson)
+        let charfileJson = readIniFile(`${chrName}.chr`);
+        res.status(200).json(charfileJson)
       } catch (err) {
 
         if (err.code === 'ENOENT') {
@@ -204,12 +236,27 @@ exports.getCharfileByName = function(req, res, chrName) {
       }
 };
 
-exports.backupCharfiles = function(req, res) {
-    // const directory = "";
-    // let chrFilePath =  path.join(`./charfiles/${chrJson.chrName}.chr`);
+exports.backupCharfiles = async function(req, res) {
+    try {
 
-    let files = fs.readdirSync('./charfiles/');
-    files = files.filter(file => file.endsWith('.chr'));
-    files.forEach(writeCharfileInDatabase);
+        //TODO: Hay que hacer una algo para no andar borrando la tabla en cada worldsave, empece algo pero me dio flojera...
+        // await deleteCharfileWorldSaveTemporalTable()
+        // await createCharfileWorldSaveTemporalTable()
 
+
+        //Primero borramos todo el contenido de la tabla e iniciamos el proceso
+        truncateCharfileWorldSaveTable()
+
+        //No se que onda con los await y el mysql, me da paja....
+        // setTimeout({}, 10000)
+
+        console.info('==== INICIANDO COPIA DE CHARFILES POR WORLDSAVE ======')
+        let files = fs.readdirSync('./charfiles/');
+        files = files.filter(file => file.endsWith('.chr'));
+        files.forEach(writeCharfileWorldSaveTable)
+        res.status(200).send('Se estan guardando los charfiles en la base de datos');
+
+    } catch(err) {
+        console.error('function backupCharfiles: ' + err)
+    }
 };
