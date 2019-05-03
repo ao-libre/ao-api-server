@@ -11,7 +11,7 @@ function readIniFile(chrName){
 function writeCharfileInDatabase(charfile) {
     let chrJson = readIniFile(charfile);
 console.log(chrJson);
-    let query = `INSERT INTO charfiles_worldsaveHide(
+    let query = `INSERT INTO charfiles_worldsave(
         ATRIBUTOS.AT1
         ATRIBUTOS.AT2
         ATRIBUTOS.AT3
