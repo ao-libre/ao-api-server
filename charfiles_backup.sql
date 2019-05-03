@@ -1,0 +1,1 @@
+CREATE TABLE `aolibre_database`.`charfiles_backup` ( `id` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
