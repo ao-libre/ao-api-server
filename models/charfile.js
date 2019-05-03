@@ -191,7 +191,7 @@ console.log(chrJson);
 
 exports.getCharfileByName = function(req, res, chrName) {
     try {
-        let chrJson = readIniFile(`${chrJson.chrName}.chr`);
+        let chrJson = readIniFile(`${chrName}.chr`);
         res.status(202).json(chrJson)
       } catch (err) {
 
