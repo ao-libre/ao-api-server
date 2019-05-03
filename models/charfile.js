@@ -1,25 +1,21 @@
 const fs = require('fs');
 const ini = require('ini');
+const path = require('path');
 
-function readIniFile(charfile){
-    return ini.decode(fs.readFileSync('SHAK.chr', 'utf-8'));
+function readIniFile(chrName){
+    let chrFilePath =  path.join(`./charfiles/${chrName}.chr`);
+    return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 
 function writeCharfileInDatabase(charfile) {
     let chrJson = readIniFile(charfile);
 
-
-
 };
 
 exports.getCharfileByName = function(req, res, chrName) {
-    let fileContents;
-    let charfilePath = `${chrName}.chr`
-
-    console.log(fs.readFileSync('lala.chr'));
     try {
-        fileContents = readIniFile(charfilePath);
-        res.status(202).json(fileContents)
+        let chrJson = readIniFile(chrName);
+        res.status(202).json(chrJson)
       } catch (err) {
 
         if (err.code === 'ENOENT') {
