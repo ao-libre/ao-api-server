@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-// const async = require('async');
 
 const PRODUCTION_DB = 'ao_database';
 const TEST_DB = 'ao_database';
