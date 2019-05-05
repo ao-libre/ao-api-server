@@ -95,25 +95,47 @@ exports.getAllCaosChars = function (req, res) {
 
 exports.backupCharfiles = async function(req, res) {
     try {
+        //POR SI LAS MOSCAS
+        //Primero creo la tabla, esto lo voy a hostear en db4free para no tener que pagar $$$
+        //Y justamente por este motivo puede fallar y no tienen por que brindarte garantias,
+        //Tambien podrian borrar el contenido de las mismas sin previo aviso dicen en su web/
+        //Asi que por eso hago esto...
+        const worldSaveSQLFixture = fs.readFileSync('./fixture/charfiles_worldsave.sql', 'utf8');
+        
+        console.info('==== CREANDO SI NO EXISTIESE TABLA charfiles_worldsave ======')
+        await db.get().query(worldSaveSQLFixture);
 
-        //TODO: Hay que hacer una algo para no andar borrando la tabla en cada worldsave, empece algo pero me dio flojera...
-        // await deleteCharfileWorldSaveTemporalTable()
-        // await createCharfileWorldSaveTemporalTable()
+        
+        console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
+        //Si no existe la tabla temporal que la cree
+        await db.get().query('CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;')
 
-        //Primero borramos todo el contenido de la tabla e iniciamos el proceso
-        console.info('==== TRUNCATE TABLA charfiles_worldsave ======')
-        await truncateCharfileWorldSaveTable()
+        
+        console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
+        //Por si existe, le borramos el contenido
+        await db.get().query('TRUNCATE charfiles_worldsave_temporal')
 
-        console.info('==== INICIANDO COPIA DE CHARFILES POR WORLDSAVE ======')
+        
+        console.info('==== INICIANDO COPIA DE CHARFILES A TABLA charfiles_worldsave_temporal ======')
+        //Se usa la tabla charfiles_worldsave_temporal en este proceso
         let files = fs.readdirSync('./charfiles/');
         files = files.filter(file => file.endsWith('.chr'));
         files.forEach(writeCharfileWorldSaveTable)
-        res.status(200).send('Se estan guardando los charfiles en la base de datos');
+        
+        
+        console.info('==== DROP TABLA charfiles_worldsave ======')
+        await db.get().query('DROP TABLE IF EXISTS charfiles_worldsave')
 
+        console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
+        await db.get().query('RENAME TABLE charfiles_worldsave_temporal TO charfiles_worldsave;')
+
+        res.status(200).send('SE REALIZO CON EXITO LA OPERACION :) , charfiles_worldsave FUE ACTUALIZADA');
     } catch(err) {
+        res.status(500).send(err)
         console.error('function backupCharfiles: ' + err)
     }
 };
+
 
 async function truncateCharfileWorldSaveTable(){
     let query = 'TRUNCATE charfiles_worldsave'
@@ -122,13 +144,13 @@ async function truncateCharfileWorldSaveTable(){
     console.info('Hecho, charfiles_worldsave vacia ');
 }
 
-function writeCharfileWorldSaveTable(charfile) {
+async function writeCharfileWorldSaveTable(charfile) {
     let charfileJson = readIniFile(charfile);
     
     //Hacemos esto para usarlo como Nombre
     charfile = charfile.replace('.chr', '')
 
-    let query = `INSERT INTO charfiles_worldsave (
+    let query = `INSERT INTO charfiles_worldsave_temporal (
         NOMBRE,
         ATRIBUTOS_AT1,
         ATRIBUTOS_AT2,
@@ -299,28 +321,6 @@ function writeCharfileWorldSaveTable(charfile) {
         '${charfileJson.STATS.MINMAN}',
         '${charfileJson.STATS.MINSTA}')`;
 
-    db.get().query(query, function (err, result, fields) {
-        if (err) console.error('function writeCharfileInDatabase: ' + err);
-        console.info(`${charfile} Guardado en base de datos correctamente`);
-    });
-
+    await db.get().query(query);
+    console.info(`${charfile} Guardado en base de datos correctamente`);
 };
-
-// function createCharfileWorldSaveTemporalTable(){
-//     let query = 'CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;'
-
-//     db.get().query(query, function (err, result, fields) {
-//         if (err) console.error('function backupCharfileWorldSaveTable: ' + err);
-//         console.info('Tabla charfiles_worldsave_temporal creada');
-//     });
-// }
-
-
-// function deleteCharfileWorldSaveTemporalTable(){
-//     let query = 'DROP TABLE IF EXISTS charfiles_worldsave_temporal'
-
-//     db.get().query(query, function (err, result, fields) {
-//         if (err) console.error('function deleteCharfileWorldSaveTemporalTable: ' + err);
-//         console.info('Tabla charfiles_worldsave_temporal borrada exitosamente');
-//     });
-// }

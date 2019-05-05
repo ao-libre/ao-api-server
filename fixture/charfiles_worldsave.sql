@@ -259,5 +259,4 @@ CREATE TABLE IF NOT EXISTS charfiles_worldsave (
     STATS_MINMAN text,
     STATS_MINSTA text,
     STATS_SKILLPTSLIBRES text
-) 
-
+)
