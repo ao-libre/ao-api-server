@@ -8,6 +8,120 @@ function readIniFile(chrName){
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 
+exports.getCharfileByName = function(req, res, chrName) {
+    try {
+        let charfileJson = readIniFile(`${chrName}.chr`);
+        res.status(200).json(charfileJson)
+      } catch (err) {
+
+        if (err.code === 'ENOENT') {
+            res.status(404).send('El charfile no existe: ' + charfilePath);
+            console.error('File not found!');
+        } else {
+            res.status(500)
+        }
+      }
+};
+
+exports.getCharByName = function(req, res, name) {
+    db.get().query(`SELECT * FROM charfiles_worldsave WHERE NOMBRE = '${name}';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getAllChars = function(req, res, name) {
+    db.get().query(`SELECT * FROM charfiles_worldsave;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenMaxLeverChars = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_ELV DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenMoreHp = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_MAXHP DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenMoreTimeOnline = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY INIT_UPTIME DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenNpcKiller = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY MUERTES_USERMUERTES DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenCharKiller = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY MUERTES_USERMUERTES DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTopTenMoreGoldChars = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_GLD DESC, STATS_BANCO DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getAllArmadaChars = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOREAL = 1 ORDER by STATS_ELV DESC;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getAllCaosChars = function (req, res) {
+    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by STATS_ELV DESC;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.backupCharfiles = async function(req, res) {
+    try {
+
+        //TODO: Hay que hacer una algo para no andar borrando la tabla en cada worldsave, empece algo pero me dio flojera...
+        // await deleteCharfileWorldSaveTemporalTable()
+        // await createCharfileWorldSaveTemporalTable()
+
+        //Primero borramos todo el contenido de la tabla e iniciamos el proceso
+        console.info('==== TRUNCATE TABLA charfiles_worldsave ======')
+        await truncateCharfileWorldSaveTable()
+
+        console.info('==== INICIANDO COPIA DE CHARFILES POR WORLDSAVE ======')
+        let files = fs.readdirSync('./charfiles/');
+        files = files.filter(file => file.endsWith('.chr'));
+        files.forEach(writeCharfileWorldSaveTable)
+        res.status(200).send('Se estan guardando los charfiles en la base de datos');
+
+    } catch(err) {
+        console.error('function backupCharfiles: ' + err)
+    }
+};
+
+async function truncateCharfileWorldSaveTable(){
+    let query = 'TRUNCATE charfiles_worldsave'
+
+    await db.get().query(query);
+    console.info('Hecho, charfiles_worldsave vacia ');
+}
+
 function writeCharfileWorldSaveTable(charfile) {
     let charfileJson = readIniFile(charfile);
     
@@ -192,7 +306,6 @@ function writeCharfileWorldSaveTable(charfile) {
 
 };
 
-
 // function createCharfileWorldSaveTemporalTable(){
 //     let query = 'CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;'
 
@@ -211,52 +324,3 @@ function writeCharfileWorldSaveTable(charfile) {
 //         console.info('Tabla charfiles_worldsave_temporal borrada exitosamente');
 //     });
 // }
-
-async function truncateCharfileWorldSaveTable(){
-    let query = 'TRUNCATE charfiles_worldsave'
-
-    await db.get().query(query, function (err, result, fields) {
-        if (err) console.error('function truncateCharfileWorldSaveTable: ' + err);
-        console.info('Tabla charfiles_worldsave_temporal TRUNCATE');
-    });
-}
-
-exports.getCharfileByName = function(req, res, chrName) {
-    try {
-        let charfileJson = readIniFile(`${chrName}.chr`);
-        res.status(200).json(charfileJson)
-      } catch (err) {
-
-        if (err.code === 'ENOENT') {
-            res.status(404).send('El charfile no existe: ' + charfilePath);
-            console.error('File not found!');
-        } else {
-            res.status(500)
-        }
-      }
-};
-
-exports.backupCharfiles = async function(req, res) {
-    try {
-
-        //TODO: Hay que hacer una algo para no andar borrando la tabla en cada worldsave, empece algo pero me dio flojera...
-        // await deleteCharfileWorldSaveTemporalTable()
-        // await createCharfileWorldSaveTemporalTable()
-
-
-        //Primero borramos todo el contenido de la tabla e iniciamos el proceso
-        truncateCharfileWorldSaveTable()
-
-        //No se que onda con los await y el mysql, me da paja....
-        // setTimeout({}, 10000)
-
-        console.info('==== INICIANDO COPIA DE CHARFILES POR WORLDSAVE ======')
-        let files = fs.readdirSync('./charfiles/');
-        files = files.filter(file => file.endsWith('.chr'));
-        files.forEach(writeCharfileWorldSaveTable)
-        res.status(200).send('Se estan guardando los charfiles en la base de datos');
-
-    } catch(err) {
-        console.error('function backupCharfiles: ' + err)
-    }
-};
