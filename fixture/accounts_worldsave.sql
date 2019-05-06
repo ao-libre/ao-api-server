@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS accounts_worldsave (
+  id int(6) unsigned NOT NULL AUTO_INCREMENT,
+  ACCOUNTHASH text,
+  INIT_CANTIDADPERSONAJES text,
+  INIT_USERNAME text,
+  PERSONAJE1 text,
+  PERSONAJE2 text,
+  PERSONAJE3 text,
+  PERSONAJE4 text,
+  PERSONAJE5 text,
+  PERSONAJE6 text,
+  PERSONAJE7 text,
+  PERSONAJE8 text,
+  PERSONAJE9 text,
+  PERSONAJE10 text,
+  PRIMARY KEY (id),
+  UNIQUE KEY id (id)
+)

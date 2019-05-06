@@ -3,6 +3,8 @@ const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
 
+let charfilesInSqlArray = []
+
 function readIniFile(chrName){
     let chrFilePath =  path.join(`./charfiles/${chrName}`);
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
@@ -117,6 +119,9 @@ exports.backupCharfiles = async function(req, res) {
 
         
         console.info('==== INICIANDO COPIA DE CHARFILES A TABLA charfiles_worldsave_temporal ======')
+        //Primero limpiamos este array para que el resultado no tenga duplicados.
+        charfilesInSqlArray = []
+
         //Se usa la tabla charfiles_worldsave_temporal en este proceso
         let files = fs.readdirSync('./charfiles/');
         files = files.filter(file => file.endsWith('.chr'));
@@ -129,7 +134,7 @@ exports.backupCharfiles = async function(req, res) {
         console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
         await db.get().query('RENAME TABLE charfiles_worldsave_temporal TO charfiles_worldsave;')
 
-        res.status(200).send('SE REALIZO CON EXITO LA OPERACION :) , charfiles_worldsave FUE ACTUALIZADA');
+        res.status(200).json({charfiles: charfilesInSqlArray});
     } catch(err) {
         res.status(500).send(err)
         console.error('function backupCharfiles: ' + err)
@@ -322,5 +327,6 @@ async function writeCharfileWorldSaveTable(charfile) {
         '${charfileJson.STATS.MINSTA}')`;
 
     await db.get().query(query);
+    charfilesInSqlArray.push(charfile)
     console.info(`${charfile} Guardado en base de datos correctamente`);
 };
