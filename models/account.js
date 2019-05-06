@@ -12,8 +12,6 @@ function readIniFile(accountHash){
 
 async function writeAccountWorldSaveTemporalTable(accountHash) {
     let accountJson = readIniFile(accountHash);
-    console.log(accountHash)
-    console.log(accountJson)
 
     //Hacemos esto para usarlo como ACCOUNTHASH
     accountHash = accountHash.replace('.ach', '')
