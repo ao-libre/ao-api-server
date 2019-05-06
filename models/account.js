@@ -13,6 +13,18 @@ function readIniFile(accountHash){
 async function writeAccountWorldSaveTemporalTable(accountHash) {
     let accountJson = readIniFile(accountHash);
 
+    //We do this validation to avoid undefined on the database
+    accountJson.PERSONAJES.Personaje1 = accountJson.PERSONAJES.Personaje1 || null
+    accountJson.PERSONAJES.Personaje2 = accountJson.PERSONAJES.Personaje2 || null
+    accountJson.PERSONAJES.Personaje3 = accountJson.PERSONAJES.Personaje3 || null
+    accountJson.PERSONAJES.Personaje4 = accountJson.PERSONAJES.Personaje4 || null
+    accountJson.PERSONAJES.Personaje5 = accountJson.PERSONAJES.Personaje5 || null
+    accountJson.PERSONAJES.Personaje6 = accountJson.PERSONAJES.Personaje6 || null
+    accountJson.PERSONAJES.Personaje7 = accountJson.PERSONAJES.Personaje7 || null
+    accountJson.PERSONAJES.Personaje8 = accountJson.PERSONAJES.Personaje8 || null
+    accountJson.PERSONAJES.Personaje9 = accountJson.PERSONAJES.Personaje9 || null
+    accountJson.PERSONAJES.Personaje10 = accountJson.PERSONAJES.Personaje10 || null
+
     //Hacemos esto para usarlo como ACCOUNTHASH
     accountHash = accountHash.replace('.ach', '')
 
