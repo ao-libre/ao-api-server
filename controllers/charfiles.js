@@ -44,4 +44,9 @@ app.get("/backupcharfiles", function (req, res) {
     charfile.backupCharfiles(req, res);
 });
 
+app.get("/lastTimeUpdated", function (req, res) {
+    charfile.getTimeLastUpdated(req, res);
+});
+
+
 module.exports = app;

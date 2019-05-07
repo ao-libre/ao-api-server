@@ -40,21 +40,21 @@ exports.getAllChars = function(req, res, name) {
 };
 
 exports.getTopTenMaxLeverChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_ELV DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_ELV AS UNSIGNED)  DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreHp = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_MAXHP DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_MAXHP AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreTimeOnline = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY INIT_UPTIME DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(INIT_UPTIME AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
@@ -68,28 +68,35 @@ exports.getTopTenNpcKiller = function (req, res) {
 };
 
 exports.getTopTenCharKiller = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY MUERTES_USERMUERTES DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(MUERTES_USERMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreGoldChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY STATS_GLD DESC, STATS_BANCO DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_GLD AS UNSIGNED) DESC, CAST(STATS_BANCO AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getAllArmadaChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOREAL = 1 ORDER by STATS_ELV DESC;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOREAL = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getAllCaosChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by STATS_ELV DESC;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
+exports.getTimeLastUpdated = function (req, res) {
+    db.get().query(`SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_NAME = 'charfiles_worldsave';`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
