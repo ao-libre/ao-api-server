@@ -61,7 +61,7 @@ exports.getTopTenMoreTimeOnline = function (req, res) {
 };
 
 exports.getTopTenNpcKiller = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(MUERTES_USERMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(MUERTES_NPCSMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
