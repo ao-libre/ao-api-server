@@ -1,7 +1,10 @@
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
+
+app.use(cors())
 
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));

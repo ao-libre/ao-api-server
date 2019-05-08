@@ -75,7 +75,8 @@ exports.backupAccountFiles = async function(req, res) {
         console.info('==== CREANDO SI NO EXISTIESE TABLA accounts_worldsave ======')
         await db.get().query(worldSaveAccountTableSQLFixture);
 
-        
+
+        //El proceso se hace en una tabla temporal para nunca perder o dejar sin funcionar otras aplicaciones que leen la bd como el ranking de la pagina
         console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
         //Si no existe la tabla temporal que la cree
         await db.get().query('CREATE TABLE IF NOT EXISTS accounts_worldsave_temporal LIKE accounts_worldsave;')
