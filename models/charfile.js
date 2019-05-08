@@ -102,6 +102,13 @@ exports.getTimeLastUpdated = function (req, res) {
     });
 };
 
+exports.getCountChars = function (req, res) {
+    db.get().query(`SELECT COUNT(id) as COUNT from charfiles_worldsave;`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
 exports.backupCharfiles = async function(req, res) {
     try {
         //POR SI LAS MOSCAS
