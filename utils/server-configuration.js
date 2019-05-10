@@ -3,7 +3,7 @@ const ini = require('ini');
 const path = require('path');
 
 function getServerIniFile() {
-    let serverFilePath = path.join(`./server/server.ini`);
+    let serverFilePath = path.join(`./server/Server.ini`);
     return ini.decode(fs.readFileSync(serverFilePath, 'utf-8'));
 }
 
