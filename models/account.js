@@ -6,7 +6,7 @@ const db = require('../db.js');
 let accountInSqlArray = []
 
 function readIniFile(accountHash){
-    let chrFilePath =  path.join(`./accounts/${accountHash}`);
+    let chrFilePath =  path.join(`./server/Account/${accountHash}`);
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 

@@ -2,37 +2,46 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
+const { getGmsFromServerIni } = require('../utils/server-configuration');
 
 let charfilesInSqlArray = []
 
-function readIniFile(chrName){
-    let chrFilePath =  path.join(`./charfiles/${chrName}`);
+function readIniFile(chrName) {
+    let chrFilePath = path.join(`./server/Charfile/${chrName}`);
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 
-exports.getCharfileByName = function(req, res, chrName) {
+function getFilterGmsClause() {
+    let gmsNamesArray = getGmsFromServerIni();
+    //Separo los elementos del array, pero le agrego '
+    gmsNamesArray = gmsNamesArray.map(i => `'${i}'`).join(',');
+    
+    return `WHERE NOMBRE NOT IN (${gmsNamesArray.toString()})`
+}
+
+exports.getCharfileByName = function (req, res, chrName) {
     try {
         let charfileJson = readIniFile(`${chrName}.chr`);
         res.status(200).json(charfileJson)
-      } catch (err) {
+    } catch (err) {
 
         if (err.code === 'ENOENT') {
-            res.status(404).send('El charfile no existe: ' + charfilePath);
+            res.status(404).send('El charfile no existe: ' + chrName);
             console.error('File not found!');
         } else {
             res.status(500)
         }
-      }
+    }
 };
 
-exports.getCharByName = function(req, res, name) {
+exports.getCharByName = function (req, res, name) {
     db.get().query(`SELECT * FROM charfiles_worldsave WHERE NOMBRE = '${name}';`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
-exports.getAllChars = function(req, res, name) {
+exports.getAllChars = function (req, res, name) {
     db.get().query(`SELECT * FROM charfiles_worldsave;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
@@ -40,56 +49,70 @@ exports.getAllChars = function(req, res, name) {
 };
 
 exports.getTopTenMaxLeverChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_ELV AS UNSIGNED)  DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreHp = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_MAXHP AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_MAXHP AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreTimeOnline = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(INIT_UPTIME AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(INIT_UPTIME AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenNpcKiller = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(MUERTES_NPCSMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(MUERTES_NPCSMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenCharKiller = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(MUERTES_USERMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(MUERTES_USERMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getTopTenMoreGoldChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave ORDER BY CAST(STATS_GLD AS UNSIGNED) DESC, CAST(STATS_BANCO AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_GLD AS UNSIGNED) DESC, CAST(STATS_BANCO AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getAllArmadaChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOREAL = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    let gmsWhereFilterClause = getFilterGmsClause();
+
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} AND WHERE FACCIONES_EJERCITOREAL = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
 };
 
 exports.getAllCaosChars = function (req, res) {
-    db.get().query(`SELECT * FROM charfiles_worldsave WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} AND WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
@@ -109,7 +132,7 @@ exports.getCountChars = function (req, res) {
     });
 };
 
-exports.backupCharfiles = async function(req, res) {
+exports.backupCharfiles = async function (req, res) {
     try {
         //POR SI LAS MOSCAS
         //Primero creo la tabla, esto lo voy a hostear en db4free para no tener que pagar $$$
@@ -117,21 +140,21 @@ exports.backupCharfiles = async function(req, res) {
         //Tambien podrian borrar el contenido de las mismas sin previo aviso dicen en su web/
         //Asi que por eso hago esto...
         const worldSaveSQLFixture = fs.readFileSync('./fixture/charfiles_worldsave.sql', 'utf8');
-        
+
         console.info('==== CREANDO SI NO EXISTIESE TABLA charfiles_worldsave ======')
         await db.get().query(worldSaveSQLFixture);
 
-        
+
         console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
         //Si no existe la tabla temporal que la cree
         await db.get().query('CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;')
 
-        
+
         console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
         //Por si existe, le borramos el contenido
         await db.get().query('TRUNCATE charfiles_worldsave_temporal')
 
-        
+
         console.info('==== INICIANDO COPIA DE CHARFILES A TABLA charfiles_worldsave_temporal ======')
         //Primero limpiamos este array para que el resultado no tenga duplicados.
         charfilesInSqlArray = []
@@ -140,23 +163,23 @@ exports.backupCharfiles = async function(req, res) {
         let files = fs.readdirSync('./charfiles/');
         files = files.filter(file => file.endsWith('.chr'));
         files.forEach(writeCharfileWorldSaveTable)
-        
-        
+
+
         console.info('==== DROP TABLA charfiles_worldsave ======')
         await db.get().query('DROP TABLE IF EXISTS charfiles_worldsave')
 
         console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
         await db.get().query('RENAME TABLE charfiles_worldsave_temporal TO charfiles_worldsave;')
 
-        res.status(200).json({charfiles: charfilesInSqlArray});
-    } catch(err) {
+        res.status(200).json({ charfiles: charfilesInSqlArray });
+    } catch (err) {
         res.status(500).send(err)
         console.error('function backupCharfiles: ' + err)
     }
 };
 
 
-async function truncateCharfileWorldSaveTable(){
+async function truncateCharfileWorldSaveTable() {
     let query = 'TRUNCATE charfiles_worldsave'
 
     await db.get().query(query);
@@ -165,7 +188,7 @@ async function truncateCharfileWorldSaveTable(){
 
 async function writeCharfileWorldSaveTable(charfile) {
     let charfileJson = readIniFile(charfile);
-    
+
     //Hacemos esto para usarlo como Nombre
     charfile = charfile.replace('.chr', '')
 
