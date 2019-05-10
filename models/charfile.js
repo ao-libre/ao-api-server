@@ -6,8 +6,10 @@ const { getGmsFromServerIni } = require('../utils/server-configuration');
 
 let charfilesInSqlArray = []
 
+const CHARFILES_PATH = './server/Charfile/';
+
 function readIniFile(chrName) {
-    let chrFilePath = path.join(`./server/Charfile/${chrName}`);
+    let chrFilePath = path.join(`${CHARFILES_PATH}/${chrName}`);
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
 }
 
@@ -160,7 +162,7 @@ exports.backupCharfiles = async function (req, res) {
         charfilesInSqlArray = []
 
         //Se usa la tabla charfiles_worldsave_temporal en este proceso
-        let files = fs.readdirSync('./charfiles/');
+        let files = fs.readdirSync(CHARFILES_PATH);
         files = files.filter(file => file.endsWith('.chr'));
         files.forEach(writeCharfileWorldSaveTable)
 
