@@ -11,6 +11,7 @@ exports.connect = function(mode, done) {
         user: 'aolibre_database',
         database: 'aolibre_database',
         password: 'cocacola',
+        connectTimeout: 30000
     });
 
     state.mode = mode;

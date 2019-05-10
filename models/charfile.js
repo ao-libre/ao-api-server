@@ -147,14 +147,14 @@ exports.backupCharfiles = async function (req, res) {
         await db.get().query(worldSaveSQLFixture);
 
 
-        console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
         //Si no existe la tabla temporal que la cree
         await db.get().query('CREATE TABLE IF NOT EXISTS charfiles_worldsave_temporal LIKE charfiles_worldsave;')
+        console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
 
 
-        console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
         //Por si existe, le borramos el contenido
         await db.get().query('TRUNCATE charfiles_worldsave_temporal')
+        console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
 
 
         console.info('==== INICIANDO COPIA DE CHARFILES A TABLA charfiles_worldsave_temporal ======')
@@ -167,11 +167,11 @@ exports.backupCharfiles = async function (req, res) {
         files.forEach(writeCharfileWorldSaveTable)
 
 
-        console.info('==== DROP TABLA charfiles_worldsave ======')
         await db.get().query('DROP TABLE IF EXISTS charfiles_worldsave')
+        console.info('==== DROP TABLA charfiles_worldsave ======')
 
-        console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
         await db.get().query('RENAME TABLE charfiles_worldsave_temporal TO charfiles_worldsave;')
+        console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
 
         res.status(200).json({ charfiles: charfilesInSqlArray });
     } catch (err) {

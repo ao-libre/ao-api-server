@@ -79,14 +79,14 @@ exports.backupAccountFiles = async function(req, res) {
 
 
         //El proceso se hace en una tabla temporal para nunca perder o dejar sin funcionar otras aplicaciones que leen la bd como el ranking de la pagina
-        console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
         //Si no existe la tabla temporal que la cree
         await db.get().query('CREATE TABLE IF NOT EXISTS accounts_worldsave_temporal LIKE accounts_worldsave;')
+        console.info('==== CREANDO TABLA charfiles_worldsave_temporal SI NO EXISTE======')
 
         
-        console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
         //Por si existe, le borramos el contenido
         await db.get().query('TRUNCATE accounts_worldsave_temporal')
+        console.info('==== VACIANDO TABLA charfiles_worldsave_temporal ======')
 
         
         console.info('==== INICIANDO COPIA DE CHARFILES A TABLA charfiles_worldsave_temporal ======')
@@ -96,14 +96,14 @@ exports.backupAccountFiles = async function(req, res) {
         //Se usa la tabla accounts_worldsave_temporal en este proceso
         let files = fs.readdirSync(ACCOUNTS_PATH);
         files = files.filter(file => file.endsWith('.ach'));
+        
         files.forEach(writeAccountWorldSaveTemporalTable)
-        
-        
-        console.info('==== DROP TABLA accounts_worldsave ======')
-        await db.get().query('DROP TABLE IF EXISTS accounts_worldsave')
 
-        console.info('==== RENOMBRANDO TABLA accounts_worldsave_temporal a accounts_worldsave ======')
+        await db.get().query('DROP TABLE IF EXISTS accounts_worldsave')
+        console.info('==== DROP TABLA accounts_worldsave ======')
+
         await db.get().query('RENAME TABLE accounts_worldsave_temporal TO accounts_worldsave;')
+        console.info('==== RENOMBRANDO TABLA accounts_worldsave_temporal a accounts_worldsave ======')
 
         res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {
