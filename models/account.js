@@ -94,7 +94,7 @@ exports.backupAccountFiles = async function(req, res) {
         accountInSqlArray = []
 
         //Se usa la tabla accounts_worldsave_temporal en este proceso
-        let files = fs.readdirSync('./accounts/');
+        let files = fs.readdirSync(ACCOUNTS_PATH);
         files = files.filter(file => file.endsWith('.ach'));
         files.forEach(writeAccountWorldSaveTemporalTable)
         
