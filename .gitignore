@@ -1,7 +1,6 @@
 .idea
 .DS_Store
 server/*
-.env
 
 # Logs
 logs

@@ -10,6 +10,7 @@ app.use(cors())
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
 app.use('/api/v1/accounts', require('./controllers/accounts'));
+app.use('/api/v1/emails', require('./controllers/emails'));
 
 
 // Connect to MySQL on start
