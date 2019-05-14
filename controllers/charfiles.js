@@ -52,4 +52,8 @@ app.get("/getCountChars", function (req, res) {
     charfile.getCountChars(req, res);
 });
 
+app.get("/getGameMasters", function (req, res) {
+    charfile.getAllGms(req, res);
+});
+
 module.exports = app;

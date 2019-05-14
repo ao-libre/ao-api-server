@@ -14,11 +14,17 @@ function readIniFile(chrName) {
 }
 
 function getFilterGmsClause() {
-    let gmsNamesArray = getGmsFromServerIni();
-    //Separo los elementos del array, pero le agrego '
-    gmsNamesArray = gmsNamesArray.map(i => `'${i}'`).join(',');
+    let gameMasters = getGmsFromServerIni();
+    let gmsNames = '';
     
-    return `WHERE NOMBRE NOT IN (${gmsNamesArray.toString()})`
+    //Separo los elementos del array, pero le agrego '
+    gmsNames += (gameMasters.admines.map(i => `'${i}'`).join(','));
+    gmsNames += (gameMasters.dioses.map(i => `'${i}'`).join(','));
+    gmsNames += (gameMasters.semidioses.map(i => `'${i}'`).join(','));
+    gmsNames += (gameMasters.consejeros.map(i => `'${i}'`).join(','));
+    gmsNames += (gameMasters.rolemasters.map(i => `'${i}'`).join(','));
+
+    return `WHERE NOMBRE NOT IN (${gmsNames})`
 }
 
 exports.getCharfileByName = function (req, res, chrName) {
@@ -118,6 +124,11 @@ exports.getAllCaosChars = function (req, res) {
         if (err) throw err;
         res.status(200).json(results);
     });
+};
+
+exports.getAllGms= function (req, res) {
+    let gameMasters = getGmsFromServerIni();
+    res.status(200).json(gameMasters);
 };
 
 exports.getTimeLastUpdated = function (req, res) {
