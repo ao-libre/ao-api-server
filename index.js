@@ -14,6 +14,7 @@ app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
 app.use('/api/v1/accounts', require('./controllers/accounts'));
 app.use('/api/v1/emails', require('./controllers/emails'));
+app.use('/api/v1/logs', require('./controllers/logs'));
 
 
 // Connect to MySQL on start

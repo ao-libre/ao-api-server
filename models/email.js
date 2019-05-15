@@ -16,11 +16,11 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     let htmlEmail = fs.readFileSync('./emails/welcome.html', 'utf-8')
     htmlEmail = htmlEmail.replace('VAR_USERNAME', username)
     htmlEmail = htmlEmail.replace('VAR_PASSWORD', password)
-    
+
     var mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
-        subject: 'Bienvenido a Argentum Online',
+        subject: 'Bienvenido a Argentum Online Libre (Alkon 0.13)',
         html: htmlEmail
     };
     
