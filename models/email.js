@@ -16,7 +16,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     let htmlEmail = fs.readFileSync('./emails/welcome.html', 'utf-8')
     htmlEmail = htmlEmail.replace('VAR_USERNAME', username)
     htmlEmail = htmlEmail.replace('VAR_PASSWORD', password)
-    console.log(emailTo)
+    
     var mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
@@ -28,6 +28,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
         if (error) {
             res.status(500).send('No se pudo enviar el email ' + error)
         } else {
+            console.info("Se envio un email de bienvenida a: " + emailTo)
             res.status(200).json('Email sent: ' + info.response)
         }
     }); 
