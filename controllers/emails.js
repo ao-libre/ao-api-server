@@ -2,8 +2,12 @@ const express = require('express');
 const app = express();
 const email = require('../models/email.js');
 
-app.get("/welcome/:emailto", function (req, res) {
-    email.sendWelcomeEmail(req, res, req.params.emailto);
+app.post("/welcome", function (req, res) {
+    let emailTo = req.body.emailTo
+    let username = req.body.username
+    let password = req.body.password
+    
+    email.sendWelcomeEmail(req, res, emailTo, username, password);
 });
 
 module.exports = app;

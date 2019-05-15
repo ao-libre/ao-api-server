@@ -1,10 +1,13 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors')
+const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
 
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors())
 
 app.use('/api/v1/users', require('./controllers/users'));
