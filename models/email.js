@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -12,13 +13,17 @@ const transporter = nodemailer.createTransport({
 })
 
 exports.sendWelcomeEmail = function (req, res, emailTo) {
+    let htmlEmail = fs.readFileSync('./emails/welcome.html', 'utf-8')
+    htmlEmail = htmlEmail.replace('VAR_USERNAME', 'CACA')
+    htmlEmail = htmlEmail.replace('VAR_PASSWORD', 'CACA2')
+
     var mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
         subject: 'Bienvenido a Argentum Online',
-        text: 'Se viene los emails loquito :):):)!'
+        html: htmlEmail
     };
-
+    
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
             res.status(500).send('No se pudo enviar el email ' + error)
