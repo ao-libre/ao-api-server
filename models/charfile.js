@@ -23,7 +23,7 @@ function getFilterGmsClause() {
     gameMasters.semidioses.length > 0 ? gmsNames += `, ${gameMasters.semidioses.map(i => `'${i}'`).join(',')}` : '';
     gameMasters.consejeros.length > 0 ? gmsNames += `, ${ameMasters.consejeros.map(i => `'${i}'`).join(',')}` : '';
     gameMasters.rolemasters.length > 0 ? gmsNames += `, ${ameMasters.rolemasters.map(i => `'${i}'`).join(',')}` : '';
-    console.log(gmsNames);
+
     return `WHERE NOMBRE NOT IN (${gmsNames})`
 }
 
