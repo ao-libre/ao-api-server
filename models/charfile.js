@@ -21,8 +21,8 @@ function getFilterGmsClause() {
     gmsNames += (gameMasters.admines.map(i => `'${i}'`).join(','));
     gameMasters.dioses.length > 0 ? gmsNames += `, ${(gameMasters.dioses.map(i => `'${i}'`).join(','))}` : '';
     gameMasters.semidioses.length > 0 ? gmsNames += `, ${gameMasters.semidioses.map(i => `'${i}'`).join(',')}` : '';
-    gameMasters.consejeros.length > 0 ? gmsNames += `, ${ameMasters.consejeros.map(i => `'${i}'`).join(',')}` : '';
-    gameMasters.rolemasters.length > 0 ? gmsNames += `, ${ameMasters.rolemasters.map(i => `'${i}'`).join(',')}` : '';
+    gameMasters.consejeros.length > 0 ? gmsNames += `, ${gameMasters.consejeros.map(i => `'${i}'`).join(',')}` : '';
+    gameMasters.rolemasters.length > 0 ? gmsNames += `, ${gameMasters.rolemasters.map(i => `'${i}'`).join(',')}` : '';
 
     return `WHERE NOMBRE NOT IN (${gmsNames})`
 }
