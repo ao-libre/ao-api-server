@@ -2,7 +2,7 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
-const { getAllGmsString } = require('../utils/server-configuration');
+const { getAllGmsString, getGmsFromServerIni } = require('../utils/server-configuration');
 
 let charfilesInSqlArray = []
 
