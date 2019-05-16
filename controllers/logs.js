@@ -6,4 +6,9 @@ app.get("/backuplogs", function (req, res) {
     logs.backupLogs(req, res);
 });
 
+app.get("/getAllGmsLogs", function (req, res) {
+    logs.getAllGmsLogs(req, res);
+});
+
+
 module.exports = app;

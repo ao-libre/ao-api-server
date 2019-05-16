@@ -59,12 +59,14 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
         '${accountJson.PERSONAJES.Personaje7}',
         '${accountJson.PERSONAJES.Personaje8}',
         '${accountJson.PERSONAJES.Personaje9}',
-        '${accountJson.PERSONAJES.Personaje10}')`;
+        '${accountJson.PERSONAJES.Personaje10}'
+        )`;
 
     await db.get().query(query);
     accountInSqlArray.push(accountJson.INIT.USERNAME);
-    console.info(`${accountHash} Guardado en base de datos correctamente`);
+    console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
 };
+
 exports.backupAccountFiles = async function(req, res) {
     try {
         //POR SI LAS MOSCAS

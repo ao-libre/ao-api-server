@@ -1,25 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const db = require('../db.js');
+const { getAllGmsString } = require('../utils/server-configuration');
 
 const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
 
-async function writeLogsWorldSaveTemporalTable (file) {
-    const logFilePath = path.join(`${LOGS_PATH}/${file}`);
-
-    const logFileContent = fs.readFileSync(logFilePath, 'utf8')
-    const query = `INSERT INTO logs_worldsave_temporal (
-            filename,
-            log
-            )
-            VALUES (
-            '${file}',
-            '${logFileContent}')`;
-
-    await db.get().query(query);
-    console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
-    logsInSqlArray.push(file);
+exports.getAllGmsLogs = function (req, res) {
+    let gameMasters = getAllGmsString();
+    
+    db.get().query(`SELECT * FROM logs_worldsave where filename in (${gameMasters});`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.backupLogs = async function (req, res) {
@@ -72,3 +65,23 @@ exports.backupLogs = async function (req, res) {
         console.error('function backupLogs: ' + err)
     }
 };
+
+async function writeLogsWorldSaveTemporalTable (file) {
+    const logFilePath = path.join(`${LOGS_PATH}/${file}`);
+
+    const logFileContent = fs.readFileSync(logFilePath, 'utf8')
+    file = file.replace('.log', '')
+
+    const query = `INSERT INTO logs_worldsave_temporal (
+            filename,
+            log
+            )
+            VALUES (
+            '${file}',
+            '${logFileContent}'
+            )`;
+
+    await db.get().query(query);
+    console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
+    logsInSqlArray.push(file);
+}

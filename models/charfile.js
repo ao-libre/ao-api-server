@@ -2,7 +2,7 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
-const { getGmsFromServerIni } = require('../utils/server-configuration');
+const { getAllGmsString } = require('../utils/server-configuration');
 
 let charfilesInSqlArray = []
 
@@ -14,17 +14,8 @@ function readIniFile(chrName) {
 }
 
 function getFilterGmsClause() {
-    let gameMasters = getGmsFromServerIni();
-    let gmsNames = '';
-    
-    //Separo los elementos del array, pero le agrego '
-    gmsNames += (gameMasters.admines.map(i => `'${i}'`).join(','));
-    gameMasters.dioses.length > 0 ? gmsNames += `, ${(gameMasters.dioses.map(i => `'${i}'`).join(','))}` : '';
-    gameMasters.semidioses.length > 0 ? gmsNames += `, ${gameMasters.semidioses.map(i => `'${i}'`).join(',')}` : '';
-    gameMasters.consejeros.length > 0 ? gmsNames += `, ${gameMasters.consejeros.map(i => `'${i}'`).join(',')}` : '';
-    gameMasters.rolemasters.length > 0 ? gmsNames += `, ${gameMasters.rolemasters.map(i => `'${i}'`).join(',')}` : '';
-
-    return `WHERE NOMBRE NOT IN (${gmsNames})`
+    let gameMasters = getAllGmsString();
+    return `WHERE NOMBRE NOT IN (${gameMasters})`
 }
 
 exports.getCharfileByName = function (req, res, chrName) {
@@ -376,9 +367,10 @@ async function writeCharfileWorldSaveTemporalTable(charfile) {
         '${charfileJson.STATS.MINHIT}',
         '${charfileJson.STATS.MINHP}',
         '${charfileJson.STATS.MINMAN}',
-        '${charfileJson.STATS.MINSTA}')`;
+        '${charfileJson.STATS.MINSTA}'
+        )`;
 
     await db.get().query(query);
     charfilesInSqlArray.push(charfile)
-    console.info(`${charfile} Guardado en base de datos correctamente`);
+    console.info(`Charfile: ${charfile} Guardado en base de datos correctamente`);
 };
