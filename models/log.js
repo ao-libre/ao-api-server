@@ -6,13 +6,25 @@ const { getAllGmsString } = require('../utils/server-configuration');
 const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
 
-exports.getAllGmsLogs = function (req, res) {
-    let gameMasters = getAllGmsString();
-    
-    db.get().query(`SELECT * FROM logs_worldsave where filename in (${gameMasters});`, function (err, results, fields) {
-        if (err) throw err;
-        res.status(200).json(results);
-    });
+async function hideIps(data) {
+    return data.replace(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\/\d{2})?/, 'IP OCULTA :)');
+}
+
+exports.getAllGmsLogs = async function (req, res) {
+    try {
+        let gameMasters = getAllGmsString();
+
+        let [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename in (${gameMasters});`);
+        
+        for (const row of rows) {
+            row.log = await hideIps(row.log)
+        }
+        
+        res.status(200).json(rows);
+    }catch {
+        res.status(500).text('Error en getAllGmsLogs');
+    }
+
 }
 
 exports.backupLogs = async function (req, res) {
