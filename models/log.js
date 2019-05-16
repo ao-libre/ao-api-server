@@ -7,7 +7,9 @@ const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
 
 async function hideIps(data) {
-    return data.replace(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\/\d{2})?/, 'IP OCULTA :)');
+    var regex = new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\/\d{2})?/, 'g');
+
+    return data.replace(regex, 'IP OCULTA :)');
 }
 
 exports.getAllGmsLogs = async function (req, res) {
@@ -21,8 +23,8 @@ exports.getAllGmsLogs = async function (req, res) {
         }
         
         res.status(200).json(rows);
-    }catch {
-        res.status(500).text('Error en getAllGmsLogs');
+    } catch (err) {
+        res.status(500).json(err);
     }
 
 }
