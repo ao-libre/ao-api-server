@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 })
 
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
-    let htmlEmail = fs.readFileSync('./emails/welcome.html', 'utf-8')
+    let htmlEmail = fs.readFileSync('./resources/emails/welcome.html', 'utf-8')
     htmlEmail = htmlEmail.replace('VAR_USERNAME', username)
     htmlEmail = htmlEmail.replace('VAR_PASSWORD', password)
 

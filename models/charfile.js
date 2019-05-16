@@ -175,8 +175,10 @@ exports.backupCharfiles = async function (req, res) {
         //Se usa la tabla charfiles_worldsave_temporal en este proceso
         let files = fs.readdirSync(CHARFILES_PATH);
         files = files.filter(file => file.endsWith('.chr'));
-        files.forEach(writeCharfileWorldSaveTable)
 
+        for (const file of files) {
+            await writeCharfileWorldSaveTemporalTable(file)
+        }
 
         await db.get().query('DROP TABLE IF EXISTS charfiles_worldsave')
         console.info('==== DROP TABLA charfiles_worldsave ======')
@@ -199,7 +201,7 @@ async function truncateCharfileWorldSaveTable() {
     console.info('Hecho, charfiles_worldsave vacia ');
 }
 
-async function writeCharfileWorldSaveTable(charfile) {
+async function writeCharfileWorldSaveTemporalTable(charfile) {
     let charfileJson = readIniFile(charfile);
 
     //Hacemos esto para usarlo como Nombre

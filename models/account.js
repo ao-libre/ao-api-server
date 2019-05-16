@@ -97,7 +97,9 @@ exports.backupAccountFiles = async function(req, res) {
         let files = fs.readdirSync(ACCOUNTS_PATH);
         files = files.filter(file => file.endsWith('.ach'));
         
-        files.forEach(writeAccountWorldSaveTemporalTable)
+        for (const file of files) {
+            await writeAccountWorldSaveTemporalTable(file)
+        }
 
         await db.get().query('DROP TABLE IF EXISTS accounts_worldsave')
         console.info('==== DROP TABLA accounts_worldsave ======')

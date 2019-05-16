@@ -5,12 +5,20 @@ const db = require('../db.js');
 const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
 
-async function writeLogsOnDatabase (file) {
+async function writeLogsWorldSaveTemporalTable (file) {
+    const logFilePath = path.join(`${LOGS_PATH}/${file}`);
 
-    const query = `LOAD DATA INFILE '${LOGS_PATH}/${file}' INTO TABLE logs_worldsave_temporal;`
-console.log(query)
+    const logFileContent = fs.readFileSync(logFilePath, 'utf8')
+    const query = `INSERT INTO logs_worldsave_temporal (
+            filename,
+            log
+            )
+            VALUES (
+            '${file}',
+            '${logFileContent}')`;
+
     await db.get().query(query);
-    console.info(`Log: ${file} Guardado en base de datos correctamente`);
+    console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
     logsInSqlArray.push(file);
 }
 
@@ -47,7 +55,10 @@ exports.backupLogs = async function (req, res) {
         //Se usa la tabla logs_worldsave_temporal en este proceso
         let files = fs.readdirSync(LOGS_PATH);
         files = files.filter(file => file.endsWith('.log'));
-        files.forEach(writeLogsOnDatabase)
+
+        for (const file of files) {
+            await writeLogsWorldSaveTemporalTable(file)
+        }
 
         await db.get().query('DROP TABLE IF EXISTS logs_worldsave')
         console.info('==== DROP TABLA logs_worldsave ======')
