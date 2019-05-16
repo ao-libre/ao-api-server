@@ -55,7 +55,7 @@ function getParsedGmsFromServerIni() {
 
 module.exports = {
     getGmsFromServerIni: function() {
-        getParsedGmsFromServerIni()
+        return getParsedGmsFromServerIni()
     },
 
     getAllGmsString: function () {
