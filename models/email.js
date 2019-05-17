@@ -45,9 +45,9 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
     
     //TODO: MANDAR IP??
     htmlContentEmail = htmlContentEmail.replace('VAR_IP', '')
-    
-    const formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
-    htmlContentEmail = htmlContentEmail.replace('VAR_DATE', formatted_date)
+
+    const formattedDate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() 
+    htmlContentEmail = htmlContentEmail.replace('VAR_DATE', formattedDate)
 
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
