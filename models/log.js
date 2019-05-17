@@ -29,63 +29,45 @@ exports.getAllGmsLogs = async function (req, res) {
 }
 
 exports.getErrorsLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename in ('errores', 'ip', 'eventos');`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename in ('errores', 'ip', 'eventos');`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getBackupsLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'backups';`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename = 'backups';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getNumUsersLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getStatisticsLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'statistics';`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename = 'statistics';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getMainLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'main';`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getDesarrolloLogs = async function (req, res) {
-    try {
-        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`);
-    
-        res.status(200).json(rows);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
 }
 
 exports.getTimeLastUpdated = function (req, res) {
