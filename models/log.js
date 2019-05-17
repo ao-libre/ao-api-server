@@ -57,7 +57,7 @@ exports.getStatisticsLogs = async function (req, res) {
 }
 
 exports.getMainLogs = async function (req, res) {
-    db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`, function (err, results, fields) {
+    db.get().query(`SELECT * FROM logs_worldsave where filename = 'Main';`, function (err, results, fields) {
         if (err) throw err;
         res.status(200).json(results);
     });
