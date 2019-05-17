@@ -88,6 +88,13 @@ exports.getDesarrolloLogs = async function (req, res) {
     }
 }
 
+exports.getTimeLastUpdated = function (req, res) {
+    db.get().query(`SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_NAME = 'logs_worldsave';`, function (err, results, fields) {
+        if (err) throw err;
+        res.status(200).json(results);
+    });
+};
+
 exports.backupLogs = async function (req, res) {
     try {
         //HACER REFACTOR DE ESTO Y PONERLO EN ALGUN LUGAR COPADO

@@ -34,4 +34,8 @@ app.get("/getStatisticsLogs", function (req, res) {
     logs.getStatisticsLogs(req, res);
 });
 
+app.get("/getTimeLastUpdated", function (req, res) {
+    logs.getTimeLastUpdated(req, res);
+});
+
 module.exports = app;
