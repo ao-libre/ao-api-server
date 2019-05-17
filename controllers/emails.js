@@ -12,10 +12,11 @@ app.post("/welcome", function (req, res) {
 
 app.post("/loginAccount", function (req, res) {
     let emailTo = req.body.emailTo
-    let ip = req.body.ip
-    let date = req.body.date
-    
-    email.sendLoginEmail(req, res, emailTo, ip, date);
+    let date = new Date()
+    //TODO: Enviar IP ??    
+    // let ip = req.body.ip
+
+    email.sendLoginEmail(req, res, emailTo, date);
 });
 
 module.exports = app;

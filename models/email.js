@@ -39,11 +39,15 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     }); 
 };
 
-exports.sendLoginEmail = function (req, res, emailTo, ip, date) {
+exports.sendLoginEmail = function (req, res, emailTo, date) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
     let htmlContentEmail = fs.readFileSync('./resources/emails/loginAccount.html', 'utf-8')
-    htmlContentEmail = htmlContentEmail.replace('VAR_IP', ip)
-    htmlContentEmail = htmlContentEmail.replace('VAR_DATE', date)
+    
+    //TODO: MANDAR IP??
+    htmlContentEmail = htmlContentEmail.replace('VAR_IP', '')
+    
+    const formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
+    htmlContentEmail = htmlContentEmail.replace('VAR_DATE', formatted_date)
 
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
