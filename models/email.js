@@ -46,8 +46,8 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
     //TODO: MANDAR IP??
     htmlContentEmail = htmlContentEmail.replace('VAR_IP', '')
 
-    const yyyymmdd = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear() + " "
-    const hourAndMinutes = (charfilesLastUpdate.getHours()<10?'0':'') + charfilesLastUpdate.getHours() + ":" + (charfilesLastUpdate.getMinutes()<10?'0':'') + charfilesLastUpdate.getMinutes()
+    var yyyymmdd = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " ";
+    const hourAndMinutes = (date.getHours()<10?'0':'') + date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes()
 
     const formattedDate = yyyymmdd + hourAndMinutes
 
