@@ -11,25 +11,56 @@ const transporter = nodemailer.createTransport({
       pass: process.env.EMAIL_PASSWORD,
     }
 })
+const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
 
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
-    let htmlEmail = fs.readFileSync('./resources/emails/welcome.html', 'utf-8')
-    htmlEmail = htmlEmail.replace('VAR_USERNAME', username)
-    htmlEmail = htmlEmail.replace('VAR_PASSWORD', password)
+    //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
+    let htmlContentEmail = fs.readFileSync('./resources/emails/welcome.html', 'utf-8')
+    htmlContentEmail = htmlContentEmail.replace('VAR_USERNAME', username)
+    htmlContentEmail = htmlContentEmail.replace('VAR_PASSWORD', password)
+
+    //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
+    htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
     var mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
-        subject: 'Bienvenido a Argentum Online Libre (Alkon 0.13)',
-        html: htmlEmail
+        subject: '🗡 Bienvenido a Argentum Online Libre (Alkon 0.13) ⚔️',
+        html: htmlContentEmail
     };
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            res.status(500).send('No se pudo enviar el email ' + error)
+            res.status(500).send('No se pudo enviar el email de bienvenida' + error)
         } else {
             console.info("Se envio un email de bienvenida a: " + emailTo)
-            res.status(200).json('Email sent: ' + info.response)
+            res.status(200).json('Email welcome sent: ' + info.response)
+        }
+    }); 
+};
+
+exports.sendLoginEmail = function (req, res, emailTo, ip, date) {
+    //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
+    let htmlContentEmail = fs.readFileSync('./resources/emails/loginAccount.html', 'utf-8')
+    htmlContentEmail = htmlContentEmail.replace('VAR_IP', ip)
+    htmlContentEmail = htmlContentEmail.replace('VAR_DATE', date)
+
+    //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
+    htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
+
+    var mailOptions = {
+        from: process.env.EMAIL,
+        to: emailTo,
+        subject: '🛡 Nuevo inicio de sesión en Argentum Online Libre',
+        html: htmlContentEmail
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            res.status(500).send('No se pudo enviar el email de login' + error)
+        } else {
+            console.info("Se envio un email de login a: " + emailTo)
+            res.status(200).json('Email login sent: ' + info.response)
         }
     }); 
 };
