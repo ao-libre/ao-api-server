@@ -30,4 +30,8 @@ app.get("/getDesarrolloLogs", function (req, res) {
     logs.getMainLogs(req, res);
 });
 
+app.get("/getStatisticsLogs", function (req, res) {
+    logs.getStatisticsLogs(req, res);
+});
+
 module.exports = app;

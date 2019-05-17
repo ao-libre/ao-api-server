@@ -58,6 +58,16 @@ exports.getNumUsersLogs = async function (req, res) {
     }
 }
 
+exports.getStatisticsLogs = async function (req, res) {
+    try {
+        const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'statistics';`);
+    
+        res.status(200).json(rows);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
 exports.getMainLogs = async function (req, res) {
     try {
         const [rows] = await db.get().query(`SELECT * FROM logs_worldsave where filename = 'main';`);
