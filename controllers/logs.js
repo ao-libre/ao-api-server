@@ -27,7 +27,7 @@ app.get("/getMainLogs", function (req, res) {
 });
 
 app.get("/getDesarrolloLogs", function (req, res) {
-    logs.getMainLogs(req, res);
+    logs.getDesarrolloLogs(req, res);
 });
 
 app.get("/getStatisticsLogs", function (req, res) {
