@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
 const fs = require('fs');
+const ip = require("ip");
+const { encriptPassword, getSaltFromAccount } = require("./account")
+
+const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -11,7 +15,6 @@ const transporter = nodemailer.createTransport({
       pass: process.env.EMAIL_PASSWORD,
     }
 })
-const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
 
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
@@ -25,7 +28,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     var mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
-        subject: '🗡 Bienvenido a Argentum Online Libre (Alkon 0.13) ⚔️',
+        subject: '🗡 Bienvenido a Argentum Online Libre (Alkon) ⚔️',
         html: htmlContentEmail
     };
     
@@ -69,6 +72,37 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
         } else {
             console.info("Se envio un email de login a: " + emailTo)
             res.status(200).json('Email login sent: ' + info.response)
+        }
+    }); 
+};
+
+exports.sendResetAccountPassword = function (req, res, email, password) {
+    //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
+    let htmlContentEmail = fs.readFileSync('./resources/emails/resetPassword.html', 'utf-8')
+    
+    //Obtenemos la salt del personaje, encriptamos la password y mandamos el email
+    const salt = getSaltFromAccount(req, res, email)
+    const encriptedPassword = encriptPassword(password, salt);
+    const linkResetPasswordEndpoint = `http://${ip.address()}:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
+
+    htmlContentEmail = htmlContentEmail.replace('VAR_LINK_ENDPOINT_RESET_PASSWORD', linkResetPasswordEndpoint)
+
+    //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
+    htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
+
+    var mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: '🔑 Reset Password Cuenta Argentum Online Libre (Alkon) 🔐',
+        html: htmlContentEmail
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            res.status(500).send('No se pudo enviar el email de reset password' + error)
+        } else {
+            console.info("Se envio un email de reset password a: " + email)
+            res.status(200).json('Email reset password sent: ' + info.response)
         }
     }); 
 };

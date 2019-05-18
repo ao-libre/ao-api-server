@@ -2,14 +2,19 @@ const fs = require('fs');
 const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
+const sha256 = require('js-sha256');
 
 let accountInSqlArray = []
 
 const ACCOUNTS_PATH = './server/Account/';
 
-function readIniFile(accountHash){
-    let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${accountHash}`);
+function readIniFile(fileName){
+    let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
     return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
+}
+
+function writeIniFile(fileName, fileContent){
+    fs.writeFileSync(`${ACCOUNTS_PATH}/${fileName}`, ini.stringify(fileContent))
 }
 
 async function writeAccountWorldSaveTemporalTable(accountHash) {
@@ -111,7 +116,48 @@ exports.backupAccountFiles = async function(req, res) {
 
         res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {
-        res.status(500).send(err)
+        res.status(500).send(err.toString())
         console.error('function backupAccountFiles: ' + err)
     }
 };
+
+exports.resetPassword = async function (req, res, email, newPassword) {
+    try {
+        let accountJson = readIniFile(`${email}.acc`);
+        accountJson.INIT.PASSWORD = newPassword;
+
+        await writeIniFile(`${email}.acc`, accountJson);
+
+        res.status(200).send(`Password de la cuenta ${email} fue cambiado correctamente :)`);
+        console.info(`Password de la cuenta ${email} fue cambiado correctamente por: ${newPassword}`)
+    } catch (err) {
+        res.status(500).send(err.toString())
+        console.error('function resetPassword: ' + err)
+    }
+};
+
+exports.encriptPassword = function (password, salt){
+    return sha256(password + salt)
+}
+
+
+exports.getSaltFromAccount = function (req, res, email) {
+    try {
+        let accountJson = readIniFile(`${email}.acc`);
+        return accountJson.SALT
+    } catch (err) {
+        res.status(500).send(err.toString())
+    }
+};
+
+
+// exports.getPasswordEncripted = function (req, res, email) {
+//     try {
+//         let accountJson = readIniFile(`${email}.acc`);
+//         return sha256(accountJson.PASSWORD + accountJson.SALT)
+
+//     } catch (err) {
+//         res.status(500).send(err.toString())
+//     }
+// };
+

@@ -20,4 +20,12 @@ app.post("/loginAccount", function (req, res) {
     email.sendLoginEmail(req, res, emailTo, date);
 });
 
+app.post("/resetAccountPassword", function (req, res) {
+    let emailTo = req.body.emailTo
+    let newPassword = req.body.newPassword
+
+    email.sendResetAccountPassword(req, res, emailTo, newPassword);
+});
+
+
 module.exports = app;
