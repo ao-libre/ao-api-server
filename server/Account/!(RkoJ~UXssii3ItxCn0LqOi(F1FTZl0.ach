@@ -1,15 +1,3 @@
 [INIT]
 CANTIDADPERSONAJES=10
 USERNAME=NADIE@GMAIL.COM
-
-[PERSONAJES]
-Personaje1=SHAK
-Personaje2=SHAK
-Personaje3=SHAK
-Personaje4=SHAK
-Personaje5=SHAK
-Personaje6=SHAK
-Personaje7=SHAK
-Personaje8=SHAK
-Personaje9=SHAK
-Personaje10=SHAK
