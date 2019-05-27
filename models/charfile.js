@@ -26,7 +26,7 @@ exports.getCharfileByName = function (req, res, chrName) {
 
         if (err.code === 'ENOENT') {
             res.status(404).send('El charfile no existe: ' + chrName);
-            console.error('File not found!');
+            console.error('\x1b[31m%s\x1b[0m', 'File not found!');
         } else {
             res.status(500)
         }
@@ -180,7 +180,7 @@ exports.backupCharfiles = async function (req, res) {
         res.status(200).json({ charfiles: charfilesInSqlArray });
     } catch (err) {
         res.status(500).send(err)
-        console.error('function backupCharfiles: ' + err)
+        console.error('\x1b[31m%s\x1b[0m', 'function backupCharfiles: ' + err)
     }
 };
 

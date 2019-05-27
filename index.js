@@ -20,13 +20,13 @@ app.use('/api/v1/logs', require('./controllers/logs'));
 // Connect to MySQL on start
 db.connect(function(err) {
     if (err) {
-        console.log('Unable to connect to MySQL.')
+        console.error('\x1b[31m%s\x1b[0m', 'Unable to connect to MySQL.')
         process.exit(1)
     } else {
         app.listen(port, function () {
             var datetime = new Date();
-            var message = "Server running on Port:- " + port + " Started at :- " + datetime;
-            console.log(message);
+            var message = "Argentum Online API on Port:- " + port + " Started at :- " + datetime;
+            console.log('\x1b[35m%s\x1b[0m', message);
         });
     }
 });

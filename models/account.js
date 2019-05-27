@@ -134,7 +134,7 @@ exports.backupAccountFiles = async function(req, res) {
         res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {
         res.status(500).send(err.toString())
-        console.error('function backupAccountFiles: ' + err)
+        console.error('\x1b[31m%s\x1b[0m', 'function backupAccountFiles: ' + err)
     }
 };
 
@@ -149,7 +149,7 @@ exports.resetPassword = async function (req, res, email, newPassword) {
         console.info(`Password de la cuenta ${email} fue cambiado correctamente por: ${newPassword}`)
     } catch (err) {
         res.status(500).send(err.toString())
-        console.error('function resetPassword: ' + err)
+        console.error('\x1b[31m%s\x1b[0m', 'function resetPassword: ' + err)
     }
 };
 

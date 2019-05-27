@@ -34,7 +34,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-			console.error("ERROR - sendWelcomeEmail error: " + error)
+			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendWelcomeEmail error: " + error)
             return res.status(500).send('No se pudo enviar el email de bienvenida' + error)
         } else {
             console.info("Se envio un email de bienvenida a: " + emailTo)
@@ -69,7 +69,7 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-			console.error("ERROR - sendLoginEmail error: " + error)
+			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendLoginEmail error: " + error)
             return res.status(500).send('No se pudo enviar el email de login' + error)
         } else {
             console.info("Se envio un email de login a: " + emailTo)
@@ -101,7 +101,7 @@ exports.sendResetAccountPassword = async function (req, res, email, password) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-			console.error("ERROR - sendResetAccountPassword error: " + error)
+			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendResetAccountPassword error: " + error)
             return res.status(500).send({error: 'No se pudo enviar el email de reset password'})
         } else {
             console.info("Se envio un email de reset password a: " + email)

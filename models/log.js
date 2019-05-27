@@ -124,7 +124,7 @@ exports.backupLogs = async function (req, res) {
         res.status(200).json({ logs: logsInSqlArray });
     } catch (err) {
         res.status(500).send(err)
-        console.error('function backupLogs: ' + err)
+        console.error('\x1b[31m%s\x1b[0m', 'function backupLogs: ' + err)
     }
 };
 
