@@ -161,7 +161,7 @@ exports.encriptPassword = function (password, salt){
 exports.getSaltFromAccount = function (email) {
 	try {
 		let accountJson = readIniFile(`${email}.acc`);
-		return accountJson.SALT
+		return accountJson.INIT.SALT
 	} catch (error){
 		return error
 	}
