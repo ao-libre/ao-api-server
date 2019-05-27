@@ -21,14 +21,14 @@ function getFilterGmsClause() {
 exports.getCharfileByName = function (req, res, chrName) {
     try {
         let charfileJson = readIniFile(`${chrName}.chr`);
-        res.status(200).json(charfileJson)
+        return res.status(200).json(charfileJson)
     } catch (err) {
 
         if (err.code === 'ENOENT') {
-            res.status(404).send('El charfile no existe: ' + chrName);
             console.error('\x1b[31m%s\x1b[0m', 'File not found!');
+            return res.status(404).send('El charfile no existe: ' + chrName);
         } else {
-            res.status(500)
+            return res.status(500)
         }
     }
 };
@@ -36,14 +36,14 @@ exports.getCharfileByName = function (req, res, chrName) {
 exports.getCharByName = function (req, res, name) {
     db.get().query(`SELECT * FROM charfiles_worldsave WHERE NOMBRE = '${name}';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
 exports.getAllChars = function (req, res, name) {
     db.get().query(`SELECT * FROM charfiles_worldsave;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -52,7 +52,7 @@ exports.getTopTenMaxLeverChars = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -61,7 +61,7 @@ exports.getTopTenMoreHp = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_MAXHP AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -70,7 +70,7 @@ exports.getTopTenMoreTimeOnline = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(INIT_UPTIME AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -79,7 +79,7 @@ exports.getTopTenNpcKiller = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(MUERTES_NPCSMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -88,7 +88,7 @@ exports.getTopTenCharKiller = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(MUERTES_USERMUERTES AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -97,7 +97,7 @@ exports.getTopTenMoreGoldChars = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} ORDER BY CAST(STATS_GLD AS UNSIGNED) DESC, CAST(STATS_BANCO AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -106,33 +106,33 @@ exports.getAllArmadaChars = function (req, res) {
 
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} AND WHERE FACCIONES_EJERCITOREAL = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
 exports.getAllCaosChars = function (req, res) {
     db.get().query(`SELECT * FROM charfiles_worldsave ${gmsWhereFilterClause} AND WHERE FACCIONES_EJERCITOCAOS = 1 ORDER by CAST(STATS_ELV AS UNSIGNED) DESC LIMIT 10;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
 exports.getAllGms= function (req, res) {
     let gameMasters = getGmsFromServerIni();
-    res.status(200).json(gameMasters);
+    return res.status(200).json(gameMasters);
 };
 
 exports.getTimeLastUpdated = function (req, res) {
     db.get().query(`SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_NAME = 'charfiles_worldsave';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
 exports.getCountChars = function (req, res) {
     db.get().query(`SELECT COUNT(id) as COUNT from charfiles_worldsave;`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -177,10 +177,10 @@ exports.backupCharfiles = async function (req, res) {
         await db.get().query('RENAME TABLE charfiles_worldsave_temporal TO charfiles_worldsave;')
         console.info('==== RENOMBRANDO TABLA charfiles_worldsave_temporal a charfiles_worldsave ======')
 
-        res.status(200).json({ charfiles: charfilesInSqlArray });
+        return res.status(200).json({ charfiles: charfilesInSqlArray });
     } catch (err) {
-        res.status(500).send(err)
         console.error('\x1b[31m%s\x1b[0m', 'function backupCharfiles: ' + err)
+        return res.status(500).send(err)
     }
 };
 

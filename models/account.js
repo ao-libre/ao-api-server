@@ -131,10 +131,10 @@ exports.backupAccountFiles = async function(req, res) {
         await db.get().query('RENAME TABLE accounts_worldsave_temporal TO accounts_worldsave;')
         console.info('==== RENOMBRANDO TABLA accounts_worldsave_temporal a accounts_worldsave ======')
 
-        res.status(200).json({accounts: accountInSqlArray});
+        return res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {
-        res.status(500).send(err.toString())
         console.error('\x1b[31m%s\x1b[0m', 'function backupAccountFiles: ' + err)
+        return res.status(500).send(err.toString())
     }
 };
 
@@ -145,11 +145,11 @@ exports.resetPassword = async function (req, res, email, newPassword) {
 
         await writeIniFile(`${email}.acc`, accountJson);
 
-        res.status(200).send(`Password de la cuenta ${email} fue cambiado correctamente :)`);
         console.info(`Password de la cuenta ${email} fue cambiado correctamente por: ${newPassword}`)
+        return res.status(200).send(`Password de la cuenta ${email} fue cambiado correctamente :)`);
     } catch (err) {
-        res.status(500).send(err.toString())
         console.error('\x1b[31m%s\x1b[0m', 'function resetPassword: ' + err)
+        return res.status(500).send(err.toString())
     }
 };
 
@@ -175,7 +175,7 @@ exports.getSaltFromAccount = function (email) {
 //         return sha256(accountJson.PASSWORD + accountJson.SALT)
 
 //     } catch (err) {
-//         res.status(500).send(err.toString())
+//         return res.status(500).send(err.toString())
 //     }
 // };
 

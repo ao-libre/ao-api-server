@@ -22,58 +22,58 @@ exports.getAllGmsLogs = async function (req, res) {
             row.log = await hideIps(row.log)
         }
         
-        res.status(200).json(rows);
+        return res.status(200).json(rows);
     } catch (err) {
-        res.status(500).json(err);
+        return res.status(500).json(err);
     }
 }
 
 exports.getErrorsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename in ('errores', 'ip', 'eventos');`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getBackupsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'backups';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getNumUsersLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getStatisticsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'statistics';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getMainLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'Main';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getDesarrolloLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 }
 
 exports.getTimeLastUpdated = function (req, res) {
     db.get().query(`SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_NAME = 'logs_worldsave';`, function (err, results, fields) {
         if (err) throw err;
-        res.status(200).json(results);
+        return res.status(200).json(results);
     });
 };
 
@@ -121,10 +121,10 @@ exports.backupLogs = async function (req, res) {
         await db.get().query('RENAME TABLE logs_worldsave_temporal TO logs_worldsave;')
         console.info('==== RENOMBRANDO TABLA logs_worldsave_temporal a logs_worldsave ======')
 
-        res.status(200).json({ logs: logsInSqlArray });
+        return res.status(200).json({ logs: logsInSqlArray });
     } catch (err) {
-        res.status(500).send(err)
         console.error('\x1b[31m%s\x1b[0m', 'function backupLogs: ' + err)
+        return res.status(500).send(err)
     }
 };
 
