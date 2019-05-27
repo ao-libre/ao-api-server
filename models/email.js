@@ -34,10 +34,11 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            res.status(500).send('No se pudo enviar el email de bienvenida' + error)
+			console.error("ERROR - sendWelcomeEmail error: " + error)
+            return res.status(500).send('No se pudo enviar el email de bienvenida' + error)
         } else {
             console.info("Se envio un email de bienvenida a: " + emailTo)
-            res.status(200).json('Email welcome sent: ' + info.response)
+            return res.status(200).send('Email welcome sent: ' + info.response)
         }
     }); 
 };
@@ -68,22 +69,23 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            res.status(500).send('No se pudo enviar el email de login' + error)
+			console.error("ERROR - sendLoginEmail error: " + error)
+            return res.status(500).send('No se pudo enviar el email de login' + error)
         } else {
             console.info("Se envio un email de login a: " + emailTo)
-            res.status(200).json('Email login sent: ' + info.response)
+            return res.status(200).send('Email login sent: ' + info.response)
         }
     }); 
 };
 
-exports.sendResetAccountPassword = function (req, res, email, password) {
+exports.sendResetAccountPassword = async function (req, res, email, password) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
     let htmlContentEmail = fs.readFileSync('./resources/emails/resetPassword.html', 'utf-8')
     
     //Obtenemos la salt del personaje, encriptamos la password y mandamos el email
-    const salt = getSaltFromAccount(req, res, email)
-    const encriptedPassword = encriptPassword(password, salt);
-    const linkResetPasswordEndpoint = `http://${ip.address()}:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
+    const salt = getSaltFromAccount(email)
+    const encriptedPassword = await encriptPassword(password, salt);
+	const linkResetPasswordEndpoint = `http://${ip.address()}:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
 
     htmlContentEmail = htmlContentEmail.replace('VAR_LINK_ENDPOINT_RESET_PASSWORD', linkResetPasswordEndpoint)
 
@@ -99,10 +101,11 @@ exports.sendResetAccountPassword = function (req, res, email, password) {
     
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-            res.status(500).send('No se pudo enviar el email de reset password' + error)
+			console.error("ERROR - sendResetAccountPassword error: " + error)
+            return res.status(500).send({error: 'No se pudo enviar el email de reset password'})
         } else {
             console.info("Se envio un email de reset password a: " + email)
-            res.status(200).json('Email reset password sent: ' + info.response)
+			return res.status(200).send('Email reset password sent: ' + info.response)
         }
     }); 
 };

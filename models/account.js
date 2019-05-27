@@ -158,13 +158,14 @@ exports.encriptPassword = function (password, salt){
 }
 
 
-exports.getSaltFromAccount = function (req, res, email) {
-    try {
-        let accountJson = readIniFile(`${email}.acc`);
-        return accountJson.SALT
-    } catch (err) {
-        res.status(500).send(err.toString())
-    }
+exports.getSaltFromAccount = function (email) {
+	try {
+		let accountJson = readIniFile(`${email}.acc`);
+		return accountJson.SALT
+	} catch (error){
+		return error
+	}
+
 };
 
 

@@ -7,6 +7,8 @@ app.post("/welcome", function (req, res) {
     let username = req.body.username
     let password = req.body.password
     
+	console.info("welcome: " + req.body.emailTo)
+	
     email.sendWelcomeEmail(req, res, emailTo, username, password);
 });
 
@@ -16,15 +18,19 @@ app.post("/loginAccount", function (req, res) {
     
     //TODO: Enviar IP ??    
     // let ip = req.body.ip
-
-    email.sendLoginEmail(req, res, emailTo, date);
+	
+	console.info("loginAccount: " + req.body.emailTo)
+    
+	email.sendLoginEmail(req, res, emailTo, date);
 });
 
 app.post("/resetAccountPassword", function (req, res) {
     let emailTo = req.body.emailTo
     let newPassword = req.body.newPassword
-
-    email.sendResetAccountPassword(req, res, emailTo, newPassword);
+	
+	console.info("resetAccountPassword: " + emailTo)
+    
+	email.sendResetAccountPassword(req, res, emailTo, newPassword);
 });
 
 
