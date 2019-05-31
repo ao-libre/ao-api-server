@@ -47,3 +47,20 @@ To update the API Documentation after modifications run this command:
 ```
 apidoc -i apidoc/ -o docs/   
 ```
+
+## Actualizar librerias NPM
+
+To update the NPM packages enter this command BEFORE you enter `npm start`:
+
+Install `NPM-CHECK-UPDATES` package:
+```
+npm install -g npm-check-updates
+```
+
+Then, update the packages:
+
+```
+ncu -n -u --loglevel verbose --packageFile package.json`
+```
+
+This will update all the packages alongside with Package.json

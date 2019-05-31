@@ -1,7 +1,7 @@
-const mysql = require('mysql2/promise');
+const mariadb = require('mariadb');
 
 exports.connect = function(callback) {
-    pool = mysql.createPool({
+    pool = mariadb.createPool({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         database: process.env.DB_NAME,
