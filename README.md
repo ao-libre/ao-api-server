@@ -60,7 +60,7 @@ npm install -g npm-check-updates
 Then, update the packages:
 
 ```
-ncu -n -u --loglevel verbose --packageFile package.json`
+ncu -n -u --loglevel verbose --packageFile package.json
 ```
 
 This will update all the packages alongside with Package.json
