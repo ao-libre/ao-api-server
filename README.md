@@ -39,6 +39,10 @@ qckwinsvc --name "AO-API-SERVER" --description "Node.js API para controlar algun
 ```
 mas info: https://www.npmjs.com/package/qckwinsvc
 
+## Postman Collection
+
+https://www.getpostman.com/collections/85121eafa43c37d0d7e7
+
 
 ## API Documentation:
 https://ao-libre.github.io/ao-api-server/index.html
