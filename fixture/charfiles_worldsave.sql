@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS charfiles_worldsave (
     REP_NOBLES text,
     REP_PLEBE text,
     REP_PROMEDIO text,
-    RESEARCH_TRAINNINGTIME text,
+    RESEARCH_TRAININGTIME text,
     -- SKILLS_ELUSK1 text,
     -- SKILLS_ELUSK10 text,
     -- SKILLS_ELUSK11 text,
