@@ -202,7 +202,7 @@ async function writeCharfileWorldSaveTemporalTable(charfile) {
     if (!charfileJson.RESEARCH)
     {
         charfileJson.RESEARCH = {
-            TRAININGTIME = 0
+            TRAININGTIME: 0
         }
     }
 
