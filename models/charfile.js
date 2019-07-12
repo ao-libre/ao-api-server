@@ -198,6 +198,14 @@ async function writeCharfileWorldSaveTemporalTable(charfile) {
     //Hacemos esto para usarlo como Nombre
     charfile = charfile.replace('.chr', '')
 
+    //Hago esta validacion ya que a veces RESEARCH no existe cuando se crea un PJ y el mismo no esta un tiempo determinado jugando
+    if (!charfileJson.RESEARCH)
+    {
+        charfileJson.RESEARCH = {
+            TRAININGTIME = 0
+        }
+    }
+
     let query = `INSERT INTO charfiles_worldsave_temporal (
         NOMBRE,
         ATRIBUTOS_AT1,
