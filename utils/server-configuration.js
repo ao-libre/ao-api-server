@@ -28,7 +28,7 @@ function getParsedGmsFromServerIni() {
     }
 
     for (i = 1; i <= serverIni.INIT.SemiDioses; i++) {
-        let semiDiosNumber = "SemiDios" + i;
+        let semiDiosNumber = "Semidios" + i;
         gameMasters.semidioses.push(serverIni.SemiDioses[semiDiosNumber]);
     } 
 
@@ -38,7 +38,7 @@ function getParsedGmsFromServerIni() {
     } 
 
     for (i = 1; i <= serverIni.INIT.RolesMasters; i++) {
-        let roleMasterNumber = "RolesMaster" + i;
+        let roleMasterNumber = "RM" + i;
         gameMasters.rolemasters.push(serverIni.RolesMasters[roleMasterNumber]);
     } 
 
