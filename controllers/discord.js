@@ -92,7 +92,7 @@ app.post("/sendNewGuildCreated/", function (req, res) {
     return res.status(200).json(embed);
 });
 
-app.get("/sendWorldSaveMessage/", function (req, res) {
+app.post("/sendWorldSaveMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`Se inicio el World Save - Actualizacion de Rankings (Alkon 0.13.X)`)
@@ -102,6 +102,24 @@ app.get("/sendWorldSaveMessage/", function (req, res) {
         .setColor(0xffffff)
         // Set the main content of the embed
         .setDescription(`Se esta creando un world save, por lo que los rankings se actualizaran en la pagina en unos momentos...`)
+
+    const channel = global.clientDiscord.channels.find(x => x.name === "general")
+    channel.send(embed)
+    return res.status(200).json(embed);
+});
+
+app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
+    let username = req.body.userName
+
+    const embed = new Discord.RichEmbed()
+        // Set the title of the field
+        .setTitle(`${username} ha nacido en las tierras de Argentum (Alkon 0.13.X)`)
+        .setImage('https://www.searchenginepeople.com/wp-content/uploads/2012/08/newbie.jpg')
+        .setFooter(website, iconFooter)
+        // Set the color of the embed
+        .setColor(0x0eedff)
+        // Set the main content of the embed
+        .setDescription(`Ayuden al newbie a entender el juego, en esta guia podras encontrar una gran ayuda para esta nueva aventura http://wiki.argentumonline.org.`)
 
     const channel = global.clientDiscord.channels.find(x => x.name === "general")
     channel.send(embed)
