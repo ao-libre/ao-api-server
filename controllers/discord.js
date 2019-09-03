@@ -47,7 +47,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`Empezo el Happy Hour!!`)
-        .setImage('https://i.pinimg.com/736x/cf/6a/06/cf6a0655a7d0697355648d556dbfc6f2.jpg')
+        .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/happy-hour-start-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0xffe700)
@@ -65,7 +65,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`Termino el Happy Hour!!`)
-        .setImage('http://londonfriend.org.uk/wp-content/uploads/2012/06/beer-glass.jpg')
+        .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/happy-hour-end-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0x641b06)
@@ -83,7 +83,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`Termino el Happy Hour!!`)
-        .setImage('http://londonfriend.org.uk/wp-content/uploads/2012/06/beer-glass.jpg')
+        .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/happy-hour-modify-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0x641b06)
@@ -122,10 +122,11 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`Se inicio el World Save - Actualizacion de Rankings (Alkon 0.13.X)`)
-        .setImage('http://2.bp.blogspot.com/-oblrxgI_1CI/TqBOybECgSI/AAAAAAAAACA/fEnWlv9GFBU/s728/save_the_world.png')
+        .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/world-save-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0xffffff)
+        .setURL('http://www.argentumonline.org')
         // Set the main content of the embed
         .setDescription(message);
 
@@ -140,7 +141,7 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`${name} ha nacido en las tierras de Argentum (Alkon 0.13.X)`)
-        .setImage('https://www.searchenginepeople.com/wp-content/uploads/2012/08/newbie.jpg')
+        .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/newbie-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0x0eedff)
