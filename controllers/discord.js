@@ -97,16 +97,19 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
 
 app.post("/sendNewGuildCreated/", function (req, res) {
     let message = req.body.message
+    let desc = req.body.desc
+    let guildName = req.body.guildname
+    let site = req.body.site
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
-        .setTitle(`Un nuevo clan se ha formado en estas tierras (Alkon 0.13.X)`)
+        .setTitle(`${guildName} Un nuevo clan se ha formado en estas tierras (Alkon 0.13.X)`)
         .setImage('https://raw.githubusercontent.com/ao-libre/ao-cliente/master/Graficos/Interfaces/VentanaFundarClan.jpg')
         .setFooter(website, iconFooter)
         // Set the color of the embed
         .setColor(0x9d01d4)
         // Set the main content of the embed
-        .setDescription(message + " -- Manual para crear clanes: http://wiki.argentumonline.org/index0a56.html?seccion=clanes#ver");
+        .setDescription(`${message} - ${desc} - ${site} -- Manual para crear clanes: http://wiki.argentumonline.org/index0a56.html?seccion=clanes#ver`);
 
     const channel = global.clientDiscord.channels.find(x => x.name === "general")
     channel.send(embed)
@@ -132,11 +135,11 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
 });
 
 app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
-    let username = req.body.userName
+    let name = req.body.name
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
-        .setTitle(`${username} ha nacido en las tierras de Argentum (Alkon 0.13.X)`)
+        .setTitle(`${name} ha nacido en las tierras de Argentum (Alkon 0.13.X)`)
         .setImage('https://www.searchenginepeople.com/wp-content/uploads/2012/08/newbie.jpg')
         .setFooter(website, iconFooter)
         // Set the color of the embed
