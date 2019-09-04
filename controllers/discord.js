@@ -22,8 +22,9 @@ app.post("/sendConnectedMessage/", function (req, res) {
     if (desc === "") {
         desc = "El personaje no tiene descripcion, dentro del juego || Con el comando /desc podes cambiarla"
     }
-    let color = (esCriminal) ? 0x36cd80 : 0x1ba1e2
 
+    let color = (esCriminal.toLowerCase() === "true") ? 0xcc1b1b : 0x1ba1e2
+    
     clase = clase.toLowerCase();
     if (clase === "trabajador") {
         clase = clase + randomIntFromInterval(0, 5);
