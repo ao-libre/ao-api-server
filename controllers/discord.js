@@ -6,35 +6,39 @@ const website = "http://www.ArgentumOnline.org - AO Libre";
 const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master/assets/images/favicon.png";
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 app.post("/sendConnectedMessage/", function (req, res) {
     // We can create embeds using the MessageEmbed constructor
     // Read more about all that you can do with the constructor
     // over at https://discord.js.org/#/docs/main/stable/class/RichEmbed
     let username = req.body.userName
     let desc = req.body.desc
-
-    // Pedidos es clan por que asi viene del charfile
-    let clanName = req.body.pedidos
+    let esCriminal = req.body.esCriminal
+    let clase = req.body.clase
 
     if (desc === "") {
         desc = "El personaje no tiene descripcion, dentro del juego || Con el comando /desc podes cambiarla"
     }
-    
-    let description;
-    if(clanName) {
-        description = `${desc} -- Clan: ${clanName}`
-    } else {
-        description = desc
+    let color = (esCriminal) ? 0x36cd80 : 0x1ba1e2
+
+    clase = clase.toLowerCase();
+    if (clase === "trabajador") {
+        clase = clase + randomIntFromInterval(0, 5);
     }
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
         .setTitle(`${username} se ha conectado al server de ROL Alkon 0.13.X`)
         // Set the color of the embed
-        .setColor(0x36cd80)
+        .setColor(color)
+        .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/${clase}.jpg`)
+
         // Set the main content of the embed
         .setFooter(website, iconFooter)
-        .setDescription(description);
+        .setDescription(desc);
 
     const channel = global.clientDiscord.channels.find(x => x.name === "general")
     channel.send(embed)
