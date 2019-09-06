@@ -87,7 +87,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
-        .setTitle(`Termino el Happy Hour!!`)
+        .setTitle(`Seguimos en Happy Hour!`)
         .setImage('https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/happy-hour-modify-discord.png')
         .setFooter(website, iconFooter)
         // Set the color of the embed
