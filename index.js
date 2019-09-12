@@ -6,6 +6,7 @@ const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
 const Discord = require('discord.js');
+const { getOnlineUsersQuantityInServer } = require('./utils/server-configuration');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -28,6 +29,11 @@ clientDiscord.on('ready', () => {
 clientDiscord.on('message', message => {
     if (message.content === 'ping') {
         message.reply('pong');
+    }
+
+    if (message.content === '/online') {
+        const usersOnline = getOnlineUsersQuantityInServer()
+        message.reply(`En este momento hay: ${usersOnline} conectados en el servidor de Rol Alkon 0.13.X`);
     }
 });
 

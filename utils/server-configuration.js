@@ -72,6 +72,8 @@ module.exports = {
         return gmsNames;
     },
 
-    
-
+    getOnlineUsersQuantityInServer: function() {
+        const numUsersLogFilePath = path.join(`./server/Logs/numusers.log`);
+        return fs.readFileSync(numUsersLogFilePath, 'utf8');
+    }
 }
