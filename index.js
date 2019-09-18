@@ -18,6 +18,7 @@ app.use('/api/v1/accounts', require('./controllers/accounts'));
 app.use('/api/v1/emails', require('./controllers/emails'));
 app.use('/api/v1/logs', require('./controllers/logs'));
 app.use('/api/v1/discord', require('./controllers/discord'));
+app.use('/admin', require('./controllers/admin'));
 
 
 // Iniciamos el cliente de discord.js
