@@ -72,7 +72,7 @@ class App extends Component {
 
     
     const fileManager = (
-     <div style={{ height: '480px' }}>
+     <div style={{ height: 30 + 'em' }}>
         <FileManager>
           <FileNavigator
             id="filemanager-1"
