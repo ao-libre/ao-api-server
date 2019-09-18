@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import FileBrowser, { Icons } from 'react-keyed-file-browser'
 import { FileManager, FileNavigator } from '@opuscapita/react-filemanager';
 import connectorNodeV1 from '@opuscapita/react-filemanager-connector-node-v1'
 import './App.css';
@@ -8,38 +6,59 @@ import './App.css';
 class App extends Component {
   state = {
     response: '',
-    post: '',
-    responseToPost: ''
+    fileSaved: false,
+    fileContent: '',
+    fileName: ''
   };
 
-  componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+  setFilenameSelectedOnState() {
+    let fileManagerFileSelected;
+    fileManagerFileSelected = document.querySelector(".oc-fm--list-view__row--last-selected")
+    if (fileManagerFileSelected) {
+      let value = fileManagerFileSelected.querySelector(".oc-fm--name-cell__title");
+      this.setState({ fileName: value.title });
+    }
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
+  onItemClick = e =>  {
+    this.setFilenameSelectedOnState()
+  }
 
   handleSubmit = async e => {
     e.preventDefault();
-    const response = await fetch('/api/world', {
+
+    const response = await fetch(`http://localhost:1337/api/v1/admin/getFileByName`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ post: this.state.post }),
+      body: JSON.stringify({ fileName: this.state.fileName }),
     });
     const body = await response.text();
-
-    this.setState({ responseToPost: body });
+    this.setState({ fileContent: body });
   };
-  
+
+  handleSubmitSaveFile = async e => {
+    e.preventDefault();
+
+    const response = await fetch(`http://localhost:1337/api/v1/admin/editFileByName`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        fileName: this.state.fileName, 
+        fileContent: this.state.fileContent 
+      }),
+    });
+
+    const body = await response.text();
+
+    this.setState({ 
+      fileSaved: true,
+      fileSavedMessage: body
+    });
+  };
 
   render() {
 
@@ -47,6 +66,7 @@ class App extends Component {
       ...connectorNodeV1.apiOptions,
       apiRoot: `http://localhost:1337/fileManager` // Or you local Server Node V1 installation.
     }
+
     
     const fileManager = (
      <div style={{ height: '480px' }}>
@@ -66,25 +86,53 @@ class App extends Component {
 
 
     return (
-      <div className="App">
+      <div className="App" onClick={this.onItemClick}>
         {fileManager}
+        <MessageInformation
+          fileSaved={this.state.fileSaved}
+          fileSavedMessage={this.state.fileSavedMessage}
+          fileName={this.state.fileName}>
+        </MessageInformation>
 
-        <p>{this.state.response}</p>
         <form onSubmit={this.handleSubmit}>
           <p>
-            <strong>Post to Server:</strong>
+            <strong>ARCHIVO SELECCIONADO</strong>
           </p>
           <input
             type="text"
-            value={this.state.post}
-            onChange={e => this.setState({ post: e.target.value })}
+            value={this.state.fileName}
+            onChange={e => this.setState({ fileName: e.target.value })}
           />
-          <button type="submit">Submit</button>
+          <button type="submit">Buscar Archivo</button>
         </form>
-        <p>{this.state.responseToPost}</p>
+
+        <form onSubmit={this.handleSubmitSaveFile}>
+          <textarea id="fileEditor" 
+            style={{width: 50 + 'em', height: 60 + 'em'}}
+            id="fileEditor" 
+            value={this.state.fileContent}
+            onChange={e => this.setState({ fileContent: e.target.value })}
+          />
+          <button type="submit">Guardar</button>
+        </form>
       </div>
     );
   }
+}
+
+function MessageInformation (props) {
+  if (props.fileSaved) {
+    return (
+      <div>
+        <h3>{props.fileSavedMessage}</h3>
+      </div>
+    );
+  }  
+
+  return (
+    <div></div>
+  )
+
 }
 
 export default App;

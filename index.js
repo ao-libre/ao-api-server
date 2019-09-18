@@ -16,11 +16,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors())
 
 
-const config = {
+const configFileManager = {
     fsRoot: path.resolve(__dirname, './server'),
-    rootName: 'Server Argentum Online'
+    rootName: 'Server AO Libre'
 };
-app.use('/fileManager/', filemanagerMiddleware(config));
+app.use('/fileManager/', filemanagerMiddleware(configFileManager));
 
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
@@ -28,6 +28,7 @@ app.use('/api/v1/accounts', require('./controllers/accounts'));
 app.use('/api/v1/emails', require('./controllers/emails'));
 app.use('/api/v1/logs', require('./controllers/logs'));
 app.use('/api/v1/discord', require('./controllers/discord'));
+app.use('/api/v1/admin', require('./controllers/admin'));
 
 
 // Iniciamos el cliente de discord.js

@@ -1,5 +1,5 @@
 {
-  "name": "AO-WEB-ADMIN",
+  "name": "ao-web-admin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,7 +19,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://localhost:1337/",
+  "proxy": "http://localhost:1337",
   "browserslist": {
     "production": [
       ">0.2%",
