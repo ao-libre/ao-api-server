@@ -24,7 +24,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
     "client": "cd admin && npm start",
-    "start": "concurrently --kill-others-on-fail \"node index.js\" \"npm run client\""
+    "startlocal": "concurrently --kill-others-on-fail \"node index.js\" \"npm run client\"",
+    "start": "node index.js"
   },
   "author": "Lucas Recoaro",
   "license": "AGPL"
