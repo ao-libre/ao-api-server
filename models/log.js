@@ -30,49 +30,49 @@ exports.getAllGmsLogs = async function (req, res) {
 
 exports.getErrorsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename in ('errores', 'ip', 'eventos');`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getBackupsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'backups';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getNumUsersLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getStatisticsLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'statistics';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getMainLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'Main';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getDesarrolloLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename like '%desarrollo%';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 }
 
 exports.getTimeLastUpdated = function (req, res) {
     db.get().query(`SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_NAME = 'logs_worldsave';`, function (err, results, fields) {
-        if (err) throw err;
+        if (err) return res.status(500).json(err);
         return res.status(200).json(results);
     });
 };

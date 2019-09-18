@@ -22,10 +22,10 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js",
+    "server": "node index.js",
+    "serverNodemon": "nodemon index.js",
     "client": "cd admin && npm start",
-    "startlocal": "concurrently --kill-others-on-fail \"node index.js\" \"npm run client\"",
-    "start": "node index.js"
+    "start": "concurrently --kill-others-on-fail \"npm run serverNodemon\" \"npm run client\""
   },
   "author": "Lucas Recoaro",
   "license": "AGPL"
