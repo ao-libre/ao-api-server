@@ -5,7 +5,6 @@ import './App.css';
 
 class App extends Component {
   state = {
-    response: '',
     fileSaved: false,
     fileContent: '',
     fileName: ''
@@ -26,6 +25,7 @@ class App extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
+    this.setState({ fileContent: 'Buscando... si toma mas de 5 segundos el archivo no existe...' });
 
     const response = await fetch(`http://localhost:1337/api/v1/admin/getFileByName`, {
       method: 'POST',
@@ -86,8 +86,12 @@ class App extends Component {
 
 
     return (
-      <div className="App" onClick={this.onItemClick}>
-        {fileManager}
+      <div className="App">
+        
+        <div onClick={this.onItemClick}>
+          {fileManager}
+        </div>
+
         <MessageInformation
           fileSaved={this.state.fileSaved}
           fileSavedMessage={this.state.fileSavedMessage}

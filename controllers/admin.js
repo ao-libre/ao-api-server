@@ -18,7 +18,6 @@ app.post("/editFileByName", function (req, res) {
     let fileName = req.body.fileName;
     let fileContent = req.body.fileContent;
     const finder = require('findit')('./server');
-    console.log(123456, fileName,fileContent )
 
     finder.on('file', function (file, stat) {
         if (file.includes(fileName)) {
