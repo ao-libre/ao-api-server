@@ -25,7 +25,7 @@
     "server": "node index.js",
     "serverNodemon": "nodemon index.js",
     "client": "cd admin && npm start",
-    "start": "concurrently --kill-others-on-fail \"npm run serverNodemon\" \"npm run client\""
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "author": "Lucas Recoaro",
   "license": "AGPL"
