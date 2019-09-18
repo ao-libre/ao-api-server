@@ -1,16 +1,26 @@
 require('dotenv').config()
 const express = require('express');
+const path = require('path');
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
 const Discord = require('discord.js');
+const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
+
 const { getOnlineUsersQuantityInServer } = require('./utils/server-configuration');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors())
+
+
+const config = {
+    fsRoot: path.resolve(__dirname, './server'),
+    rootName: 'Server Argentum Online'
+};
+app.use('/fileManager/', filemanagerMiddleware(config));
 
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
