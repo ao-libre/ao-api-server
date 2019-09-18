@@ -1,16 +1,26 @@
 require('dotenv').config()
 const express = require('express');
+const path = require('path');
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
 const Discord = require('discord.js');
+const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
+
 const { getOnlineUsersQuantityInServer } = require('./utils/server-configuration');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors())
+
+
+const configFileManager = {
+    fsRoot: path.resolve(__dirname, './server'),
+    rootName: 'Server AO Libre'
+};
+app.use('/fileManager/', filemanagerMiddleware(configFileManager));
 
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
@@ -18,6 +28,7 @@ app.use('/api/v1/accounts', require('./controllers/accounts'));
 app.use('/api/v1/emails', require('./controllers/emails'));
 app.use('/api/v1/logs', require('./controllers/logs'));
 app.use('/api/v1/discord', require('./controllers/discord'));
+app.use('/api/v1/admin', require('./controllers/admin'));
 
 
 // Iniciamos el cliente de discord.js
