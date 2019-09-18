@@ -11,6 +11,9 @@ class App extends Component {
   };
 
   setFilenameSelectedOnState() {
+    // Hago esto por que se scrappea el valor del explorador de archivos
+    // Por que el mismo no esta terminado y no tiene editar :(
+
     let fileManagerFileSelected;
     fileManagerFileSelected = document.querySelector(".oc-fm--list-view__row--last-selected")
     if (fileManagerFileSelected) {

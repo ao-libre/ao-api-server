@@ -22,7 +22,7 @@ npm start
 ```
 
 Then enter to `http://localhost:1337` and use one of the endpoints that appear in the documentation.
-
+Entrar a [http://localhost:3000](http://localhost:3000) para ver el panel de administracion web del servidor
 
 ## Instalar como Servicio
 En caso que se quiera utilizar la aplicacion como servicio, util para cuando querramos que la aplicacion se inicie al iniciar Windows, debemos instalar el paquete `qckwinsvc` y luego configurarlo de la siguiente forma:
