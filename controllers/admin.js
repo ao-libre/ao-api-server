@@ -17,7 +17,8 @@ app.post("/getFileByName", function (req, res) {
     const finder = require('findit')('./server');
 
     finder.on('file', function (file, stat) {
-        if (file === fileName) {
+        if (file.includes(fileName)) {
+            finder.stop()
             const fileContent = fs.readFileSync(file, 'utf-8');
             return res.status(202).send(fileContent);
         }
@@ -30,7 +31,8 @@ app.post("/editFileByName", function (req, res) {
     const finder = require('findit')('./server');
 
     finder.on('file', function (file, stat) {
-        if (file === fileName) {
+        if (file.includes(fileName)) {
+            finder.stop()
             fs.writeFileSync(file, fileContent)
             const message = `El archivo ${fileName} fue editado con exito`;
             return res.status(202).send(message);
