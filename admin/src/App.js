@@ -7,7 +7,10 @@ class App extends Component {
   state = {
     fileSaved: false,
     fileContent: '',
-    fileName: ''
+    fileName: '',
+    loginPassword: '',
+    loginMessage: '',
+    isLogged: false
   };
 
   setFilenameSelectedOnState() {
@@ -22,7 +25,7 @@ class App extends Component {
     }
   }
 
-  onItemClick = e =>  {
+  onItemClick = e => {
     this.setFilenameSelectedOnState()
   }
 
@@ -41,6 +44,31 @@ class App extends Component {
     this.setState({ fileContent: body });
   };
 
+  handleSubmitLogin = async e => {
+    e.preventDefault();
+
+    const response = await fetch(`http://localhost:1337/api/v1/admin/authorization`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password: this.state.loginPassword }),
+    });
+
+    // Entramos aca is logeamos bien papa
+    if (response.status === 200) {
+      this.setState({ 
+        isLogged: true,
+      });
+      return;
+    }
+
+    const body = await response.text();
+    this.setState({ 
+      loginMessage: body,
+    });
+  };
+
   handleSubmitSaveFile = async e => {
     e.preventDefault();
 
@@ -49,15 +77,15 @@ class App extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
-        fileName: this.state.fileName, 
-        fileContent: this.state.fileContent 
+      body: JSON.stringify({
+        fileName: this.state.fileName,
+        fileContent: this.state.fileContent
       }),
     });
 
     const body = await response.text();
 
-    this.setState({ 
+    this.setState({
       fileSaved: true,
       fileSavedMessage: body
     });
@@ -65,76 +93,104 @@ class App extends Component {
 
   render() {
 
-    const apiOptions = {
-      ...connectorNodeV1.apiOptions,
-      apiRoot: `http://localhost:1337/fileManager` // Or you local Server Node V1 installation.
+    let loginForm = (<div></div>);
+    if (!this.state.isLogged) {
+      loginForm = (
+        <form onSubmit={this.handleSubmitLogin}>
+          <h3>Ingresar Password</h3>
+          <h5>{this.state.loginMessage}</h5>
+          <input
+            type="password"
+            value={this.state.loginPassword}
+            onChange={e => this.setState({ loginPassword: e.target.value })}
+          />
+          <button type="submit">Login</button>
+        </form>
+      );
+    } else {
+      loginForm = (
+        <h1>PANEL ADMIN AO-LIBRE</h1>
+      )
     }
 
-    
-    const fileManager = (
-     <div style={{ height: 30 + 'em' }}>
-        <FileManager>
-          <FileNavigator
-            id="filemanager-1"
-            api={connectorNodeV1.api}
-            apiOptions={apiOptions}
-            capabilities={connectorNodeV1.capabilities}
-            listViewLayout={connectorNodeV1.listViewLayout}
-            viewLayoutOptions={connectorNodeV1.viewLayoutOptions}
-          />
-        </FileManager>
-      </div>
-    );
-    
+    let authorizedContent = (<div></div>);
+    if (this.state.isLogged) {
+
+      const apiOptions = {
+        ...connectorNodeV1.apiOptions,
+        apiRoot: `http://localhost:1337/fileManager` // Or you local Server Node V1 installation.
+      }
+  
+      const fileManager = (
+        <div style={{ height: 30 + 'em' }}>
+          <FileManager>
+            <FileNavigator
+              id="filemanager-1"
+              api={connectorNodeV1.api}
+              apiOptions={apiOptions}
+              capabilities={connectorNodeV1.capabilities}
+              listViewLayout={connectorNodeV1.listViewLayout}
+              viewLayoutOptions={connectorNodeV1.viewLayoutOptions}
+            />
+          </FileManager>
+        </div>
+      );
+  
+      authorizedContent = (
+        <div>
+          <div onClick={this.onItemClick}>
+            {fileManager}
+          </div>
+
+          <MessageInformation
+            fileSaved={this.state.fileSaved}
+            fileSavedMessage={this.state.fileSavedMessage}
+            fileName={this.state.fileName}>
+          </MessageInformation>
+
+          <form onSubmit={this.handleSubmit}>
+            <p>
+              <strong>ARCHIVO SELECCIONADO</strong>
+            </p>
+            <input
+              type="text"
+              value={this.state.fileName}
+              onChange={e => this.setState({ fileName: e.target.value })}
+            />
+            <button type="submit">Buscar Archivo</button>
+          </form>
+
+          <form onSubmit={this.handleSubmitSaveFile}>
+            <textarea id="fileEditor"
+              style={{ width: 50 + 'em', height: 60 + 'em' }}
+              id="fileEditor"
+              value={this.state.fileContent}
+              onChange={e => this.setState({ fileContent: e.target.value })}
+            />
+            <button type="submit">Guardar</button>
+          </form>
+        </div>
+      );
+    }
 
 
     return (
       <div className="App">
-        
-        <div onClick={this.onItemClick}>
-          {fileManager}
-        </div>
-
-        <MessageInformation
-          fileSaved={this.state.fileSaved}
-          fileSavedMessage={this.state.fileSavedMessage}
-          fileName={this.state.fileName}>
-        </MessageInformation>
-
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <strong>ARCHIVO SELECCIONADO</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.fileName}
-            onChange={e => this.setState({ fileName: e.target.value })}
-          />
-          <button type="submit">Buscar Archivo</button>
-        </form>
-
-        <form onSubmit={this.handleSubmitSaveFile}>
-          <textarea id="fileEditor" 
-            style={{width: 50 + 'em', height: 60 + 'em'}}
-            id="fileEditor" 
-            value={this.state.fileContent}
-            onChange={e => this.setState({ fileContent: e.target.value })}
-          />
-          <button type="submit">Guardar</button>
-        </form>
+        {loginForm}
+        {authorizedContent}
       </div>
     );
   }
 }
 
-function MessageInformation (props) {
+function MessageInformation(props) {
   if (props.fileSaved) {
     return (
       <div>
         <h3>{props.fileSavedMessage}</h3>
       </div>
     );
-  }  
+  }
 
   return (
     <div></div>
