@@ -24,8 +24,8 @@ npm start
 Then enter to `http://localhost:1337` and use one of the endpoints that appear in the documentation.
 
 ## Administrador Web
-Entrar a [http://localhost:3000](http://localhost:3000) para ver el panel de administracion web del servidor
-<img src="https://cdn.discordapp.com/attachments/479064501115944962/623869451221073920/unknown.png">
+Con la api van a poder usar el administrador del servidor web de ao-libre
+https://github.com/ao-libre/ao-admin-web-vb6
 
 
 
