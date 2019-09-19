@@ -6,7 +6,6 @@
   "dependencies": {
     "@opuscapita/filemanager-server": "^1.1.0-beta.6",
     "body-parser": "^1.19.0",
-    "concurrently": "^4.1.2",
     "cors": "^2.8.5",
     "discord.js": "^11.5.1",
     "dotenv": "^8.0.0",
@@ -22,10 +21,8 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node index.js",
-    "serverNodemon": "nodemon index.js",
-    "client": "cd admin && npm start",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "start": "node index.js",
+    "nodemon": "nodemon index.js"
   },
   "author": "Lucas Recoaro",
   "license": "AGPL"
