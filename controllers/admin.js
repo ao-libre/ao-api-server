@@ -14,30 +14,52 @@ app.post("/authorization", function (req, res) {
 
 app.post("/getFileByName", function (req, res) {
     let fileName = req.body.fileName;
-    const finder = require('findit')('./server');
+    const finder = require('findit2')('./server');
 
     finder.on('file', function (file, stat) {
-        if (file.includes(fileName)) {
+        // Hago esto para separar en un array todos los elementos de la path
+        // Por que esta funcion devuelve una path, y luego comparo que el archivo sea el que queremos
+        const fileArray = file.split("\\");
+
+        // El ultimo elemento del array va a ser el nombre del archivo
+        const fileArrayLastElement = fileArray[fileArray.length - 1];
+
+        if (fileName === fileArrayLastElement) {
             finder.stop()
             const fileContent = fs.readFileSync(file, 'utf-8');
             return res.status(202).send(fileContent);
         }
     });
+
+    finder.on('end', function () {
+        return res.status(404).send('No existe un archivo con ese nombre');
+    })
 });
 
 app.post("/editFileByName", function (req, res) {
     let fileName = req.body.fileName;
     let fileContent = req.body.fileContent;
-    const finder = require('findit')('./server');
+    const finder = require('findit2')('./server');
 
     finder.on('file', function (file, stat) {
-        if (file.includes(fileName)) {
+        // Hago esto para separar en un array todos los elementos de la path
+        // Por que esta funcion devuelve una path, y luego comparo que el archivo sea el que queremos
+        const fileArray = file.split("\\");
+
+        // El ultimo elemento del array va a ser el nombre del archivo
+        const fileArrayLastElement = fileArray[fileArray.length - 1];
+
+        if (fileName === fileArrayLastElement) {
             finder.stop()
             fs.writeFileSync(file, fileContent)
             const message = `El archivo ${fileName} fue editado con exito`;
             return res.status(202).send(message);
         }
     });
+
+    finder.on('end', function () {
+        return res.status(404).send('Lo que estas tratando de editar no existe');
+    })
 
 });
 
