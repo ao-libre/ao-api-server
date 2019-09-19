@@ -33,7 +33,7 @@ class App extends Component {
     e.preventDefault();
     this.setState({ fileContent: 'Buscando... si toma mas de 5 segundos el archivo no existe...' });
 
-    const response = await fetch(`http://localhost:1337/api/v1/admin/getFileByName`, {
+    const response = await fetch(`http://18.231.37.189:1337/api/v1/admin/getFileByName`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ class App extends Component {
   handleSubmitLogin = async e => {
     e.preventDefault();
 
-    const response = await fetch(`http://localhost:1337/api/v1/admin/authorization`, {
+    const response = await fetch(`http://18.231.37.189:1337/api/v1/admin/authorization`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ class App extends Component {
   handleSubmitSaveFile = async e => {
     e.preventDefault();
 
-    const response = await fetch(`http://localhost:1337/api/v1/admin/editFileByName`, {
+    const response = await fetch(`http://18.231.37.189:1337/api/v1/admin/editFileByName`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ class App extends Component {
 
       const apiOptions = {
         ...connectorNodeV1.apiOptions,
-        apiRoot: `http://localhost:1337/fileManager` // Or you local Server Node V1 installation.
+        apiRoot: `http://18.231.37.189:1337/fileManager` // Or you local Server Node V1 installation.
       }
   
       const fileManager = (
