@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
-const Discord = require('discord.js');
 const filemanagerMiddleware = require('@opuscapita/filemanager-server').middleware;
 
 app.use(bodyParser.json()); // support json encoded bodies
