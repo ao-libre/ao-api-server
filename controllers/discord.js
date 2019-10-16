@@ -51,7 +51,7 @@ app.post("/sendConnectedMessage/", function (req, res) {
 
     clase = clase.toLowerCase();
     if (clase === "trabajador") {
-        clase = clase + randomIntFromInterval(0, 5);
+        clase = clase + randomIntFromInterval(0, 6);
     }
 
     const embed = new Discord.RichEmbed()
