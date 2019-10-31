@@ -49,6 +49,9 @@ clientDiscord.on('error', err => {
     console.log('\x1b[35m%s\x1b[0m', err);
 });
 
+const channelGeneral = clientDiscord.channels.find(x => x.name === "general")
+const channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
+
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -84,8 +87,8 @@ app.post("/sendConnectedMessage/", function (req, res) {
         .setFooter(website, iconFooter)
         .setDescription(desc);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -102,8 +105,8 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -120,8 +123,8 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -138,8 +141,8 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -159,8 +162,8 @@ app.post("/sendNewGuildCreated/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`${message} - ${desc} - ${site} -- Manual para crear clanes: http://wiki.argentumonline.org/index0a56.html?seccion=clanes#ver`);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -178,8 +181,8 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -196,8 +199,8 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`Ayuden al newbie a entender el juego, en esta guia podras encontrar una gran ayuda para esta nueva aventura http://wiki.argentumonline.org.`)
 
-    const channel = clientDiscord.channels.find(x => x.name === "general")
-    channel.send(embed)
+    channelGeneral.send(embed)
+    channelAOLibre.send(embed)
     return res.status(200).json(embed);
 });
 
