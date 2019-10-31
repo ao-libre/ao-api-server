@@ -8,8 +8,13 @@ const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
 // Iniciamos el cliente de discord.js
+let channelGeneral
+let channelAOLibre
+
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
+    channelGeneral = clientDiscord.channels.find(x => x.name === "general")
+    channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
@@ -48,9 +53,6 @@ clientDiscord.login(process.env.DISCORD_TOKEN);
 clientDiscord.on('error', err => {
     console.log('\x1b[35m%s\x1b[0m', err);
 });
-
-const channelGeneral = clientDiscord.channels.find(x => x.name === "general")
-const channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
