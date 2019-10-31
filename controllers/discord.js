@@ -21,9 +21,9 @@ clientDiscord.on('ready', () => {
 clientDiscord.on('message', message => {
     if (message.content === 'ping') {
         message.reply('pong');
-    }
+    }  
 
-    if (message.content === '/online') {
+    if (message.content.toLowerCase() === '/online') {
         const usersOnline = getOnlineUsersQuantityInServer()
         let imageNumber;
 
