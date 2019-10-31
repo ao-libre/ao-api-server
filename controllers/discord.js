@@ -8,7 +8,7 @@ const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
 // Iniciamos el cliente de discord.js
-const clientDiscord  = new Discord.Client();
+const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
@@ -20,8 +20,27 @@ clientDiscord.on('message', message => {
 
     if (message.content === '/online') {
         const usersOnline = getOnlineUsersQuantityInServer()
-        message.reply(`En este momento hay: ${usersOnline} conectados en el servidor de Rol Alkon 0.13.X`);
+        let imageNumber;
+
+        if (usersOnline === 0) {
+            imageNumber = 0
+        } else {
+            imageNumber = randomIntFromInterval(1, 12)
+        }
+
+        const embed = new Discord.RichEmbed()
+            // Set the title of the field
+            .setTitle(`Argentum Online Libre: Gente ONLINE en tiempo real`)
+            .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/onlinerandom${imageNumber}.jpg`)
+            .setFooter(website, iconFooter)
+            // Set the color of the embed
+            .setColor(0x90CC55)
+            // Set the main content of the embed
+            .setDescription(`En este momento hay: ${usersOnline} conectados en el servidor de Rol Alkon 0.13.X`);
+
+        message.reply(embed)
     }
+
 });
 
 clientDiscord.login(process.env.DISCORD_TOKEN);

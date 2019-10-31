@@ -74,6 +74,7 @@ module.exports = {
 
     getOnlineUsersQuantityInServer: function() {
         const numUsersLogFilePath = path.join(`./server/Logs/numusers.log`);
-        return fs.readFileSync(numUsersLogFilePath, 'utf8');
+        const numberOnline = fs.readFileSync(numUsersLogFilePath, 'utf8')
+        return numberOnline.trim();
     }
 }
