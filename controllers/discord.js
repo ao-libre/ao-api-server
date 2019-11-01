@@ -8,13 +8,13 @@ const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
 // Iniciamos el cliente de discord.js
-let channelGeneral
+let channelJugando
 let channelAOLibre
 let channelChatFree
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
-    channelGeneral = clientDiscord.channels.find(x => x.name === "general")
+    channelJugando = clientDiscord.channels.find(x => x.name === "jugando")
     channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
     channelChatFree = clientDiscord.channels.find(x => x.name.includes("chat-free"))
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
@@ -95,7 +95,7 @@ app.post("/sendConnectedMessage/", function (req, res) {
         .setFooter(website, iconFooter)
         .setDescription(desc);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -114,7 +114,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -133,7 +133,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -152,7 +152,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -174,7 +174,7 @@ app.post("/sendNewGuildCreated/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`${message} - ${desc} - ${site} -- Manual para crear clanes: http://wiki.argentumonline.org/index0a56.html?seccion=clanes#ver`);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -194,7 +194,7 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
@@ -213,7 +213,7 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`Ayuden al newbie a entender el juego, en esta guia podras encontrar una gran ayuda para esta nueva aventura http://wiki.argentumonline.org.`)
 
-    channelGeneral.send(embed)
+    channelJugando.send(embed)
     channelAOLibre.send(embed)
     channelChatFree.send(embed)
     return res.status(200).json(embed);
