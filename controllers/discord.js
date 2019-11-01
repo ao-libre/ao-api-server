@@ -10,17 +10,23 @@ const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/6
 // Iniciamos el cliente de discord.js
 let channelGeneral
 let channelAOLibre
+let channelChatFree
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
     channelGeneral = clientDiscord.channels.find(x => x.name === "general")
     channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
+    channelChatFree = clientDiscord.channels.find(x => x.name.includes("chat-free"))
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
 clientDiscord.on('message', message => {
     if (message.content === 'ping') {
         message.reply('pong');
+    }  
+
+    if (message.content.includes('aguante el ao')) {
+        message.reply('Si bro, aguante el Argentum!!, bajalo de aca mono http://www.ArgentumOnline.org !!!')
     }  
 
     if (message.content.toLowerCase() === '/online') {
@@ -91,6 +97,7 @@ app.post("/sendConnectedMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -109,6 +116,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -127,6 +135,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -145,6 +154,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -166,6 +176,7 @@ app.post("/sendNewGuildCreated/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -185,6 +196,7 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
@@ -203,6 +215,7 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
 
     channelGeneral.send(embed)
     channelAOLibre.send(embed)
+    channelChatFree.send(embed)
     return res.status(200).json(embed);
 });
 
