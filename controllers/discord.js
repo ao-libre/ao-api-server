@@ -237,6 +237,31 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
     return res.status(200).json(embed);
 });
 
+app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
+    let name = req.body.userName
+    let desc = req.body.desc
+    let chat = req.body.chat
+
+    let title;
+    if (desc === "") {
+        title = `${name} ha enviado un mensaje desde dentro del server de AO-LIBRE (Alkon 0.13.X): `
+    } else {
+        title = `${name} (${desc}) ha enviado un mensaje desde dentro del server de AO-LIBRE (Alkon 0.13.X): `
+    }
+
+    const embed = new Discord.RichEmbed()
+        // Set the title of the field
+        .setTitle(title)
+        .setFooter(website, iconFooter)
+        // Set the color of the embed
+        .setColor(0xFFF400)
+        // Set the main content of the embed
+        .setDescription(`${chat} || Podes enviar estos mensajes con el comando /discord en el juego`)
+
+    sendMessageToDiscordChannels(embed);
+    return res.status(200).json(embed);
+});
+
 function sendMessageToDiscordChannels(message) {
     channelAOLibreDiscord.send(message)
     channelArgentumComunidad.send(message)
