@@ -18,8 +18,10 @@ clientDiscord.on('ready', () => {
     // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
     channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
+
     // channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
-    channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
+    // channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
+    channelSoloAos = clientDiscord.channels.find(x => x.id === '639993548669845504') // ao-libre-bot channel name
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
