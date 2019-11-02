@@ -8,31 +8,32 @@ const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
 // Iniciamos el cliente de discord.js
-let channelJugando
-let channelAOLibre
+let channelAOLibreDiscord
+let channelArgentumComunidad
 let channelChatFree
 let channelSoloAos
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
     // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
-    channelJugando = clientDiscord.channels.find(x => x.name === "jugando")
-    channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
-    channelChatFree = clientDiscord.channels.find(x => x.name.includes("aolibre"))
-    channelSoloAos = clientDiscord.channels.find(x => x.name.includes("ao-libre-bot"))
+    channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
+    channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
+    channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
+    channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
 clientDiscord.on('message', message => {
+    message = message.toLowerCase()
     if (message.content === 'ping') {
         message.reply('pong');
     }  
 
-    if (message.content.toLowerCase().includes('gs zone') || message.content.toLowerCase().includes('gs')) {
-        message.reply('GS-Zone que bonito lugar, lleno de informacion para el Argentum http://www.gs-zone.org');
+    if (message.content.includes('gs zone') || message.content.includes('gs')) {
+        message.reply('GS-Zone que bonito lugar, lleno de informacion para el Argentum https://www.gs-zone.org');
     }  
 
-    if (message.content.toLowerCase().includes('barrin')) {
+    if (message.content.includes('barrin')) {
         message.reply('mmmm yo no lo conozco, pero tampoco me cae bien ese Barrin, que libere el codigo!');
     }  
 
@@ -40,7 +41,7 @@ clientDiscord.on('message', message => {
         message.reply('Si bro, aguante el Argentum!!, bajalo de aca mono http://www.ArgentumOnline.org !!!')
     }  
 
-    if (message.content.toLowerCase() === '/online') {
+    if (message.content === '/online') {
         const usersOnline = getOnlineUsersQuantityInServer()
         let imageNumber;
 
@@ -217,8 +218,8 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
 });
 
 function sendMessageToDiscordChannels(message) {
-    channelJugando.send(message)
-    channelAOLibre.send(message)
+    channelAOLibreDiscord.send(message)
+    channelArgentumComunidad.send(message)
     channelChatFree.send(message)  
     channelSoloAos.send(message)  
 }
