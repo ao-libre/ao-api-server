@@ -25,7 +25,7 @@ clientDiscord.on('ready', () => {
 
 clientDiscord.on('message', message => {
     message.content = message.content.toLowerCase()
-    
+
     if (message.content === 'ping') {
         message.reply('pong');
     }  
