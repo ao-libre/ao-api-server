@@ -18,7 +18,7 @@ clientDiscord.on('ready', () => {
     // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
     channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
-    channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
+    // channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
@@ -30,12 +30,30 @@ clientDiscord.on('message', message => {
         message.reply('pong');
     }  
 
-    if (message.content.includes('gs zone') || message.content.includes('gs')) {
-        message.reply('GS-Zone que bonito lugar, lleno de informacion para el Argentum https://www.gs-zone.org');
+    if (message.content.includes('gs zone') || message.content.includes('gs-zone') || message.content.includes('gs')) {
+        const embed = new Discord.RichEmbed()
+        // Set the title of the field
+        .setTitle(`GS-Zone que bonito lugar`)
+        .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
+        .setFooter(website, iconFooter)
+        // Set the color of the embed
+        .setColor(0x90CC55)
+        // Set the main content of the embed
+        .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
+
+        message.reply(embed)
     }  
 
     if (message.content.includes('barrin')) {
-        message.reply('mmmm yo no lo conozco, pero tampoco me cae bien ese Barrin, que libere el codigo!');
+        const embed = new Discord.RichEmbed()
+        // Set the title of the field
+        .setFooter(website, iconFooter)
+        // Set the color of the embed
+        .setColor(0x90CC55)
+        // Set the main content of the embed
+        .setDescription(`A ese Barrin yo no lo conozco, pero tampoco me cae bien, que libere el codigo!!!`);
+
+        message.reply(embed)
     }  
 
     if (message.content.includes('aguante el ao')) {
