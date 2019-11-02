@@ -11,18 +11,29 @@ const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/6
 let channelJugando
 let channelAOLibre
 let channelChatFree
+let channelSoloAos
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
+    // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
     channelJugando = clientDiscord.channels.find(x => x.name === "jugando")
     channelAOLibre = clientDiscord.channels.find(x => x.name === "ao-libre")
-    channelChatFree = clientDiscord.channels.find(x => x.name.includes("chat-free"))
+    channelChatFree = clientDiscord.channels.find(x => x.name.includes("aolibre"))
+    channelSoloAos = clientDiscord.channels.find(x => x.name.includes("ao-libre-bot"))
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
 clientDiscord.on('message', message => {
     if (message.content === 'ping') {
         message.reply('pong');
+    }  
+
+    if (message.content.toLowerCase().includes('gs zone') || message.content.toLowerCase().includes('gs')) {
+        message.reply('GS-Zone que bonito lugar, lleno de informacion para el Argentum http://www.gs-zone.org');
+    }  
+
+    if (message.content.toLowerCase().includes('barrin')) {
+        message.reply('mmmm yo no lo conozco, pero tampoco me cae bien ese Barrin, que libere el codigo!');
     }  
 
     if (message.content.includes('aguante el ao')) {
@@ -95,9 +106,7 @@ app.post("/sendConnectedMessage/", function (req, res) {
         .setFooter(website, iconFooter)
         .setDescription(desc);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -114,9 +123,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -133,9 +140,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -152,9 +157,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -174,9 +177,7 @@ app.post("/sendNewGuildCreated/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`${message} - ${desc} - ${site} -- Manual para crear clanes: http://wiki.argentumonline.org/index0a56.html?seccion=clanes#ver`);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -194,9 +195,7 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -213,11 +212,15 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`Ayuden al newbie a entender el juego, en esta guia podras encontrar una gran ayuda para esta nueva aventura http://wiki.argentumonline.org.`)
 
-    channelJugando.send(embed)
-    channelAOLibre.send(embed)
-    channelChatFree.send(embed)
+    sendMessageToDiscordChannels(embed);
     return res.status(200).json(embed);
 });
 
+function sendMessageToDiscordChannels(message) {
+    channelJugando.send(message)
+    channelAOLibre.send(message)
+    channelChatFree.send(message)  
+    channelSoloAos.send(message)  
+}
 
 module.exports = app;
