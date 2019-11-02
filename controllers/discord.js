@@ -20,8 +20,7 @@ clientDiscord.on('ready', () => {
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
 
     // channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
-    // channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
-    channelSoloAos = clientDiscord.channels.find(x => x.id === '639993548669845504') // ao-libre-bot channel name
+    channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
@@ -241,7 +240,7 @@ app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
 function sendMessageToDiscordChannels(message) {
     channelAOLibreDiscord.send(message)
     channelArgentumComunidad.send(message)
-    channelChatFree.send(message)  
+    // channelChatFree.send(message)  
     channelSoloAos.send(message)  
 }
 
