@@ -3,6 +3,10 @@ const app = express();
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
 
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 const website = "http://www.ArgentumOnline.org - AO Libre";
 const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master/assets/images/favicon.png";
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
@@ -12,54 +16,52 @@ let channelAOLibreDiscord
 let channelArgentumComunidad
 let channelChatFree
 let channelSoloAos
+let channelKeikah
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
     // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
     channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
-
-    // channelChatFree = clientDiscord.channels.find(x => x.name === "aolibre")
+    channelKeikah = clientDiscord.channels.find(x => x.name === "aolibre")
+    channelChatFree = clientDiscord.channels.find(x => x.name.includes("chat-free"))
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
+    // channelChatFree.send('Ya me ajust');
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
 clientDiscord.on('message', message => {
     message.content = message.content.toLowerCase()
 
-    if (message.content === 'ping') {
-        message.reply('pong');
-    }  
-
-    if (message.content.includes('gs zone') || message.content.includes('gs-zone') || message.content.includes('gs')) {
+    if (message.content.includes('gs zone') || message.content.includes('gs-zone')) {
         const embed = new Discord.RichEmbed()
-        // Set the title of the field
-        .setTitle(`GS-Zone que bonito lugar`)
-        .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
-        .setFooter(website, iconFooter)
-        // Set the color of the embed
-        .setColor(0x90CC55)
-        // Set the main content of the embed
-        .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
+            // Set the title of the field
+            .setTitle(`Yo no hubiera nacido sin ese foro, que bonito lugar`)
+            .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
+            .setFooter(website, iconFooter)
+            // Set the color of the embed
+            .setColor(0x90CC55)
+            // Set the main content of the embed
+            .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
 
         message.reply(embed)
-    }  
+    }
 
     if (message.content.includes('barrin')) {
         const embed = new Discord.RichEmbed()
-        // Set the title of the field
-        .setFooter(website, iconFooter)
-        // Set the color of the embed
-        .setColor(0x90CC55)
-        // Set the main content of the embed
-        .setDescription(`A ese Barrin yo no lo conozco, pero tampoco me cae bien, que libere el codigo!!!`);
+            // Set the title of the field
+            .setFooter(website, iconFooter)
+            // Set the color of the embed
+            .setColor(0x90CC55)
+            // Set the main content of the embed
+            .setDescription(`A ese Barrin yo no lo conozco, pero tampoco me cae bien, que libere el codigo!!!`);
 
         message.reply(embed)
-    }  
+    }
 
     if (message.content.includes('aguante el ao')) {
         message.reply('Si bro, aguante el Argentum!!, bajalo de aca mono http://www.ArgentumOnline.org !!!')
-    }  
+    }
 
     if (message.content === '/online') {
         const usersOnline = getOnlineUsersQuantityInServer()
@@ -92,9 +94,20 @@ clientDiscord.on('error', err => {
     console.log('\x1b[35m%s\x1b[0m', err);
 });
 
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min);
+
+// Esto es para que no mande la notificacion del mismo usuario conectado al server en una hora
+// Asi no spamea tanto
+let usersConnectedLastHour = []
+function cleanConnectedArray() {
+    usersConnectedLastHour = [];
+    return
 }
+
+function didUserConnectInTheLastHour(username) {
+    return usersConnectedLastHour.find(el => el === username) ? true : false;
+}
+
+setInterval(() => cleanConnectedArray(), 3600000);
 
 app.post("/sendConnectedMessage/", function (req, res) {
     // We can create embeds using the MessageEmbed constructor
@@ -104,6 +117,13 @@ app.post("/sendConnectedMessage/", function (req, res) {
     let desc = req.body.desc
     let esCriminal = req.body.esCriminal
     let clase = req.body.clase
+
+    // Si esto es verdadero retornamos para que no mande nada.
+    if (didUserConnectInTheLastHour(username)) {
+        return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
+    }
+
+    usersConnectedLastHour.push(username)
 
     if (desc === "") {
         desc = "El personaje no tiene descripcion, dentro del juego || Con el comando /desc podes cambiarla"
@@ -222,6 +242,13 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
 
 app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
     let name = req.body.name
+    
+    // Si esto es verdadero retornamos para que no mande nada.
+    if (didUserConnectInTheLastHour(username)) {
+        return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
+    }
+
+    usersConnectedLastHour.push(username)
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
@@ -265,8 +292,9 @@ app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
 function sendMessageToDiscordChannels(message) {
     channelAOLibreDiscord.send(message)
     channelArgentumComunidad.send(message)
-    // channelChatFree.send(message)  
-    channelSoloAos.send(message)  
+    channelChatFree.send(message)  
+    channelSoloAos.send(message)
+    channelKeikah.send(message)
 }
 
 module.exports = app;
