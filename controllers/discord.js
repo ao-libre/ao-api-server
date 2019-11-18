@@ -33,19 +33,19 @@ clientDiscord.on('ready', () => {
 clientDiscord.on('message', message => {
     message.content = message.content.toLowerCase()
 
-    if (message.content.includes('gs zone') || message.content.includes('gs-zone')) {
-        const embed = new Discord.RichEmbed()
-            // Set the title of the field
-            .setTitle(`Yo no hubiera nacido sin ese foro, que bonito lugar`)
-            .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
-            .setFooter(website, iconFooter)
-            // Set the color of the embed
-            .setColor(0x90CC55)
-            // Set the main content of the embed
-            .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
+    // if (message.content.includes('gs zone') || message.content.includes('gs-zone')) {
+    //     const embed = new Discord.RichEmbed()
+    //         // Set the title of the field
+    //         .setTitle(`Yo no hubiera nacido sin ese foro, que bonito lugar`)
+    //         .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
+    //         .setFooter(website, iconFooter)
+    //         // Set the color of the embed
+    //         .setColor(0x90CC55)
+    //         // Set the main content of the embed
+    //         .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
 
-        message.reply(embed)
-    }
+    //     message.reply(embed)
+    // }
 
     if (message.content.includes('barrin')) {
         const embed = new Discord.RichEmbed()
