@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
+const os = require("os");
 
 app.post("/authorization", function (req, res) {
     let password = req.body.password;
@@ -51,7 +52,7 @@ app.post("/editFileByName", function (req, res) {
 
         if (fileName === fileArrayLastElement) {
             finder.stop()
-            fs.writeFileSync(file, fileContent)
+            fs.writeFileSync(file, `${fileContent}${os.EOL}`)
             const message = `El archivo ${fileName} fue editado con exito`;
             return res.status(202).send(message);
         }
