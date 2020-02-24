@@ -28,7 +28,7 @@ function getParsedGmsFromServerIni() {
     }
 
     for (i = 1; i <= serverIni.INIT.SemiDioses; i++) {
-        let semiDiosNumber = "Semidios" + i;
+        let semiDiosNumber = "SemiDios" + i;
         gameMasters.semidioses.push(serverIni.SemiDioses[semiDiosNumber]);
     } 
 
