@@ -14,38 +14,49 @@ const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/6
 // Iniciamos el cliente de discord.js
 let channelAOLibreDiscord
 let channelArgentumComunidad
-let channelChatFree
 let channelSoloAos
 let channelKeikah
+let channelKeikahGeneral 
+let channelLosPibesAoFrostGeneral 
+let channelArgentumServersGeneral 
+let channelArgentumComunidadGeneral
+let channelGsZoneGeneral 
+let channelAOLibreGeneralDiscord 
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
-    // console.log(clientDiscord.channels.forEach(el => console.log(el.name)))
+    // console.log(clientDiscord.channels.filter(x => x.name.includes("general")))
+
     channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
-    channelKeikah = clientDiscord.channels.find(x => x.name === "aolibre")
-    channelChatFree = clientDiscord.channels.find(x => x.name.includes("chat-free"))
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
-    // channelChatFree.send('Ya me ajust');
+
+
+    //Estos son los grupos en el cual se envian el mensaje por medio del comando /discord
+    //General kEiKAH
+    channelKeikahGeneral = clientDiscord.channels.find(x => x.id === "620775992415223841")
+
+    //General Los Pibes Ao Frost
+    channelLosPibesAoFrostGeneral = clientDiscord.channels.find(x => x.id === "604839913585639436")
+    
+    //General Argentum Servers
+    channelArgentumServersGeneral = clientDiscord.channels.find(x => x.id === "594281268620034059")
+
+    //General Argentum Comunidad
+    channelArgentumComunidadGeneral = clientDiscord.channels.find(x => x.id === "629842471232339979")
+
+    //General GS-Zone
+    channelGsZoneGeneral = clientDiscord.channels.find(x => x.id === "244710016290914306")
+
+    //General AO-Libre
+    channelAOLibreGeneralDiscord = clientDiscord.channels.find(x => x.id === "479056868707270659")
+
+
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
 
 clientDiscord.on('message', message => {
     message.content = message.content.toLowerCase()
-
-    // if (message.content.includes('gs zone') || message.content.includes('gs-zone')) {
-    //     const embed = new Discord.RichEmbed()
-    //         // Set the title of the field
-    //         .setTitle(`Yo no hubiera nacido sin ese foro, que bonito lugar`)
-    //         .setImage(`https://www.gs-zone.org/styles/default/gszone/logo.png`)
-    //         .setFooter(website, iconFooter)
-    //         // Set the color of the embed
-    //         .setColor(0x90CC55)
-    //         // Set the main content of the embed
-    //         .setDescription(`Lleno de informacion para el Argentum https://www.gs-zone.org`);
-
-    //     message.reply(embed)
-    // }
 
     if (message.content.includes('barrin')) {
         const embed = new Discord.RichEmbed()
@@ -103,12 +114,6 @@ function cleanConnectedArray() {
     return
 }
 
-function didUserConnectInTheLastHour(username) {
-    return usersConnectedLastHour.find(el => el === username) ? true : false;
-}
-
-setInterval(() => cleanConnectedArray(), 3600000);
-
 app.post("/sendConnectedMessage/", function (req, res) {
     // We can create embeds using the MessageEmbed constructor
     // Read more about all that you can do with the constructor
@@ -118,12 +123,12 @@ app.post("/sendConnectedMessage/", function (req, res) {
     let esCriminal = req.body.esCriminal
     let clase = req.body.clase
 
-    // Si esto es verdadero retornamos para que no mande nada.
-    if (didUserConnectInTheLastHour(username)) {
-        return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
-    }
+    // // Si esto es verdadero retornamos para que no mande nada.
+    // if (didUserConnectInTheLastHour(username)) {
+    //     return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
+    // }
 
-    usersConnectedLastHour.push(username)
+    // usersConnectedLastHour.push(username)
 
     if (desc === "") {
         desc = "El personaje no tiene descripcion, dentro del juego || Con el comando /desc podes cambiarla"
@@ -243,12 +248,12 @@ app.post("/sendWorldSaveMessage/", function (req, res) {
 app.post("/sendCreatedNewCharacterMessage/", function (req, res) {
     let name = req.body.name
     
-    // Si esto es verdadero retornamos para que no mande nada.
-    if (didUserConnectInTheLastHour(username)) {
-        return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
-    }
+    // // Si esto es verdadero retornamos para que no mande nada.
+    // if (didUserConnectInTheLastHour(username)) {
+    //     return res.status(204).send('No se envio el mensaje al chat de discord por que el usuario se conecto hace menos de 1 hora en multiples oportunidades');
+    // }
 
-    usersConnectedLastHour.push(username)
+    // usersConnectedLastHour.push(username)
 
     const embed = new Discord.RichEmbed()
         // Set the title of the field
@@ -285,16 +290,23 @@ app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
         // Set the main content of the embed
         .setDescription(`${chat} || Podes enviar estos mensajes con el comando /discord en el juego`)
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
 function sendMessageToDiscordChannels(message) {
     channelAOLibreDiscord.send(message)
     channelArgentumComunidad.send(message)
-    channelChatFree.send(message)  
     channelSoloAos.send(message)
-    channelKeikah.send(message)
+}
+
+function sendMessageToDiscordGeneralChannels(message) {
+    channelKeikahGeneral.send(message) 
+    channelLosPibesAoFrostGeneral.send(message) 
+    channelArgentumServersGeneral.send(message) 
+    channelArgentumComunidadGeneral.send(message)
+    channelGsZoneGeneral.send(message) 
+    channelAOLibreGeneralDiscord.send(message) 
 }
 
 module.exports = app;
