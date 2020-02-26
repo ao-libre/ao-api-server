@@ -305,7 +305,7 @@ function sendMessageToDiscordGeneralChannels(message) {
     channelLosPibesAoFrostGeneral.send(message) 
     channelArgentumServersGeneral.send(message) 
     channelArgentumComunidadGeneral.send(message)
-    channelGsZoneGeneral.send(message) 
+    // channelGsZoneGeneral.send(message) 
     channelAOLibreGeneralDiscord.send(message) 
 }
 
