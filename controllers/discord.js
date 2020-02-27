@@ -97,6 +97,23 @@ clientDiscord.on('message', message => {
         message.reply(embed)
     }
 
+    if (message.content === '/comics') {
+        let imageNumber = randomIntFromInterval(1, 222)
+
+        const embed = new Discord.RichEmbed()
+            // Set the title of the field
+            .setTitle(`Argentum Online Libre presenta: Comics de MegaDimension`)
+            .setAuthor('MegaDimension', 'https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/comics/logo-megadimension.png', 'http://www.megadimension.com.ar/')
+            .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/comics/Comic${imageNumber}.png`)
+            .setFooter(website, iconFooter)
+            // Set the color of the embed
+            .setColor(0xf7f7f7)
+            // Set the main content of the embed
+            .setDescription(`Encontra mas comics del autor en su web: http://www.megadimension.com.ar/`)
+            .addField('AO Libre Server Primario Online 24/7', 'http://www.ArgentumOnline.org', true);
+
+        message.reply(embed)
+    }
 });
 
 clientDiscord.login(process.env.DISCORD_TOKEN);
