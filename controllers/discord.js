@@ -12,30 +12,23 @@ const iconFooter = "https://raw.githubusercontent.com/ao-libre/ao-website/master
 const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/612483417107595275/icon-256.png";
 
 // Iniciamos el cliente de discord.js
-let channelAOLibreDiscord
+let channelAOLibreJugandoChannelDiscord
 let channelArgentumComunidad
 let channelSoloAos
-let channelKeikah
-let channelKeikahGeneral 
 let channelLosPibesAoFrostGeneral 
 let channelArgentumServersGeneral 
 let channelArgentumComunidadGeneral
-let channelGsZoneGeneral 
 let channelAOLibreGeneralDiscord 
 
 const clientDiscord = new Discord.Client();
 clientDiscord.on('ready', () => {
-    // console.log(clientDiscord.channels.filter(x => x.name.includes("general")))
 
-    channelAOLibreDiscord = clientDiscord.channels.find(x => x.name === "jugando")
+    // Estos son simplemente el log del server/conectados online/happy hour/worldsave/etc
+    channelAOLibreJugandoChannelDiscord = clientDiscord.channels.find(x => x.id === "479059822545993740")
     channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
 
-
     //Estos son los grupos en el cual se envian el mensaje por medio del comando /discord
-    //General kEiKAH
-    channelKeikahGeneral = clientDiscord.channels.find(x => x.id === "620775992415223841")
-
     //General Los Pibes Ao Frost
     channelLosPibesAoFrostGeneral = clientDiscord.channels.find(x => x.id === "604839913585639436")
     
@@ -45,12 +38,8 @@ clientDiscord.on('ready', () => {
     //General Argentum Comunidad
     channelArgentumComunidadGeneral = clientDiscord.channels.find(x => x.id === "629842471232339979")
 
-    //General GS-Zone
-    channelGsZoneGeneral = clientDiscord.channels.find(x => x.id === "244710016290914306")
-
     //General AO-Libre
     channelAOLibreGeneralDiscord = clientDiscord.channels.find(x => x.id === "479056868707270659")
-
 
     console.log(`Logged in Discord as ${clientDiscord.user.tag}!`);
 });
@@ -74,6 +63,20 @@ clientDiscord.on('message', message => {
         message.reply('Si bro, aguante el Argentum!!, bajalo de aca mono http://www.ArgentumOnline.org !!!')
     }
 
+    if (message.content === '/descargar') {
+        const embed = new Discord.RichEmbed()
+            // Set the title of the field
+            .setTitle('Argentum Online Libre - AO Clasico')
+            .setFooter(website, iconClassic)
+            // Set the color of the embed
+            .setColor(0xFFF400)
+            // Set the main content of the embed
+            .setDescription(`Entra aca para bajarte el juego http://www.ArgentumOnline.org/aoclasico.html`)
+        
+        // channelAOLibreGeneralDiscord.send(embed)
+        message.reply(embed)
+    }
+
     if (message.content === '/online') {
         const usersOnline = getOnlineUsersQuantityInServer()
         let imageNumber;
@@ -88,7 +91,7 @@ clientDiscord.on('message', message => {
             // Set the title of the field
             .setTitle(`Argentum Online Libre: Gente ONLINE en tiempo real`)
             .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/onlinerandom${imageNumber}.jpg`)
-            .setFooter(website, iconFooter)
+            .setFooter(website, iconClassic)
             // Set the color of the embed
             .setColor(0x90CC55)
             // Set the main content of the embed
@@ -312,18 +315,16 @@ app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
 });
 
 function sendMessageToDiscordChannels(message) {
-    channelAOLibreDiscord.send(message)
+    channelAOLibreJugandoChannelDiscord.send(message)
     channelArgentumComunidad.send(message)
     channelSoloAos.send(message)
 }
 
 function sendMessageToDiscordGeneralChannels(message) {
-    channelKeikahGeneral.send(message) 
+    channelAOLibreGeneralDiscord.send(message) 
     channelLosPibesAoFrostGeneral.send(message) 
     channelArgentumServersGeneral.send(message) 
     channelArgentumComunidadGeneral.send(message)
-    // channelGsZoneGeneral.send(message) 
-    channelAOLibreGeneralDiscord.send(message) 
 }
 
 module.exports = app;
