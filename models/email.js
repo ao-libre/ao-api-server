@@ -16,6 +16,10 @@ const transporter = nodemailer.createTransport({
     }
 })
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+  
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
     let htmlContentEmail = fs.readFileSync('./resources/emails/welcome.html', 'utf-8')
@@ -111,4 +115,46 @@ exports.sendResetAccountPassword = async function (req, res, email, password) {
 			return res.status(200).send('Email reset password sent: ' + info.response)
         }
     }); 
+};
+
+exports.sendNewsletterEmail = async function (req, res, allEmails, emailSubject, emailContent) {
+    //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
+    let htmlContentEmail = fs.readFileSync('./resources/emails/newsletter.html', 'utf-8')
+
+    htmlContentEmail = htmlContentEmail.replace('VAR_CONTENT', emailContent)
+
+    //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
+    htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
+
+    const emailsStatus = {
+        emailsSent: [],
+        emailsFailed: []        
+    };
+
+    for (const [key, emailValue] of Object.entries(allEmails)) {
+        console.log(`Esperando 5 segundos para mandar el siguiente email numero ${parseInt(key) + 1} a la cuenta: [${emailValue.INIT_USERNAME}]`);
+        await sleep(5000);
+
+        var mailOptions = {
+            from: process.env.EMAIL,
+            to: "lolab48481@gotkmail.com",
+            subject: `⛏ ${emailSubject}`,
+            html: htmlContentEmail
+        };
+        
+        const info = await transporter.sendMail(mailOptions).catch(console.error);
+
+        if (info && info.response.includes("250")) {
+            console.info("Se envio un email de newsletter a: " + emailValue.INIT_USERNAME)
+            emailsStatus.emailsSent.push(emailValue.INIT_USERNAME)
+        } else {
+            console.error('\x1b[31m%s\x1b[0m', "ERROR - sendNewsletterEmail error: " + emailValue.INIT_USERNAME)
+            emailsStatus.emailsFailed.push(emailValue.INIT_USERNAME)
+        }
+
+        // Si es el ultimo email vamos a mandar el response...
+        if (Object.is(allEmails.length - 1, key)) {
+			return res.status(200).json(emailsStatus)
+        }
+    };
 };
