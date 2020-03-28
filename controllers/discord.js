@@ -69,7 +69,7 @@ clientDiscord.on('message', message => {
             .setTitle('Argentum Online Libre - AO Clasico')
             .setFooter(website, iconClassic)
             // Set the color of the embed
-            .setColor(0xFFF400)
+            .setColor(0x00ff00)
             // Set the main content of the embed
             .setDescription(`Entra aca para bajarte el juego http://www.ArgentumOnline.org/aoclasico.html`)
         
