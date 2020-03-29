@@ -1,24 +1,9 @@
-const nodemailer = require('nodemailer');
 const fs = require('fs');
 const ip = require("ip");
+const emailTransporter = require('../email-transporter.js');
 const { encriptPassword, getSaltFromAccount } = require("./account")
 
 const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
-
-// create reusable transporter object using the default SMTP transport
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    }
-})
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
   
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
@@ -36,7 +21,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
         html: htmlContentEmail
     };
     
-    transporter.sendMail(mailOptions, function(error, info){
+    emailTransporter.getGeneralPool().sendMail(mailOptions, function(error, info){
         if (error) {
 			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendWelcomeEmail error: " + error)
             return res.status(500).send('No se pudo enviar el email de bienvenida' + error)
@@ -71,7 +56,7 @@ exports.sendLoginEmail = function (req, res, emailTo, date) {
         html: htmlContentEmail
     };
     
-    transporter.sendMail(mailOptions, function(error, info){
+    emailTransporter.getGeneralPool().sendMail(mailOptions, function(error, info){
         if (error) {
 			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendLoginEmail error: " + error)
             return res.status(500).send('No se pudo enviar el email de login' + error)
@@ -106,7 +91,7 @@ exports.sendResetAccountPassword = async function (req, res, email, password) {
         html: htmlContentEmail
     };
     
-    transporter.sendMail(mailOptions, function(error, info){
+    emailTransporter.getGeneralPool().sendMail(mailOptions, function(error, info){
         if (error) {
 			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendResetAccountPassword error: " + error)
             return res.status(500).send({error: 'No se pudo enviar el email de reset password'})
@@ -131,30 +116,43 @@ exports.sendNewsletterEmail = async function (req, res, allEmails, emailSubject,
         emailsFailed: []        
     };
 
+    let blacklistEmails = fs.readFileSync('./blacklist-emails.json', 'utf-8')
+    blacklistEmails = JSON.parse(blacklistEmails);
+
+    console.log(`Hay que enviar ${allEmails.length} emails`)
+
+    let mailOptions = {
+        from: process.env.EMAIL_NEWSLETTER,
+        subject: `⛏ ${emailSubject}`,
+        html: htmlContentEmail
+    };
+
     for (const [key, emailValue] of Object.entries(allEmails)) {
-        console.log(`Esperando 5 segundos para mandar el siguiente email numero ${parseInt(key) + 1} a la cuenta: [${emailValue.INIT_USERNAME}]`);
-        await sleep(5000);
+        // Si NO esta email esta en la blacklist trabajamos.
+        if (!blacklistEmails.includes(emailValue.INIT_USERNAME)) {
+            mailOptions.to = "argentumonline@riseup.net";
 
-        var mailOptions = {
-            from: process.env.EMAIL,
-            to: "lolab48481@gotkmail.com",
-            subject: `⛏ ${emailSubject}`,
-            html: htmlContentEmail
-        };
-        
-        const info = await transporter.sendMail(mailOptions).catch(console.error);
+            console.info("Se esta enviando un email de newsletter a: " + emailValue.INIT_USERNAME)
 
-        if (info && info.response.includes("250")) {
-            console.info("Se envio un email de newsletter a: " + emailValue.INIT_USERNAME)
-            emailsStatus.emailsSent.push(emailValue.INIT_USERNAME)
-        } else {
-            console.error('\x1b[31m%s\x1b[0m', "ERROR - sendNewsletterEmail error: " + emailValue.INIT_USERNAME)
-            emailsStatus.emailsFailed.push(emailValue.INIT_USERNAME)
+            const info = await emailTransporter.getNewsletterPool().sendMail(mailOptions).catch(console.error);
+    
+            if (info && info.response.includes("250")) {
+                console.info("Se envio un email de newsletter a: " + emailValue.INIT_USERNAME)
+                emailsStatus.emailsSent.push(emailValue.INIT_USERNAME)
+            } else {
+                console.error('\x1b[31m%s\x1b[0m', "ERROR - sendNewsletterEmail error: " + emailValue.INIT_USERNAME)
+                emailsStatus.emailsFailed.push(emailValue.INIT_USERNAME)
+            }
         }
 
-        // Si es el ultimo email vamos a mandar el response...
-        if (Object.is(allEmails.length - 1, key)) {
-			return res.status(200).json(emailsStatus)
+        // Si es el ultimo email...
+        if (allEmails.length - 1 === parseInt(key)) {
+            console.info("Guardando emails que no se pueden enviar en blacklist-emails.json");
+            fs.writeFileSync(`./blacklist-emails.json`, JSON.stringify(emailsStatus.emailsFailed, null, 4));
+            
+            console.info("Se completo el envio de Newsletter a todos los usuarios");
         }
     };
+    
+    return res.status(200).send("Se inicio el envio del newsletter email con exito")
 };

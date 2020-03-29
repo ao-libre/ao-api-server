@@ -41,7 +41,6 @@ app.post("/sendNewsletterEmail", async function (req, res) {
 	console.info("sendNewsletterEmail: " + emailSubject)
 
     let allEmails = await getAllEmailsFromAccounts();
-    console.log(666, Array.isArray(allEmails))
 
     allEmails = allEmails.map(x => { 
         return {
@@ -51,7 +50,5 @@ app.post("/sendNewsletterEmail", async function (req, res) {
     
     email.sendNewsletterEmail(req, res, allEmails, emailSubject, emailContent);
 });
-
-
 
 module.exports = app;
