@@ -13,11 +13,9 @@ const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/6
 
 // Iniciamos el cliente de discord.js
 let channelAOLibreJugandoChannelDiscord
-let channelArgentumComunidad
 let channelSoloAos
 let channelLosPibesAoFrostGeneral 
 let channelArgentumServersGeneral 
-let channelArgentumComunidadGeneral
 let channelAOLibreGeneralDiscord 
 
 const clientDiscord = new Discord.Client();
@@ -25,7 +23,6 @@ clientDiscord.on('ready', () => {
 
     // Estos son simplemente el log del server/conectados online/happy hour/worldsave/etc
     channelAOLibreJugandoChannelDiscord = clientDiscord.channels.find(x => x.id === "479059822545993740")
-    channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
 
     //Estos son los grupos en el cual se envian el mensaje por medio del comando /discord
@@ -34,9 +31,6 @@ clientDiscord.on('ready', () => {
     
     //General Argentum Servers
     channelArgentumServersGeneral = clientDiscord.channels.find(x => x.id === "594281268620034059")
-
-    //General Argentum Comunidad
-    channelArgentumComunidadGeneral = clientDiscord.channels.find(x => x.id === "629842471232339979")
 
     //General AO-Libre
     channelAOLibreGeneralDiscord = clientDiscord.channels.find(x => x.id === "479056868707270659")
@@ -316,7 +310,6 @@ app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
 
 function sendMessageToDiscordChannels(message) {
     channelAOLibreJugandoChannelDiscord.send(message)
-    channelArgentumComunidad.send(message)
     channelSoloAos.send(message)
 }
 
@@ -324,7 +317,6 @@ function sendMessageToDiscordGeneralChannels(message) {
     channelAOLibreGeneralDiscord.send(message) 
     channelLosPibesAoFrostGeneral.send(message) 
     channelArgentumServersGeneral.send(message) 
-    channelArgentumComunidadGeneral.send(message)
 }
 
 module.exports = app;
