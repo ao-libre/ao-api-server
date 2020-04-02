@@ -1,5 +1,5 @@
 const express = require('express');
-const ini = require('ini');
+const INI = require('easy-ini')
 const db = require('../db.js');
 const fs = require('fs');
 const fsExtra = require('fs-extra');
@@ -13,19 +13,20 @@ app.get("/deleteAndResetGuilds", async function (req, res) {
         
         let [rows] = await db.get().query(`SELECT * FROM charfiles_worldsave;`);
         rows.forEach(async char => {
+            const charfileName = `${CHARS_PATH}/${char.NOMBRE}.chr`
+            
             try {
-                const charfileName = `${CHARS_PATH}/${char.NOMBRE}.chr`
-                const charIni = ini.decode(fs.readFileSync(charfileName, 'utf-8'));
-    
-                delete charIni.GUILD;
-                console.log(charIni.INIT.ACCOUNTHASH);
-                charIni.INIT.ACCOUNTHASH.safe(charIni.INIT.ACCOUNTHASH);
-
-                fs.writeFileSync(charfileName, ini.stringify(charIni));
+                const charfileContent = fs.readFileSync(charfileName, 'utf-8');
+                const charIni = new INI(charfileContent);
+                
+                // Remove an entire section
+                charIni.findAndRemoveSectionIfExists('[GUILD]')
+                
+                fs.writeFileSync(charfileName, charIni.createINIString());
                 console.info('El charfile se modifico correctamente: ' + char.NOMBRE);
 
             }catch(err){
-                //console.error('No se encontro el archivo: ' + char.NOMBRE)
+                // console.error('No se encontro el archivo: ' + charfileName)
             }
 
         });
