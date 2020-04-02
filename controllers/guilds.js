@@ -18,7 +18,8 @@ app.get("/deleteAndResetGuilds", async function (req, res) {
                 const charIni = ini.decode(fs.readFileSync(charfileName, 'utf-8'));
     
                 delete charIni.GUILD;
-                
+                console.log(charIni.INIT.ACCOUNTHASH);
+                charIni.INIT.ACCOUNTHASH.safe(charIni.INIT.ACCOUNTHASH);
 
                 fs.writeFileSync(charfileName, ini.stringify(charIni));
                 console.info('El charfile se modifico correctamente: ' + char.NOMBRE);
