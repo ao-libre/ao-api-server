@@ -26,7 +26,7 @@ app.get("/deleteAndResetGuilds", async function (req, res) {
                 console.info('El charfile se modifico correctamente: ' + char.NOMBRE);
 
             }catch(err){
-                // console.error('No se encontro el archivo: ' + charfileName)
+                console.error('No se encontro el archivo: ' + charfileName)
             }
 
         });
