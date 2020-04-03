@@ -183,7 +183,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -200,7 +200,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -217,7 +217,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
