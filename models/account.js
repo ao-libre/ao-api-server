@@ -7,6 +7,7 @@ const sha256 = require('js-sha256');
 let accountInSqlArray = []
 
 const ACCOUNTS_PATH = './server/Account/';
+const CHARFILES_PATH = './server/Charfile/'; 
 
 function readIniFile(fileName){
     let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
@@ -178,4 +179,47 @@ exports.getSaltFromAccount = function (email) {
 //         return res.status(500).send(err.toString())
 //     }
 // };
+
+exports.resetAllAccounts = async function (req, res) {
+    //Hacemos este proceso para no tener que borrar nuestros usuarios y asi no tener que perder la base de jugadores. :)
+
+    //Borramos los personajes en todos los CHARFILES
+    fs.readdir(ACCOUNTS_PATH, async (err, files) => {
+
+        const filteredFiles = files.filter(x=> x.includes('.ach'))
+
+        filteredFiles.forEach(file => {
+            console.log(123, file)
+            let accountJson = readIniFile(file);
+
+            accountJson.INIT.CANTIDADPERSONAJES = 0
+
+            delete accountJson.PERSONAJES.Personaje1
+            delete accountJson.PERSONAJES.Personaje2
+            delete accountJson.PERSONAJES.Personaje3
+            delete accountJson.PERSONAJES.Personaje4
+            delete accountJson.PERSONAJES.Personaje5
+            delete accountJson.PERSONAJES.Personaje6
+            delete accountJson.PERSONAJES.Personaje7
+            delete accountJson.PERSONAJES.Personaje8
+            delete accountJson.PERSONAJES.Personaje9
+            delete accountJson.PERSONAJES.Personaje10
+
+            writeIniFile(file, accountJson);
+        });
+    });
+
+    //Borramos todos los archivos de la carpeta CHARFILE
+    fs.readdir(CHARFILES_PATH, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+          fs.unlink(path.join(CHARFILES_PATH, file), err => {
+            if (err) throw err;
+          });
+        }
+    });
+
+    return res.status(200).send(`Se reseteo el server correctamente, todas las cuentas estan limpias`);
+};
 

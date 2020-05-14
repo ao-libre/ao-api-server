@@ -11,4 +11,9 @@ app.get("/resetPassword/:email/:newPassword", function (req, res) {
     account.resetPassword(req, res, req.params.email, req.params.newPassword);
 });
 
+app.get("/resetAllAccounts/", function (req, res) {
+    //Email es lo mismo cuenta...
+    account.resetAllAccounts(req, res);
+});
+
 module.exports = app;
