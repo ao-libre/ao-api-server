@@ -156,17 +156,15 @@ exports.resetPassword = async function (req, res, email, newPassword) {
 
 exports.encriptPassword = function (password, salt){
     return sha256(password + salt)
-}
-
+};
 
 exports.getSaltFromAccount = function (email) {
 	try {
 		let accountJson = readIniFile(`${email}.acc`);
 		return accountJson.INIT.SALT
-	} catch (error){
+	} catch (error) {
 		return error
 	}
-
 };
 
 
@@ -189,21 +187,23 @@ exports.resetAllAccounts = async function (req, res) {
         const filteredFiles = files.filter(x=> x.includes('.ach'))
 
         filteredFiles.forEach(file => {
-            console.log(123, file)
+            console.log("Reseteando archivo: ", file)
             let accountJson = readIniFile(file);
 
             accountJson.INIT.CANTIDADPERSONAJES = 0
-
-            delete accountJson.PERSONAJES.Personaje1
-            delete accountJson.PERSONAJES.Personaje2
-            delete accountJson.PERSONAJES.Personaje3
-            delete accountJson.PERSONAJES.Personaje4
-            delete accountJson.PERSONAJES.Personaje5
-            delete accountJson.PERSONAJES.Personaje6
-            delete accountJson.PERSONAJES.Personaje7
-            delete accountJson.PERSONAJES.Personaje8
-            delete accountJson.PERSONAJES.Personaje9
-            delete accountJson.PERSONAJES.Personaje10
+            
+            if (accountJson.PERSONAJES) {
+                delete accountJson.PERSONAJES.Personaje1
+                delete accountJson.PERSONAJES.Personaje2
+                delete accountJson.PERSONAJES.Personaje3
+                delete accountJson.PERSONAJES.Personaje4
+                delete accountJson.PERSONAJES.Personaje5
+                delete accountJson.PERSONAJES.Personaje6
+                delete accountJson.PERSONAJES.Personaje7
+                delete accountJson.PERSONAJES.Personaje8
+                delete accountJson.PERSONAJES.Personaje9
+                delete accountJson.PERSONAJES.Personaje10
+            }
 
             writeIniFile(file, accountJson);
         });
