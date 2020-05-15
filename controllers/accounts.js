@@ -17,14 +17,14 @@ app.get("/resetPassword/:email/:newPassword", function (req, res) {
 
 app.get("/resetAllAccounts/:adminPassword", function (req, res) {
     if (process.env.ADMIN_PASSWORD === req.params.adminPassword) {
-        account.resetAllAccounts(req, res);
-
         //Eliminamos clanes 
         fsExtra.emptyDirSync(GUILDS_PATH)
 
         //Reseteamos archivo de clanes.
         const guildinfoDefaultValue = "[INIT]\nnroGuilds=0\n"
         fs.writeFileSync(GUILDS_PATH + "/guildsinfo.inf", guildinfoDefaultValue)
+        
+        account.resetAllAccounts(req, res);
     }else {
         return res.status(401).send("LA PASSWORD ES INCORRECTA");
     }
