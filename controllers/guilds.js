@@ -11,9 +11,14 @@ const CHARS_PATH = './server/Charfile';
 app.get("/deleteAndResetGuilds", async function (req, res) {
     try {
         
-        let [rows] = await db.get().query(`SELECT * FROM charfiles_worldsave;`);
-        rows.forEach(async char => {
-            const charfileName = `${CHARS_PATH}/${char.NOMBRE}.chr`
+        let chars = fs.readdirSync(CHARS_PATH)
+        chars = chars.filter(x=> x.includes('.chr'));
+        console.log(chars)
+
+
+        // let [chars] = await db.get().query(`SELECT * FROM charfiles_worldsave;`);
+        chars.forEach(async char => {
+            const charfileName = `${CHARS_PATH}/${char}`
             
             try {
                 const charfileContent = fs.readFileSync(charfileName, 'utf-8');
@@ -23,7 +28,7 @@ app.get("/deleteAndResetGuilds", async function (req, res) {
                 charIni.findAndRemoveSectionIfExists('[GUILD]')
                 
                 fs.writeFileSync(charfileName, charIni.createINIString());
-                console.info('El charfile se modifico correctamente: ' + char.NOMBRE);
+                console.info('El charfile se modifico correctamente: ' + char);
 
             }catch(err){
                 console.error('No se encontro el archivo: ' + charfileName)
