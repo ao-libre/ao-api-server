@@ -60,12 +60,11 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     }); 
 };
 
-exports.sendLoginEmail = function (req, res, emailTo, date) {
+exports.sendLoginEmail = function (req, res, emailTo, date, currentIp) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
     let htmlContentEmail = fs.readFileSync('./resources/emails/loginAccount.html', 'utf-8')
     
-    //TODO: MANDAR IP??
-    htmlContentEmail = htmlContentEmail.replace('VAR_IP', '')
+    htmlContentEmail = htmlContentEmail.replace('VAR_IP', currentIp)
 
     var yyyymmdd = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " ";
     const hourAndMinutes = (date.getHours()<10?'0':'') + date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes()
