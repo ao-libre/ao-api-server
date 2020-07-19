@@ -9,6 +9,11 @@ const GUILDS_PATH = './server/Guilds';
 const CHARS_PATH = './server/Charfile';
 
 app.get("/deleteAndResetGuilds", async function (req, res) {
+
+    if (process.env.ADMIN_PASSWORD != req.body.password) {
+        return res.status(401).send('No estas autorizado a entrar... :(');
+    }
+
     try {
         
         let chars = fs.readdirSync(CHARS_PATH)
