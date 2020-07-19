@@ -32,6 +32,19 @@ const transporterRecuperarPassword = nodemailer.createTransport({
     }
 })
 
+// create reusable transporter object using the default SMTP transport
+const transporterBienvenida = nodemailer.createTransport({
+    pool: true,
+    maxMessages: 50,
+    host: process.env.EMAIL_HOST_BIENVENIDA,
+    port: process.env.EMAIL_PORT_BIENVENIDA,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER_BIENVENIDA,
+      pass: process.env.EMAIL_PASSWORD_BIENVENIDA,
+    }
+})
+
 
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     //Primero obtenemos el archivo html del tipo de email a enviar y ponemos los parametros
@@ -49,7 +62,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
         html: htmlContentEmail
     };
     
-    transporter.sendMail(mailOptions, function(error, info){
+    transporterBienvenida.sendMail(mailOptions, function(error, info){
         if (error) {
 			console.error('\x1b[31m%s\x1b[0m', "ERROR - sendWelcomeEmail error: " + error)
             return res.status(500).send('No se pudo enviar el email de bienvenida' + error)
