@@ -56,4 +56,8 @@ app.get("/getGameMasters", function (req, res) {
     charfile.getAllGms(req, res);
 });
 
+app.post("/resetInventoryAndGoldCharfile", function (req, res) {
+    charfile.resetInventoryOfCheaters(req, res);
+});
+
 module.exports = app;
