@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
-
+const zl = require("zip-lib");
+ 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -242,6 +243,26 @@ app.post("/sendNewGuildCreated/", function (req, res) {
 });
 
 app.post("/sendWorldSaveMessage/", function (req, res) {
+    // creamos backup de algunas carpetas 
+    const zip = new zl.Zip();
+
+    const date = new Date();
+    let isoDateString = date.toISOString();
+    console.log(isoDateString)
+    isoDateString = isoDateString.replace(/:/g,"-");
+    console.log(isoDateString)
+
+    // Adds a folder from the file system, putting its contents at the root of archive
+    zip.addFolder("./server/Account", "Account");
+    zip.addFolder("./server/Charfile", "Charfile");
+    zip.addFolder("./server/Guilds", "Guilds");
+    // Generate zip file.
+    zip.archive(`./backups/aolibre-${isoDateString}.zip`).then(function () {
+        console.log("Backup de los Guilds, Account, Charfile hecho");
+    }, function (err) {
+        console.log(err);
+    });
+    
     let message = "Sabias que en http://wiki.argentumonline.org tenes la guia y en nuestro reddit guias de entrenamiento para cada raza?"
 
     const embed = new Discord.RichEmbed()
