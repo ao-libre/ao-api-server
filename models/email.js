@@ -56,7 +56,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
     var mailOptions = {
-        from: process.env.EMAIL,
+        from: process.env.EMAIL_BIENVENIDA,
         to: emailTo,
         subject: '🗡 Bienvenido a Argentum Online Libre (Alkon) ⚔️',
         html: htmlContentEmail
