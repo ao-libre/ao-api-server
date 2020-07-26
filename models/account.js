@@ -3,6 +3,7 @@ const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
 const sha256 = require('js-sha256');
+const INI_EASY = require('easy-ini')
 
 let accountInSqlArray = []
 
@@ -141,10 +142,17 @@ exports.backupAccountFiles = async function(req, res) {
 
 exports.resetPassword = async function (req, res, email, newPassword) {
     try {
-        let accountJson = readIniFile(`${email}.acc`);
-        accountJson.INIT.PASSWORD = newPassword;
+        const accFilePath = path.join(`${ACCOUNTS_PATH}/${email}.acc`);
 
-        await writeIniFile(`${email}.acc`, accountJson);
+        const accountContent = fs.readFileSync(accFilePath, 'utf-8');
+        const accountIni = new INI_EASY(accountContent);
+    
+        const INIT = accountIni.iniData.find(x => x.name == "[INIT]")
+    
+        INIT.content.find(x => x.key === "PASSWORD").val = newPassword
+
+        //Hacemos esto por que el hash de password se graba mal a veces con la otra libreria.
+        fs.writeFileSync(accFilePath, accountIni.createINIString());
 
         console.info(`Password de la cuenta ${email} fue cambiado correctamente por: ${newPassword}`)
         return res.status(200).send(`Password de la cuenta ${email} fue cambiado correctamente :)`);
