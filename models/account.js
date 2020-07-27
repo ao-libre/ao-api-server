@@ -6,6 +6,7 @@ const sha256 = require('js-sha256');
 const INI_EASY = require('easy-ini')
 
 let accountInSqlArray = []
+let workingInBackup = false;
 
 const ACCOUNTS_PATH = './server/Account/';
 const CHARFILES_PATH = './server/Charfile/'; 
@@ -88,11 +89,14 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
 
     await db.get().query(query);
     accountInSqlArray.push(accountJson.INIT.USERNAME);
-    console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
+    // console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
 };
 
 exports.backupAccountFiles = async function(req, res) {
+    if (workingInBackup) { return; }
+
     try {
+        workingInBackup = true;
         //POR SI LAS MOSCAS
         //Primero creo la tabla, esto lo voy a hostear en db4free para no tener que pagar $$$
         //Y justamente por este motivo puede fallar y no tienen por que brindarte garantias,
@@ -132,6 +136,8 @@ exports.backupAccountFiles = async function(req, res) {
 
         await db.get().query('RENAME TABLE accounts_worldsave_temporal TO accounts_worldsave;')
         console.info('==== RENOMBRANDO TABLA accounts_worldsave_temporal a accounts_worldsave ======')
+
+        workingInBackup = false;
 
         return res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {

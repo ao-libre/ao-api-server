@@ -5,11 +5,12 @@ const { getAllGmsString } = require('../utils/server-configuration');
 
 const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
+let workingInBackup = false;
 
 async function hideIps(data) {
     var regex = new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\/\d{2})?/, 'g');
 
-    return data.replace(regex, 'IP OCULTA :)');
+    return data.replace(regex, ' IP OCULTA =)');
 }
 
 exports.getAllGmsLogs = async function (req, res) {
@@ -78,7 +79,10 @@ exports.getTimeLastUpdated = function (req, res) {
 };
 
 exports.backupLogs = async function (req, res) {
+    if (workingInBackup) { return; }
+
     try {
+        workingInBackup = true;
         //HACER REFACTOR DE ESTO Y PONERLO EN ALGUN LUGAR COPADO
         //ESTO LO HAGO COMO EN 5 LADOS YA XD
 
@@ -144,6 +148,6 @@ async function writeLogsWorldSaveTemporalTable (file) {
             )`;
 
     await db.get().query(query);
-    console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
+    // console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
     logsInSqlArray.push(file);
 }
