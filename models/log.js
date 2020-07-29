@@ -148,7 +148,12 @@ async function writeLogsWorldSaveTemporalTable (file) {
             '${logFileContent}'
             )`;
 
-    await db.get().query(query);
+    try {
+        await db.get().query(query);
+        logsInSqlArray.push(file);
+    } catch (error) {
+        console.info(`Error writeLogsWorldSaveTemporalTable Log: ${file}, Error: ${error}`);
+
+    }
     // console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
-    logsInSqlArray.push(file);
 }
