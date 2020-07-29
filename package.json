@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API para ampliar funciones del servidor del juego Argentum Online Libre",
   "main": "index.js",
+  "repository": "github:ao-libre/ao-api-server",
   "dependencies": {
     "@opuscapita/filemanager-server": "^1.1.0-beta.6",
     "body-parser": "^1.19.0",
@@ -28,5 +29,5 @@
     "nodemon": "nodemon index.js"
   },
   "author": "Lucas Recoaro",
-  "license": "AGPL"
+  "license": "AGPL-3.0-only"
 }

@@ -46,7 +46,8 @@ exports.getBackupsLogs = async function (req, res) {
 exports.getNumUsersLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`, function (err, results, fields) {
         if (err) return res.status(500).json(err);
-        return res.status(200).json(results);
+        const usersOnlineDB = results.pop().log.replace('/\r?\n|\r/g', '').trim();
+        return res.status(200).json({onlines: usersOnlineDB});
     });
 }
 
