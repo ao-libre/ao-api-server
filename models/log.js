@@ -107,7 +107,7 @@ exports.backupLogs = async function (req, res) {
         console.info('==== VACIANDO TABLA logs_worldsave_temporal ======')
 
 
-        console.info('==== INICIANDO COPIA DE CHARFILES A TABLA logs_worldsave_temporal ======')
+        console.info('==== INICIANDO COPIA DE LOGS A TABLA logs_worldsave_temporal ======')
         //Primero limpiamos este array para que el resultado no tenga duplicados.
         logsInSqlArray = []
 
