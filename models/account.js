@@ -3,7 +3,9 @@ const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
 const sha256 = require('js-sha256');
-const INI_EASY = require('easy-ini')
+const INI_EASY = require('easy-ini');
+const hashEquals = require('hash-equals');
+const { type } = require('os');
 
 let accountInSqlArray = []
 let workingInBackup = false;
@@ -92,6 +94,29 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
     // console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
 };
 
+function encriptPassword(password, salt) {
+    return sha256(password + salt)
+};
+
+function getSaltFromAccount(email) {
+	try {
+		let accountJson = readIniFile(`${email}.acc`);
+		return accountJson.INIT.SALT
+	} catch (error) {
+		return error
+	}
+};
+
+function getPasswordEncripted(req, res, email) {
+    try {
+        let accountJson = readIniFile(`${email}.acc`);
+        return sha256(accountJson.INIT.PASSWORD + accountJson.INIT.SALT)
+
+    } catch (err) {
+        return res.status(500).send(err.toString())
+    }
+};
+
 exports.backupAccountFiles = async function(req, res) {
     if (workingInBackup) { return; }
 
@@ -168,30 +193,6 @@ exports.resetPassword = async function (req, res, email, newPassword) {
     }
 };
 
-exports.encriptPassword = function (password, salt){
-    return sha256(password + salt)
-};
-
-exports.getSaltFromAccount = function (email) {
-	try {
-		let accountJson = readIniFile(`${email}.acc`);
-		return accountJson.INIT.SALT
-	} catch (error) {
-		return error
-	}
-};
-
-
-// exports.getPasswordEncripted = function (req, res, email) {
-//     try {
-//         let accountJson = readIniFile(`${email}.acc`);
-//         return sha256(accountJson.PASSWORD + accountJson.SALT)
-
-//     } catch (err) {
-//         return res.status(500).send(err.toString())
-//     }
-// };
-
 exports.resetAllAccounts = async function (req, res) {
     //Hacemos este proceso para no tener que borrar nuestros usuarios y asi no tener que perder la base de jugadores. :)
 
@@ -237,3 +238,16 @@ exports.resetAllAccounts = async function (req, res) {
     return res.status(200).send(`Se reseteo el server correctamente, todas las cuentas estan limpias`);
 };
 
+exports.login = async function (req, res, email, password) {
+    if (email == null || password == null) { return; }
+
+    const salt = getSaltFromAccount(email);
+    const inputPassword = sha256(password + salt);
+    const encryptedPassword = getPasswordEncripted(req, res, email);
+
+    if (inputPassword === encryptedPassword) {
+        return res.status(200).send(`Has iniciado sesion correctamente`)
+    } else {
+        return res.status(403).send(`Usuario y/o contraseña invalidos.`)
+    }
+}
