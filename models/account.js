@@ -4,7 +4,6 @@ const path = require('path');
 const db = require('../db.js');
 const sha256 = require('js-sha256');
 const INI_EASY = require('easy-ini');
-const hashEquals = require('hash-equals');
 const { type } = require('os');
 
 let accountInSqlArray = []
@@ -94,7 +93,7 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
     // console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
 };
 
-function encriptPassword(password, salt) {
+function hashPassword(password, salt) {
     return sha256(password + salt)
 };
 
@@ -107,11 +106,10 @@ function getSaltFromAccount(email) {
 	}
 };
 
-function getPasswordEncripted(req, res, email) {
+function getHashedPassword(req, res, email) {
     try {
         let accountJson = readIniFile(`${email}.acc`);
-        return sha256(accountJson.INIT.PASSWORD + accountJson.INIT.SALT)
-
+        return hashPassword(accountJson.INIT.PASSWORD, accountJson.INIT.SALT)
     } catch (err) {
         return res.status(500).send(err.toString())
     }
@@ -239,11 +237,13 @@ exports.resetAllAccounts = async function (req, res) {
 };
 
 exports.login = async function (req, res, email, password) {
-    if (email == null || password == null) { return; }
+    if (email == null || password == null) { 
+        return res.status(500).send(`Faltan parámetros para procesar esta petición.`) 
+    }
 
     const salt = getSaltFromAccount(email);
-    const inputPassword = sha256(password + salt);
-    const encryptedPassword = getPasswordEncripted(req, res, email);
+    const inputPassword = hashPassword(password, salt);
+    const encryptedPassword = getHashedPassword(req, res, email);
 
     if (inputPassword === encryptedPassword) {
         return res.status(200).send(`Has iniciado sesion correctamente`)
