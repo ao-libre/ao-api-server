@@ -109,7 +109,7 @@ function getSaltFromAccount(email) {
 function getHashedPassword(req, res, email) {
     try {
         let accountJson = readIniFile(`${email}.acc`);
-        return hashPassword(accountJson.INIT.PASSWORD, accountJson.INIT.SALT)
+        return accountJson.INIT.PASSWORD
     } catch (err) {
         return res.status(500).send(err.toString())
     }
