@@ -226,12 +226,20 @@ exports.login = async function (req, res, email, password) {
     // Obtenemos la info. de la cuenta
     const accountData = readIniFile(`${email}.acc`)
 
-    const salt = accountData.INIT.salt;
+    const salt = accountData.INIT.SALT;
     const inputPassword = sha256(password + salt);
-    const encryptedPassword = accountData.INIT.password;
+    const encryptedPassword = accountData.INIT.PASSWORD;
 
     if (inputPassword === encryptedPassword) {
-        return res.status(200).send(`Has iniciado sesion correctamente`)
+        
+        // NO enviamos la contraseña y el salt.
+        delete accountData.INIT.SALT;
+        delete accountData.INIT.PASSWORD;
+        
+        // Devolvemos un JSON con el resto de la informacion de la cuenta.
+        return res.status(200).json(accountData)
+        
+        // return res.status(200).send(`Has iniciado sesion correctamente`)
     } else {
         return res.status(403).send(`Usuario y/o contraseña invalidos.`)
     }
