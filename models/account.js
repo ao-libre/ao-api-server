@@ -13,8 +13,12 @@ const ACCOUNTS_PATH = './server/Account/';
 const CHARFILES_PATH = './server/Charfile/'; 
 
 function readIniFile(fileName){
-    let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
-    return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
+    try {
+        let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
+        return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
+    } catch (err) {
+        return res.status(500).send(err.toString())
+    }  
 }
 
 function writeIniFile(fileName, fileContent){
@@ -91,28 +95,6 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
     await db.get().query(query);
     accountInSqlArray.push(accountJson.INIT.USERNAME);
     // console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
-};
-
-function hashPassword(password, salt) {
-    return sha256(password + salt)
-};
-
-function getSaltFromAccount(email) {
-	try {
-		let accountJson = readIniFile(`${email}.acc`);
-		return accountJson.INIT.SALT
-	} catch (error) {
-		return error
-	}
-};
-
-function getHashedPassword(req, res, email) {
-    try {
-        let accountJson = readIniFile(`${email}.acc`);
-        return accountJson.INIT.PASSWORD
-    } catch (err) {
-        return res.status(500).send(err.toString())
-    }
 };
 
 exports.backupAccountFiles = async function(req, res) {
@@ -241,9 +223,12 @@ exports.login = async function (req, res, email, password) {
         return res.status(500).send(`Faltan parámetros para procesar esta petición.`) 
     }
 
-    const salt = getSaltFromAccount(email);
-    const inputPassword = hashPassword(password, salt);
-    const encryptedPassword = getHashedPassword(req, res, email);
+    // Obtenemos la info. de la cuenta
+    const accountData = readIniFile(`${email}.acc`)
+
+    const salt = accountData.INIT.salt;
+    const inputPassword = sha256(password + salt);
+    const encryptedPassword = accountData.INIT.password;
 
     if (inputPassword === encryptedPassword) {
         return res.status(200).send(`Has iniciado sesion correctamente`)
