@@ -1,6 +1,6 @@
 const fs = require('fs');
 const ip = require("ip");
-const emailTransporter = require('../email-transporter.js');
+const nodemailer = require('nodemailer'); 
 const { encriptPassword, getSaltFromAccount } = require("./account")
 
 const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
