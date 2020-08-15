@@ -56,4 +56,12 @@ app.get("/getGameMasters", function (req, res) {
     charfile.getAllGms(req, res);
 });
 
+app.post("/resetInventoryAndGoldCharfile", function (req, res) {
+    if (process.env.ADMIN_PASSWORD === req.body.password) {
+        charfile.resetInventoryOfCheaters(req, res);
+    }
+
+    return res.status(401).send('No estas autorizado a entrar... :(');
+});
+
 module.exports = app;

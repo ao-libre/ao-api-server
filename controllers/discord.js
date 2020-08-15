@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
-
+const zl = require("zip-lib");
+ 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -13,11 +14,9 @@ const iconClassic = "https://cdn.discordapp.com/attachments/523242255230697490/6
 
 // Iniciamos el cliente de discord.js
 let channelAOLibreJugandoChannelDiscord
-let channelArgentumComunidad
 let channelSoloAos
 let channelLosPibesAoFrostGeneral 
 let channelArgentumServersGeneral 
-let channelArgentumComunidadGeneral
 let channelAOLibreGeneralDiscord 
 
 const clientDiscord = new Discord.Client();
@@ -25,7 +24,6 @@ clientDiscord.on('ready', () => {
 
     // Estos son simplemente el log del server/conectados online/happy hour/worldsave/etc
     channelAOLibreJugandoChannelDiscord = clientDiscord.channels.find(x => x.id === "479059822545993740")
-    channelArgentumComunidad = clientDiscord.channels.find(x => x.name === "ao-libre")
     channelSoloAos = clientDiscord.channels.find(x => x.name === "ao-libre-bot")
 
     //Estos son los grupos en el cual se envian el mensaje por medio del comando /discord
@@ -34,9 +32,6 @@ clientDiscord.on('ready', () => {
     
     //General Argentum Servers
     channelArgentumServersGeneral = clientDiscord.channels.find(x => x.id === "594281268620034059")
-
-    //General Argentum Comunidad
-    channelArgentumComunidadGeneral = clientDiscord.channels.find(x => x.id === "629842471232339979")
 
     //General AO-Libre
     channelAOLibreGeneralDiscord = clientDiscord.channels.find(x => x.id === "479056868707270659")
@@ -189,7 +184,7 @@ app.post("/sendHappyHourStartMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -206,7 +201,7 @@ app.post("/sendHappyHourEndMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -223,7 +218,7 @@ app.post("/sendHappyHourModifiedMessage/", function (req, res) {
         // Set the main content of the embed
         .setDescription(message);
 
-    sendMessageToDiscordChannels(embed);
+    sendMessageToDiscordGeneralChannels(embed);
     return res.status(200).json(embed);
 });
 
@@ -248,6 +243,26 @@ app.post("/sendNewGuildCreated/", function (req, res) {
 });
 
 app.post("/sendWorldSaveMessage/", function (req, res) {
+    // creamos backup de algunas carpetas 
+    const zip = new zl.Zip();
+
+    const date = new Date();
+    let isoDateString = date.toISOString();
+    console.log(isoDateString)
+    isoDateString = isoDateString.replace(/:/g,"-");
+    console.log(isoDateString)
+
+    // Adds a folder from the file system, putting its contents at the root of archive
+    zip.addFolder("./server/Account", "Account");
+    zip.addFolder("./server/Charfile", "Charfile");
+    zip.addFolder("./server/Guilds", "Guilds");
+    // Generate zip file.
+    zip.archive(`./backups/aolibre-${isoDateString}.zip`).then(function () {
+        console.log("Backup de los Guilds, Account, Charfile hecho");
+    }, function (err) {
+        console.log(err);
+    });
+    
     let message = "Sabias que en http://wiki.argentumonline.org tenes la guia y en nuestro reddit guias de entrenamiento para cada raza?"
 
     const embed = new Discord.RichEmbed()
@@ -316,7 +331,6 @@ app.post("/sendCustomCharacterMessageDiscord/", function (req, res) {
 
 function sendMessageToDiscordChannels(message) {
     channelAOLibreJugandoChannelDiscord.send(message)
-    channelArgentumComunidad.send(message)
     channelSoloAos.send(message)
 }
 
@@ -324,7 +338,6 @@ function sendMessageToDiscordGeneralChannels(message) {
     channelAOLibreGeneralDiscord.send(message) 
     channelLosPibesAoFrostGeneral.send(message) 
     channelArgentumServersGeneral.send(message) 
-    channelArgentumComunidadGeneral.send(message)
 }
 
 module.exports = app;

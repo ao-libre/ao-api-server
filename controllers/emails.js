@@ -14,15 +14,18 @@ app.post("/welcome", function (req, res) {
 });
 
 app.post("/loginAccount", function (req, res) {
-    let emailTo = req.body.emailTo
-    let date = new Date()
-    
-    //TODO: Enviar IP ??    
-    // let ip = req.body.ip
+    const emailTo = req.body.emailTo
+    const lastIpsUsed = req.body.lastIpsUsed
+    const currentIp = req.body.currentIp
+
+    if (lastIpsUsed.includes(currentIp)) {
+        return res.status(200).send('No se envio email de login a ' + req.body.emailTo + ' por que se conecto desde una ip antes usada: ' + currentIp); 
+    } 
+
+    const date = new Date()
 	
-	console.info("loginAccount: " + req.body.emailTo)
-    
-	email.sendLoginEmail(req, res, emailTo, date);
+	console.info("loginAccount: " + req.body.emailTo + " Conectado con ip: " + req.body.currentIp)
+	email.sendLoginEmail(req, res, emailTo, date, currentIp);
 });
 
 app.post("/resetAccountPassword", function (req, res) {

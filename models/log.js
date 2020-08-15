@@ -5,11 +5,12 @@ const { getAllGmsString } = require('../utils/server-configuration');
 
 const LOGS_PATH = './server/Logs';
 logsInSqlArray = [];
+let workingInBackup = false;
 
 async function hideIps(data) {
     var regex = new RegExp(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:\/\d{2})?/, 'g');
 
-    return data.replace(regex, 'IP OCULTA :)');
+    return data.replace(regex, ' IP OCULTA =)');
 }
 
 exports.getAllGmsLogs = async function (req, res) {
@@ -45,7 +46,8 @@ exports.getBackupsLogs = async function (req, res) {
 exports.getNumUsersLogs = async function (req, res) {
     db.get().query(`SELECT * FROM logs_worldsave where filename = 'numusers';`, function (err, results, fields) {
         if (err) return res.status(500).json(err);
-        return res.status(200).json(results);
+        const usersOnlineDB = results.pop().log.replace('/\r?\n|\r/g', '').trim();
+        return res.status(200).json({onlines: usersOnlineDB});
     });
 }
 
@@ -78,7 +80,10 @@ exports.getTimeLastUpdated = function (req, res) {
 };
 
 exports.backupLogs = async function (req, res) {
+    if (workingInBackup) { return; }
+
     try {
+        workingInBackup = true;
         //HACER REFACTOR DE ESTO Y PONERLO EN ALGUN LUGAR COPADO
         //ESTO LO HAGO COMO EN 5 LADOS YA XD
 
@@ -103,7 +108,7 @@ exports.backupLogs = async function (req, res) {
         console.info('==== VACIANDO TABLA logs_worldsave_temporal ======')
 
 
-        console.info('==== INICIANDO COPIA DE CHARFILES A TABLA logs_worldsave_temporal ======')
+        console.info('==== INICIANDO COPIA DE LOGS A TABLA logs_worldsave_temporal ======')
         //Primero limpiamos este array para que el resultado no tenga duplicados.
         logsInSqlArray = []
 
@@ -143,7 +148,12 @@ async function writeLogsWorldSaveTemporalTable (file) {
             '${logFileContent}'
             )`;
 
-    await db.get().query(query);
-    console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
-    logsInSqlArray.push(file);
+    try {
+        await db.get().query(query);
+        logsInSqlArray.push(file);
+    } catch (error) {
+        console.info(`Error writeLogsWorldSaveTemporalTable Log: ${file}, Error: ${error}`);
+
+    }
+    // console.info(`Log: ${file} Guardado en base de datos correctamente, Length: ${logFileContent.length}`);
 }

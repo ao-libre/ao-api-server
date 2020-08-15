@@ -3,10 +3,13 @@ const ini = require('ini');
 const path = require('path');
 const db = require('../db.js');
 const sha256 = require('js-sha256');
+const INI_EASY = require('easy-ini')
 
 let accountInSqlArray = []
+let workingInBackup = false;
 
 const ACCOUNTS_PATH = './server/Account/';
+const CHARFILES_PATH = './server/Charfile/'; 
 
 function readIniFile(fileName){
     let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
@@ -86,11 +89,14 @@ async function writeAccountWorldSaveTemporalTable(accountHash) {
 
     await db.get().query(query);
     accountInSqlArray.push(accountJson.INIT.USERNAME);
-    console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
+    // console.info(`Cuenta: ${accountHash} Guardado en base de datos correctamente`);
 };
 
 exports.backupAccountFiles = async function(req, res) {
+    if (workingInBackup) { return; }
+
     try {
+        workingInBackup = true;
         //POR SI LAS MOSCAS
         //Primero creo la tabla, esto lo voy a hostear en db4free para no tener que pagar $$$
         //Y justamente por este motivo puede fallar y no tienen por que brindarte garantias,
@@ -131,6 +137,8 @@ exports.backupAccountFiles = async function(req, res) {
         await db.get().query('RENAME TABLE accounts_worldsave_temporal TO accounts_worldsave;')
         console.info('==== RENOMBRANDO TABLA accounts_worldsave_temporal a accounts_worldsave ======')
 
+        workingInBackup = false;
+
         return res.status(200).json({accounts: accountInSqlArray});
     } catch(err) {
         console.error('\x1b[31m%s\x1b[0m', 'function backupAccountFiles: ' + err)
@@ -140,10 +148,17 @@ exports.backupAccountFiles = async function(req, res) {
 
 exports.resetPassword = async function (req, res, email, newPassword) {
     try {
-        let accountJson = readIniFile(`${email}.acc`);
-        accountJson.INIT.PASSWORD = newPassword;
+        const accFilePath = path.join(`${ACCOUNTS_PATH}/${email}.acc`);
 
-        await writeIniFile(`${email}.acc`, accountJson);
+        const accountContent = fs.readFileSync(accFilePath, 'utf-8');
+        const accountIni = new INI_EASY(accountContent);
+    
+        const INIT = accountIni.iniData.find(x => x.name == "[INIT]")
+    
+        INIT.content.find(x => x.key === "PASSWORD").val = newPassword
+
+        //Hacemos esto por que el hash de password se graba mal a veces con la otra libreria.
+        fs.writeFileSync(accFilePath, accountIni.createINIString());
 
         console.info(`Password de la cuenta ${email} fue cambiado correctamente por: ${newPassword}`)
         return res.status(200).send(`Password de la cuenta ${email} fue cambiado correctamente :)`);
@@ -155,16 +170,15 @@ exports.resetPassword = async function (req, res, email, newPassword) {
 
 exports.encriptPassword = function (password, salt){
     return sha256(password + salt)
-}
+};
 
 exports.getSaltFromAccount = function (email) {
 	try {
 		let accountJson = readIniFile(`${email}.acc`);
 		return accountJson.INIT.SALT
-	} catch (error){
+	} catch (error) {
 		return error
 	}
-
 };
 
 exports.getAllEmailsFromAccounts = async function(req, res) {
@@ -181,4 +195,49 @@ exports.getAllEmailsFromAccounts = async function(req, res) {
 //         return res.status(500).send(err.toString())
 //     }
 // };
+
+exports.resetAllAccounts = async function (req, res) {
+    //Hacemos este proceso para no tener que borrar nuestros usuarios y asi no tener que perder la base de jugadores. :)
+
+    //Borramos los personajes en todos los CHARFILES
+    fs.readdir(ACCOUNTS_PATH, async (err, files) => {
+
+        const filteredFiles = files.filter(x=> x.includes('.ach'))
+
+        filteredFiles.forEach(file => {
+            console.log("Reseteando archivo: ", file)
+            let accountJson = readIniFile(file);
+
+            accountJson.INIT.CANTIDADPERSONAJES = 0
+            
+            if (accountJson.PERSONAJES) {
+                delete accountJson.PERSONAJES.Personaje1
+                delete accountJson.PERSONAJES.Personaje2
+                delete accountJson.PERSONAJES.Personaje3
+                delete accountJson.PERSONAJES.Personaje4
+                delete accountJson.PERSONAJES.Personaje5
+                delete accountJson.PERSONAJES.Personaje6
+                delete accountJson.PERSONAJES.Personaje7
+                delete accountJson.PERSONAJES.Personaje8
+                delete accountJson.PERSONAJES.Personaje9
+                delete accountJson.PERSONAJES.Personaje10
+            }
+
+            writeIniFile(file, accountJson);
+        });
+    });
+
+    //Borramos todos los archivos de la carpeta CHARFILE
+    fs.readdir(CHARFILES_PATH, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+          fs.unlink(path.join(CHARFILES_PATH, file), err => {
+            if (err) throw err;
+          });
+        }
+    });
+
+    return res.status(200).send(`Se reseteo el server correctamente, todas las cuentas estan limpias`);
+};
 

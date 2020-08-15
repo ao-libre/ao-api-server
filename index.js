@@ -26,6 +26,7 @@ app.use('/api/v1/emails', require('./controllers/emails'));
 app.use('/api/v1/logs', require('./controllers/logs'));
 app.use('/api/v1/discord', require('./controllers/discord'));
 app.use('/api/v1/admin', require('./controllers/admin'));
+app.use('/api/v1/guilds', require('./controllers/guilds'));
 
 // Create email transporter pool to send emails
 emailTransporter.createTransporter(function(err) {
