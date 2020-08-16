@@ -5,6 +5,9 @@ const { encriptPassword, getSaltFromAccount } = require("./account");
 
 const htmlTemplateEmail = fs.readFileSync('./resources/emails/template.html', 'utf-8')
 
+let blacklistEmails = fs.readFileSync('./blacklist-emails.json', 'utf-8')
+blacklistEmails = JSON.parse(blacklistEmails);
+
 // mas info: https://nodemailer.com/smtp/pooled/
 // create reusable transporter object using the default SMTP transport
 const transporterLogin = nodemailer.createTransport({
@@ -62,22 +65,21 @@ let messagesLogin = [];
 let messagesNewsletter = [];
 let messagesBienvenida = [];
 let messagesRecuperarPassword = [];
-let blacklistEmails = {};
 
 transporterLogin.on("idle", function () {
     // send next message from the pending queue
     setInterval(() => {
+        console.log('messagesLogin en cola: ' + messagesLogin.length)
+        
         while (transporterLogin.isIdle() && messagesLogin.length) {
-            let lastMessage =  messagesNewsletter.shift();
+            let lastMessage =  messagesLogin.shift();
 
-            transporterLogin.sendMail(messagesLogin.shift(), function(error, info){
+            transporterLogin.sendMail(lastMessage, function(error, info){
                 if (error) {
-                    console.error('\x1b[31m%s\x1b[0m', "ERROR - transporterLogin error: " + error)
-                    console.error('No se pudo enviar el email de login: ' + error)
+                    putEmailInBlackListOrAddInArrayToRetry(error, messagesLogin, lastMessage);
+                    console.error('\x1b[31m%s\x1b[0m', `ERROR ${lastMessage.to} - transporterLogin error: ${error}`)
                 } else {
-                    putEmailInBlackList(error);
                     console.info("Se envio un email de login a: " + emailTo)
-                    console.info('Email login sent: ' + lastMessage.to)
                 }
             }); 
         }
@@ -88,76 +90,80 @@ transporterLogin.on("idle", function () {
 transporterNewsletter.on("idle", function () {
     // send next message from the pending queue
     setInterval(() => {
-        console.log('MessagesNewsletter en cola: ' + messagesNewsletter.length)
+        console.log('messagesNewsletter en cola: ' + messagesNewsletter.length)
+
         while (transporterNewsletter.isIdle() && messagesNewsletter.length) {
+
             let lastMessage =  messagesNewsletter.shift();
-            console.log('MessagesNewsletter en cola syhift: ' + messagesNewsletter.length)
 
             transporterNewsletter.sendMail(lastMessage, function(error, info){
-                if (info && info.response.includes("250")) {
-                    console.info("Se envio un email de newsletter a: " + lastMessage.to)
+                if (error) {
+                    putEmailInBlackListOrAddInArrayToRetry(error, messagesNewsletter, lastMessage);
+                    console.error('\x1b[31m%s\x1b[0m', `ERROR ${lastMessage.to} - transporterNewsletter error: ${error}`)
                 } else {
-                    putEmailInBlackList(error);
-
-                    // Si falla re-encolamos el mensaje
-                    messagesNewsletter.push(lastMessage);
-                    console.info('MessagesNewsletter en cola p[yusg]: ' + messagesNewsletter.length)
-
-                    console.error('\x1b[31m%s\x1b[0m', "ERROR - transporterNewsletter error: " + error)
+                    console.info("Se envio un email de newsletter a: " + lastMessage.to)
                 }
             }); 
         }
-    }, 30000)
+    }, 60000)
 });
 
 transporterBienvenida.on("idle", function () {
     // send next message from the pending queue
     setInterval(() => {
+        console.log('messagesBienvenida en cola: ' + messagesBienvenida.length)
+       
         while (transporterBienvenida.isIdle() && messagesBienvenida.length) {
             let lastMessage =  messagesBienvenida.shift();
             
-            transporterBienvenida.sendMail(messagesBienvenida.shift(), function(error, info){
+            transporterBienvenida.sendMail(lastMessage, function(error, info){
                 if (error) {
-                    console.error('\x1b[31m%s\x1b[0m', "ERROR - transporterBienvenida error: " + error)
-                    console.error('No se pudo enviar el email de bienvenida: ' + error)
+                    putEmailInBlackListOrAddInArrayToRetry(error, messagesBienvenida, lastMessage);
+                    console.error('\x1b[31m%s\x1b[0m', `ERROR ${lastMessage.to} - transporterBienvenida error: ${error}`)
                 } else {
-                    putEmailInBlackList(error);
                     console.info("Se envio un email de bienvenida a: " + lastMessage.to)
-                    console.info('Email bienvenida sent: ' + info.response)
                 }
             }); 
         }
-    }, 30000)
+    }, 60000)
 });
   
 transporterRecuperarPassword.on("idle", function () {
     setInterval(() => {
+        console.log('messagesRecuperarPassword en cola: ' + messagesRecuperarPassword.length)
+        
         // send next message from the pending queue
         while (transporterRecuperarPassword.isIdle() && messagesRecuperarPassword.length) {
             let lastMessage = messagesRecuperarPassword.shift();
 
             transporterRecuperarPassword.sendMail(lastMessage, function(error, info){
                 if (error) {
-                    console.error('\x1b[31m%s\x1b[0m', "ERROR - transporterRecuperarPassword error: " + error)
-                    console.error('No se pudo enviar el email de recuperar password: ' + error)
+                    putEmailInBlackListOrAddInArrayToRetry(error, messagesRecuperarPassword, lastMessage);
+                    console.error('\x1b[31m%s\x1b[0m', `ERROR ${lastMessage.to} - transporterRecuperarPassword error: ${error}`)
                 } else {
-                    putEmailInBlackList(error);
                     console.info("Se envio un email de recuperar password a: " + lastMessage.to)
-                    console.info('Email recuperar password sent: ' + info.response)
                 }
             }); 
         }
-    }, 30000)
+    }, 60000)
 });
 
-function putEmailInBlackList (error) {
-    if (!error.contains("450")) {
-        //Metemos el email en el blacklist si NO es error 450 que es exceeded message rate
-        blacklistEmails.push(lastMessage.to)
+function putEmailInBlackListOrAddInArrayToRetry (error, arrayMessages, message) {
+    console.log("putEmailInBlackListOrAddInArrayToRetry: ", error.response)
+    console.log("putEmailInBlackListOrAddInArrayToRetry: ", message.to)
+
+    //Si no es error de que excedimos quota de mensajes permitidos le re-encolamos.
+    if (error.response && !error.response.includes("End-of-data rejected: exceeded message rate")) {
+        blacklistEmails.push(message.to)
         blacklistEmails = [...new Set(blacklistEmails)]; 
-        console.info("Guardando emails que no se pueden enviar en blacklist-emails.json");
+        console.info(message.to + " guardando en blacklist-emails.json");
         fs.writeFileSync(`./blacklist-emails.json`, JSON.stringify(blacklistEmails, null, 4));
+    } else {
+        console.info("re-encolando email: " + message.to);
+        arrayMessages.push(message)
     }
+
+    return
 }
 
 exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
@@ -169,7 +175,7 @@ exports.sendWelcomeEmail = function (req, res, emailTo, username, password) {
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
-    var mailOptions = {
+    let mailOptions = {
         from: process.env.EMAIL_BIENVENIDA,
         to: emailTo,
         subject: '🗡 Bienvenido a Argentum Online Libre (Alkon) ⚔️',
@@ -186,7 +192,7 @@ exports.sendLoginEmail = function (req, res, emailTo, date, currentIp) {
     
     htmlContentEmail = htmlContentEmail.replace('VAR_IP', currentIp)
 
-    var yyyymmdd = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " ";
+    let yyyymmdd = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + " ";
     const hourAndMinutes = (date.getHours()<10?'0':'') + date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes()
 
     const formattedDate = yyyymmdd + hourAndMinutes
@@ -196,7 +202,7 @@ exports.sendLoginEmail = function (req, res, emailTo, date, currentIp) {
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
-    var mailOptions = {
+    let mailOptions = {
         from: process.env.EMAIL,
         to: emailTo,
         subject: '🛡 Nuevo inicio de sesión en Argentum Online Libre',
@@ -224,7 +230,7 @@ exports.sendResetAccountPassword = async function (req, res, email, password) {
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
-    var mailOptions = {
+    let mailOptions = {
         from: process.env.EMAIL_RECUPERAR_PASSWORD,
         to: email,
         subject: '🔑 Reset Password Cuenta Argentum Online Libre (Alkon) 🔐',
@@ -244,25 +250,23 @@ exports.sendNewsletterEmail = async function (req, res, allEmails, emailSubject,
     //Despues obtenemos el archivo html del template y reemplazamos la variable por el contenido deseado
     htmlContentEmail = htmlTemplateEmail.replace('VAR_TIPO_EMAIL_ENVIAR', htmlContentEmail)
 
-    blacklistEmails = fs.readFileSync('./blacklist-emails.json', 'utf-8')
-    blacklistEmails = JSON.parse(blacklistEmails);
-
     console.log(`Hay que enviar ${allEmails.length} emails`)
 
-    let mailOptions = {
-        from: process.env.EMAIL_NEWSLETTER,
-        subject: `⛏ ${emailSubject}`,
-        html: htmlContentEmail
-    };
-
     for (const [key, emailValue] of Object.entries(allEmails)) {
+
         // Si NO esta email esta en la blacklist trabajamos.
         if (!blacklistEmails.includes(emailValue.INIT_USERNAME)) {
-            mailOptions.to = "lucas.recoaro@gmail.com";
+            let mailOptions = {
+                from: process.env.EMAIL_NEWSLETTER,
+                subject: `⛏ ${emailSubject}`,
+                html: htmlContentEmail,
+                to: "test"+emailValue.INIT_USERNAME
+            };
 
             messagesNewsletter.push(mailOptions);
             console.info('Email Newsletter en espera para: ' + mailOptions.to)
         }
+
     };
     
     return res.status(200).send("Se inicio el envio del newsletter email con exito")
