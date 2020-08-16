@@ -260,7 +260,7 @@ exports.sendNewsletterEmail = async function (req, res, allEmails, emailSubject,
                 from: process.env.EMAIL_NEWSLETTER,
                 subject: `⛏ ${emailSubject}`,
                 html: htmlContentEmail,
-                to: "test"+emailValue.INIT_USERNAME
+                to: emailValue.INIT_USERNAME
             };
 
             messagesNewsletter.push(mailOptions);
