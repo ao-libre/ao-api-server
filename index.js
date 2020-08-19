@@ -18,6 +18,9 @@ const configFileManager = {
 };
 app.use('/fileManager/', filemanagerMiddleware(configFileManager));
 
+// usado en './controllers/servers';
+global.serversOnlineQuantityUsers = [];
+
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
 app.use('/api/v1/accounts', require('./controllers/accounts'));
@@ -26,6 +29,7 @@ app.use('/api/v1/logs', require('./controllers/logs'));
 app.use('/api/v1/discord', require('./controllers/discord'));
 app.use('/api/v1/admin', require('./controllers/admin'));
 app.use('/api/v1/guilds', require('./controllers/guilds'));
+app.use('/api/v1/servers', require('./controllers/servers'));
 
 
 // Connect to MySQL on start

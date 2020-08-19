@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const moment = require('moment');
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
 const zl = require("zip-lib");
@@ -84,13 +85,19 @@ clientDiscord.on('message', message => {
 
         const embed = new Discord.RichEmbed()
             // Set the title of the field
-            .setTitle(`Argentum Online Libre: Gente ONLINE en tiempo real`)
+            .setTitle(`Argentum Online Libre: Gente en todos los servidores`)
             .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/onlinerandom${imageNumber}.jpg`)
             .setFooter(website, iconClassic)
             // Set the color of the embed
             .setColor(0x90CC55)
             // Set the main content of the embed
-            .setDescription(`En este momento hay: ${usersOnline} conectados en el servidor de Rol Alkon 0.13.X`);
+            .setDescription(`Cantidad de gente jugando en cada uno de los servidores online de AO Libre`)
+            .addField(`Servidor Primario v0.13.X Alkon`, `Cantidad Online en Tiempo Real: ${usersOnline}.`)
+            .addField('\u200B', '\u200B')
+            
+        global.serversOnlineQuantityUsers.forEach(server => {
+            embed.addField(server.serverName, `Cantidad Online: ${server.quantity} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+        })
 
         message.reply(embed)
     }
