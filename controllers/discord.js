@@ -95,8 +95,17 @@ clientDiscord.on('message', message => {
             .addField(`Servidor Primario v0.13.X Alkon`, `Cantidad Online en Tiempo Real: ${usersOnline}.`)
             .addField('\u200B', '\u200B')
             
+        var dateNow = new Date();
+        
+
         global.serversOnlineQuantityUsers.forEach(server => {
-            embed.addField(server.serverName, `Cantidad Online: ${server.quantity} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+            const dateMoment = new Date(server.dateTime);
+
+            var diff = Math.abs(dateMoment.getTime() - dateNow.getTime()) / 3600000;
+            console.log(diff)
+            if (diff <= 3) { 
+                embed.addField(server.serverName, `Cantidad Online: ${server.quantity} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+            }
         })
 
         message.reply(embed)
