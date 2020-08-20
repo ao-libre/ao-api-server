@@ -2,13 +2,13 @@ const express = require('express');
 const app = express();
 
 app.post("/sendUsersOnline", function (req, res) {
-    global.serversOnlineQuantityUsers = global.serversOnlineQuantityUsers.filter(x => x.serverName !== req.body.serverName)
+    const serverInfo =  `${req.body.ip}:${req.body.port}`;
+    global.serversOnlineQuantityUsers = global.serversOnlineQuantityUsers.filter(x => x.ipAndPort !== serverInfo)
 
     global.serversOnlineQuantityUsers.push({
         serverName: req.body.serverName,
         quantityUsers: req.body.quantityUsers,
-        ip: req.body.ip,
-        port: req.body.port,
+        ipAndPort: serverInfo,
         dateTime: new Date()
     })
 

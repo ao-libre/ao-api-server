@@ -86,6 +86,7 @@ clientDiscord.on('message', message => {
         const embed = new Discord.RichEmbed()
             // Set the title of the field
             .setTitle(`Argentum Online Libre: Gente en todos los servidores`)
+            .setThumbnail('http://argentumonline.org/assets/images/ao-libre-logo.png')
             .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/onlinerandom${imageNumber}.jpg`)
             .setFooter(website, iconClassic)
             // Set the color of the embed
@@ -103,7 +104,8 @@ clientDiscord.on('message', message => {
 
             var diff = Math.abs(dateMoment.getTime() - dateNow.getTime()) / 3600000;
             if (diff <= 2) { 
-                embed.addField(`${server.serverName} ${server.ip}:${server.port}  `, `Cantidad Online: ${server.quantityUsers} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+                embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
+                embed.addField('\u200B', '\u200B')
             } else {
                 delete server
             }
