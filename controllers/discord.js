@@ -105,7 +105,7 @@ clientDiscord.on('message', message => {
             data.serversInfo.forEach(server => {
                 
                 //Si es el server principal no lo mostramos repetido
-                if (!server.ipAndPort.includes("18.230.151.33")) {
+                if (!server.ipAndPort.includes("18.230.151.33:7666")) {
                     var now = new Date();
                     var serverLastUpdate = new Date(server.dateTime);
                     var diffMs = (now - serverLastUpdate); // milliseconds between now & Christmas
