@@ -6,7 +6,9 @@ app.post("/sendUsersOnline", function (req, res) {
 
     global.serversOnlineQuantityUsers.push({
         serverName: req.body.serverName,
-        quantity: req.body.quantity,
+        quantityUsers: req.body.quantityUsers,
+        ip: req.body.ip,
+        port: req.body.port,
         dateTime: new Date()
     })
 

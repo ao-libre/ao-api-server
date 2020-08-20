@@ -102,9 +102,10 @@ clientDiscord.on('message', message => {
             const dateMoment = new Date(server.dateTime);
 
             var diff = Math.abs(dateMoment.getTime() - dateNow.getTime()) / 3600000;
-            console.log(diff)
-            if (diff <= 3) { 
-                embed.addField(server.serverName, `Cantidad Online: ${server.quantity} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+            if (diff <= 2) { 
+                embed.addField(`${server.serverName} ${server.ip}:${server.port}  `, `Cantidad Online: ${server.quantityUsers} - Ultima actualizacion ${moment(server.dateTime).format("DD-MM-YYYY hh:mm:ss a")}.`, true);
+            } else {
+                delete server
             }
         })
 
