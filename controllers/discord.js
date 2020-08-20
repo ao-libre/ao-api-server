@@ -104,15 +104,18 @@ clientDiscord.on('message', message => {
         .then(data => {
             data.serversInfo.forEach(server => {
                 
-                var now = new Date();
-                var serverLastUpdate = new Date(server.dateTime);
-                var diffMs = (serverLastUpdate - now); // milliseconds between now & Christmas
-                var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-                if (diffMins <= 2) { 
-                    embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
-                    embed.addField('\u200B', '\u200B')
-                } else {
-                    delete server
+                //Si es el server principal no lo mostramos repetido
+                if (!server.ipAndPort.includes("18.230.151.33")) {
+                    var now = new Date();
+                    var serverLastUpdate = new Date(server.dateTime);
+                    var diffMs = (now - serverLastUpdate); // milliseconds between now & Christmas
+                    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+                    if (diffMins <= 2) { 
+                        embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
+                        embed.addField('\u200B', '\u200B')
+                    } else {
+                        delete server
+                    }
                 }
             })
 
