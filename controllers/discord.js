@@ -4,7 +4,8 @@ const moment = require('moment');
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
 const zl = require("zip-lib");
- 
+const fetch = require('node-fetch');
+
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -98,20 +99,25 @@ clientDiscord.on('message', message => {
             
         var dateNow = new Date();
         
+        fetch('http://api.argentumonline.org/api/v1/servers/getOnlineUsersFromAllServers')
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(server => {
+                
+                var now = new Date();
+                var serverLastUpdate = new Date(server.dateTime);
+                var diffMs = (serverLastUpdate - now); // milliseconds between now & Christmas
+                var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+                if (diffMins <= 2) { 
+                    embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
+                    embed.addField('\u200B', '\u200B')
+                } else {
+                    delete server
+                }
+            })
 
-        global.serversOnlineQuantityUsers.forEach(server => {
-            const dateMoment = new Date(server.dateTime);
-
-            var diff = Math.abs(dateMoment.getTime() - dateNow.getTime()) / 3600000;
-            if (diff <= 2) { 
-                embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
-                embed.addField('\u200B', '\u200B')
-            } else {
-                delete server
-            }
-        })
-
-        message.reply(embed)
+            message.reply(embed)
+        });
     }
 
     if (message.content === '/comics') {

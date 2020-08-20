@@ -16,7 +16,7 @@ app.post("/sendUsersOnline", function (req, res) {
 });
 
 app.get("/getOnlineUsersFromAllServers", function (req, res) {
-    return res.status(200).json(global.serversOnlineQuantityUsers);
+    return res.status(200).json({serversInfo: global.serversOnlineQuantityUsers});
 });
 
 module.exports = app;
