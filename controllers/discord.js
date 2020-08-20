@@ -102,7 +102,7 @@ clientDiscord.on('message', message => {
         fetch('http://api.argentumonline.org/api/v1/servers/getOnlineUsersFromAllServers')
         .then(res => res.json())
         .then(data => {
-            data.forEach(server => {
+            data.serversInfo.forEach(server => {
                 
                 var now = new Date();
                 var serverLastUpdate = new Date(server.dateTime);
