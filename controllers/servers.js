@@ -19,7 +19,7 @@ app.post("/sendUsersOnline", function (req, res) {
     
     global.serversOnlineQuantityUsers.sort(function(obj1, obj2) {
         // Ascending: first age less than the previous
-        return obj1.quantityUsers - obj2.quantityUsers;
+        return obj2.quantityUsers - obj1.quantityUsers;
     });
 
     return res.status(200).json(global.serversOnlineQuantityUsers);
