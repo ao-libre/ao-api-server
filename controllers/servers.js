@@ -5,12 +5,20 @@ app.post("/sendUsersOnline", function (req, res) {
     const serverInfo =  `${req.body.ip}:${req.body.port}`;
     global.serversOnlineQuantityUsers = global.serversOnlineQuantityUsers.filter(x => x.ipAndPort !== serverInfo)
 
+    let serverName = req.body.serverName
+    if (serverInfo === "18.230.151.33:7666"){
+        serverName = "Servidor Principal"
+    }
+
     global.serversOnlineQuantityUsers.push({
-        serverName: req.body.serverName,
+        serverName: serverName,
         quantityUsers: req.body.quantityUsers,
         ipAndPort: serverInfo,
         dateTime: new Date()
-    })
+    }).sort(function(obj1, obj2) {
+        // Ascending: first age less than the previous
+        return obj1.quantityUsers - obj2.quantityUsers;
+    });
 
     return res.status(200).json(global.serversOnlineQuantityUsers);
 });
