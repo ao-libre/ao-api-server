@@ -15,7 +15,9 @@ app.post("/sendUsersOnline", function (req, res) {
         quantityUsers: req.body.quantityUsers,
         ipAndPort: serverInfo,
         dateTime: new Date()
-    }).sort(function(obj1, obj2) {
+    })
+    
+    global.serversOnlineQuantityUsers.sort(function(obj1, obj2) {
         // Ascending: first age less than the previous
         return obj1.quantityUsers - obj2.quantityUsers;
     });
