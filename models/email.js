@@ -116,8 +116,8 @@ exports.sendResetAccountPassword = async function (req, res, email, password) {
     const encriptedPassword = await encriptPassword(password, salt);
 
     // Hardcodeo la ip por que amazon no funciona bien con esto, asi que hasta que cambiemos de host arreglo esto.
-	// const linkResetPasswordEndpoint = `http://${ip.address()}:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
-	const linkResetPasswordEndpoint = `http://18.230.151.33:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
+	const linkResetPasswordEndpoint = `http://${ip.address()}:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
+	// const linkResetPasswordEndpoint = `http://18.230.151.33:1337/api/v1/accounts/resetPassword/${email}/${encriptedPassword}`
 
     htmlContentEmail = htmlContentEmail.replace('VAR_LINK_ENDPOINT_RESET_PASSWORD', linkResetPasswordEndpoint)
 
