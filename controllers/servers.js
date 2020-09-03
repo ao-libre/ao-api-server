@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const ip = require("ip");
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -10,7 +11,7 @@ app.post("/sendUsersOnline", function (req, res) {
     global.serversOnlineQuantityUsers = global.serversOnlineQuantityUsers.filter(x => x.ipAndPort !== serverInfo)
 
     let serverName = req.body.serverName
-    if (serverInfo === "18.230.151.33:7666"){
+    if (serverInfo === `${ip.address()}:7666`){
         serverName = "Servidor Principal"
     }
 
