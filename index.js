@@ -16,7 +16,8 @@ const configFileManager = {
     fsRoot: path.resolve(__dirname, './server'),
     rootName: 'Server AO Libre'
 };
-app.use('/fileManager/', filemanagerMiddleware(configFileManager));
+
+// app.use('/fileManager/', filemanagerMiddleware(configFileManager));
 
 // usado en './controllers/servers';
 global.serversOnlineQuantityUsers = [];
