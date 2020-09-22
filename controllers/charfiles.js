@@ -64,4 +64,12 @@ app.post("/resetInventoryAndGoldCharfile", function (req, res) {
     return res.status(401).send('No estas autorizado a entrar... :(');
 });
 
+app.post("/deleteItemFromChars", function (req, res) {
+    if (process.env.ADMIN_PASSWORD === req.body.password) {
+        charfile.deleteItemFromChars(req, res);
+    }
+
+    return res.status(401).send('No estas autorizado a entrar... :(');
+});
+
 module.exports = app;

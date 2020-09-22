@@ -138,6 +138,133 @@ exports.getCountChars = function (req, res) {
     });
 };
 
+exports.deleteItemFromChars = function (req, res) {
+    let charfiles = [];
+
+    if (req.body.personajes) {
+        charfiles = req.body.personajes
+    } else {
+        //Se usa la tabla charfiles_worldsave_temporal en este proceso
+        let files = fs.readdirSync(CHARFILES_PATH);
+        charfiles = files.filter(file => file.endsWith('.chr'));
+    }
+    
+    for (const charfile of charfiles) {
+        deleteItemFromChar(charfile)
+    }
+
+    return res.status(200).send('El item se elimino correctamente de los charfiles: ' + charfiles.toString());
+};
+
+function deleteItemFromChar(file, itemIndex, priceBack) {
+    const chrFilePath = path.join(`${CHARFILES_PATH}/${file}.chr`);
+
+    const charfileContent = fs.readFileSync(chrFilePath, 'utf-8');
+    const charIni = new INI_EASY(charfileContent);
+
+    const INVENTORY = charIni.iniData.find(x => x.name == "[INVENTORY]")
+
+    INVENTORY.content.find(x => x.key === "ANILLOSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "ARMOUREQPSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "BARCOSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "CANTIDADITEMS").val = "1"
+    INVENTORY.content.find(x => x.key === "CASCOEQPSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "ESCUDOEQPSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "MOCHILASLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "MONTURAEQPSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "MUNICIONSLOT").val = "0"
+    INVENTORY.content.find(x => x.key === "OBJ1").val = "31-1-0"
+    INVENTORY.content.find(x => x.key === "OBJ10").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ11").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ12").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ13").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ14").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ15").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ16").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ17").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ18").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ19").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ2").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ20").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ21").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ22").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ23").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ24").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ25").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ26").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ27").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ28").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ29").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ3").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ30").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ31").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ32").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ33").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ34").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ35").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ4").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ5").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ6").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ7").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ8").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "OBJ9").val = "0-0-0"
+    INVENTORY.content.find(x => x.key === "WEAPONEQPSLOT").val = "0"
+
+    const BANCOINVENTORY = charIni.iniData.find(x => x.name == "[BANCOINVENTORY]")
+
+    BANCOINVENTORY.content.find(x => x.key === "CANTIDADITEMS").val = "0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ1").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ10").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ11").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ12").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ13").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ14").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ15").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ16").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ17").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ18").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ19").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ2").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ20").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ21").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ22").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ23").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ24").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ25").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ26").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ27").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ28").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ29").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ3").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ30").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ31").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ32").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ33").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ34").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ35").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ36").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ37").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ38").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ39").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ4").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ40").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ5").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ6").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ7").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ8").val = "0-0"
+    BANCOINVENTORY.content.find(x => x.key === "OBJ9").val = "0-0"
+    
+    const STATS = charIni.iniData.find(x => x.name == "[STATS]")
+    
+    STATS.content.find(x => x.key === "GLD").val = "0"
+    STATS.content.find(x => x.key === "BANCO").val = "0"
+
+    //Hacemos esto por que el hash de password se graba mal a veces con la otra libreria.
+    fs.writeFileSync(chrFilePath, charIni.createINIString());
+
+    console.info('El inventario y oro del charfile se modifico correctamente: ' + file);
+}
+
 exports.resetInventoryOfCheaters = function (req, res) {
     let personajesChiteros = [];
 
