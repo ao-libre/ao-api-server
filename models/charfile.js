@@ -12,7 +12,7 @@ const CHARFILES_PATH = './server/Charfile/';
 
 function readIniFile(chrName) {
     let chrFilePath = path.join(`${CHARFILES_PATH}/${chrName}`);
-    return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
+    return ini.decode(fs.readFileSync(chrFilePath, 'latin1'));
 }
 
 function getFilterGmsClause() {
@@ -180,7 +180,7 @@ exports.resetInventoryOfCheaters = function (req, res) {
 function resetInventoryCharfile(file) {
     const chrFilePath = path.join(`${CHARFILES_PATH}/${file}.chr`);
 
-    const charfileContent = fs.readFileSync(chrFilePath, 'utf-8');
+    const charfileContent = fs.readFileSync(chrFilePath, 'latin1');
     const charIni = new INI_EASY(charfileContent);
 
     const INVENTORY = charIni.iniData.find(x => x.name == "[INVENTORY]")
