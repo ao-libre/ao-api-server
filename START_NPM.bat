@@ -1,1 +1,1 @@
-cmd /C npm start --prefix %~dp0
+pm2 start C:/Ao-Libre/ao20-api-server/index.js --name=ao-api-server --watch --ignore-watch="node_modules"
