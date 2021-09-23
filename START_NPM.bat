@@ -1,1 +1,1 @@
-pm2 start C:/Ao-Libre/ao20-api-server/index.js --name=ao-api-server --watch --ignore-watch="node_modules"
+pm2 start C:/AO-Libre/ao-api-server/index.js --name=ao-api-server --watch --ignore-watch="node_modules"
