@@ -32,17 +32,18 @@ app.use('/api/v1/admin', require('./controllers/admin'));
 app.use('/api/v1/guilds', require('./controllers/guilds'));
 app.use('/api/v1/servers', require('./controllers/servers'));
 
-
 // Connect to MySQL on start
 db.connect(function (err) {
     if (err) {
         console.error('\x1b[31m%s\x1b[0m', 'Unable to connect to MySQL.')
         process.exit(1)
     } else {
-        app.listen(port, function () {
-            var datetime = new Date();
-            var message = "Argentum Online API on Port:- " + port + " Started at :- " + datetime;
-            console.log('\x1b[35m%s\x1b[0m', message);
-        });
+        console.log('\x1b[34m%s\x4b[0m', "Conexion a la BD MySQL Exitosa.");
     }
+});
+
+app.listen(port, function () {
+    var datetime = new Date();
+    var message = "Argentum Online API on Port:- " + port + " Started at :- " + datetime;
+    console.log('\x1b[35m%s\x1b[0m', message);
 });

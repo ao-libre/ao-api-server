@@ -181,6 +181,10 @@ exports.getSaltFromAccount = function (email) {
 	}
 };
 
+exports.getAllEmailsFromAccounts = async function(req, res) {
+    const [rows, fields] = await db.get().query(`SELECT INIT_USERNAME FROM accounts_worldsave;`)
+    return rows;
+};
 
 // exports.getPasswordEncripted = function (req, res, email) {
 //     try {
