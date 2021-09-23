@@ -13,7 +13,7 @@ const CHARFILES_PATH = './server/Charfile/';
 
 function readIniFile(fileName){
     let chrFilePath =  path.join(`${ACCOUNTS_PATH}/${fileName}`);
-    return ini.decode(fs.readFileSync(chrFilePath, 'utf-8'));
+    return ini.decode(fs.readFileSync(chrFilePath, 'latin1'));
 }
 
 function writeIniFile(fileName, fileContent){
@@ -150,7 +150,7 @@ exports.resetPassword = async function (req, res, email, newPassword) {
     try {
         const accFilePath = path.join(`${ACCOUNTS_PATH}/${email}.acc`);
 
-        const accountContent = fs.readFileSync(accFilePath, 'utf-8');
+        const accountContent = fs.readFileSync(accFilePath, 'latin1');
         const accountIni = new INI_EASY(accountContent);
     
         const INIT = accountIni.iniData.find(x => x.name == "[INIT]")

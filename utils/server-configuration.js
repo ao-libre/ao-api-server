@@ -4,7 +4,7 @@ const path = require('path');
 
 function getServerIniFile() {
     let serverFilePath = path.join(`./server/Server.ini`);
-    return ini.decode(fs.readFileSync(serverFilePath, 'utf-8'));
+    return ini.decode(fs.readFileSync(serverFilePath, 'latin1'));
 }
 
 function getParsedGmsFromServerIni() {

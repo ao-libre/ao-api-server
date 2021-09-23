@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
+const moment = require('moment');
 const Discord = require('discord.js');
 const { getOnlineUsersQuantityInServer } = require('../utils/server-configuration');
 const zl = require("zip-lib");
- 
+const fetch = require('node-fetch');
+const ip = require("ip");
+
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -84,15 +87,41 @@ clientDiscord.on('message', message => {
 
         const embed = new Discord.RichEmbed()
             // Set the title of the field
-            .setTitle(`Argentum Online Libre: Gente ONLINE en tiempo real`)
+            .setTitle(`Argentum Online Libre: Gente en todos los servidores`)
+            .setThumbnail('http://argentumonline.org/assets/images/ao-libre-logo.png')
             .setImage(`https://raw.githubusercontent.com/ao-libre/ao-api-server/master/resources/images/onlinerandom${imageNumber}.jpg`)
             .setFooter(website, iconClassic)
             // Set the color of the embed
             .setColor(0x90CC55)
             // Set the main content of the embed
-            .setDescription(`En este momento hay: ${usersOnline} conectados en el servidor de Rol Alkon 0.13.X`);
+            .setDescription(`Cantidad de gente jugando en cada uno de los servidores online de AO Libre`)
+            .addField(`Servidor Primario v0.13.X Alkon`, `Cantidad Online en Tiempo Real: ${usersOnline}.`)
+            .addField('\u200B', '\u200B')
+            
+        var dateNow = new Date();
+        
+        fetch('http://api.argentumonline.org/api/v1/servers/getOnlineUsersFromAllServers')
+        .then(res => res.json())
+        .then(data => {
+            data.serversInfo.forEach(server => {
+                
+                //Si es el server principal no lo mostramos repetido
+                if (!server.ipAndPort.includes(`93.176.180.82:7666`)) {
+                    var now = new Date();
+                    var serverLastUpdate = new Date(server.dateTime);
+                    var diffMs = (now - serverLastUpdate); // milliseconds between now & Christmas
+                    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+                    if (diffMins <= 2) { 
+                        embed.addField(`${server.serverName} | ${server.ipAndPort} `, `Online: ${server.quantityUsers} - Actualizado ${moment(server.dateTime).format("DD-MM hh:mm a")}.`, true);
+                        embed.addField('\u200B', '\u200B')
+                    } else {
+                        delete server
+                    }
+                }
+            })
 
-        message.reply(embed)
+            message.reply(embed)
+        });
     }
 
     if (message.content === '/comics') {
