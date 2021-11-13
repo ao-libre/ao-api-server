@@ -11,7 +11,8 @@ app.post("/sendUsersOnline", function (req, res) {
     global.serversOnlineQuantityUsers = global.serversOnlineQuantityUsers.filter(x => x.ipAndPort !== serverInfo)
 
     let serverName = req.body.serverName
-    if (serverInfo === `93.176.180.82:7666`){
+
+    if (serverInfo.includes(global.serverIpAddress)){
         serverName = "Servidor Principal"
     }
 

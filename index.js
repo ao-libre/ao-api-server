@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors')
 const bodyParser = require('body-parser');
+const https = require('https')
 const app = express();
 const port = process.env.PORT || 1337;
 const db = require('./db');
@@ -21,6 +22,7 @@ const configFileManager = {
 
 // usado en './controllers/servers';
 global.serversOnlineQuantityUsers = [];
+global.serverIpAddress = null;
 
 app.use('/api/v1/users', require('./controllers/users'));
 app.use('/api/v1/charfiles', require('./controllers/charfiles'));
@@ -46,4 +48,32 @@ app.listen(port, function () {
     var datetime = new Date();
     var message = "Argentum Online API on Port:- " + port + " Started at :- " + datetime;
     console.log('\x1b[35m%s\x1b[0m', message);
+
+
+    ///Obtenemos IP del server donde se ejecuta la api.
+    const options = {
+        hostname: 'api.ipify.org',
+        method: 'GET'
+    }
+
+    var req = https.request(options, function(res) {
+        // Buffer the body entirely for processing as a whole.
+        var bodyChunks = [];
+        res.on('data', function(chunk) {
+          // You can process streamed parts here...
+          bodyChunks.push(chunk);
+        }).on('end', function() {
+          var body = Buffer.concat(bodyChunks);
+          console.log('Ip del Server: ' + body);
+          global.serverIpAddress = body;
+        })
+    });
+
+    req.on('error', error => {
+        console.error(error)
+    })
+
+    req.end()
+    ///Fin Obtenemos IP del server donde se ejecuta la api.
+    
 });
