@@ -69,7 +69,7 @@ clientDiscord.on('message', message => {
             // Set the color of the embed
             .setColor(0x00ff00)
             // Set the main content of the embed
-            .setDescription(`Entra aca para bajarte el juego http://www.ArgentumOnline.org/aoclasico.html`)
+            .setDescription(`Entra aca para bajarte el juego https://argentumonline.org/aoclasico/`)
         
         // channelAOLibreGeneralDiscord.send(embed)
         message.reply(embed)
